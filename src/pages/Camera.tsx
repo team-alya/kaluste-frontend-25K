@@ -1,11 +1,22 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
+import { Camera } from "react-camera-pro";
 
 
 const CameraApp: React.FC = () => {
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    //const videoRef = useRef<HTMLVideoElement | null>(null);
+    //const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [photo, setPhoto] = useState<string | null>(null);
+    const cameraRef = useRef<any>(null);
 
+    const capturePhoto = () => {
+        if (cameraRef.current) {
+            const imageDataUrl = cameraRef.current.takePhoto();
+            setPhoto(imageDataUrl);
+            console.log("Kuva otetty ja tallennettu")
+        }
+    };
+
+    /*
     useEffect(() => {
         navigator.mediaDevices
             .getUserMedia({ video: { facingMode: "enviroment" } })
@@ -15,7 +26,7 @@ const CameraApp: React.FC = () => {
                 }
             })
             .catch((err) => console.error("Kamera häiriö:", err));
-    }, []);
+    }, []); 
 
     const capturePhoto = () => {
         const canvas = canvasRef.current;
@@ -26,54 +37,70 @@ const CameraApp: React.FC = () => {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                setPhoto(canvas.toDataURL("image/png"));
+                const capturedPhoto = canvas.toDataURL("image/png");
+                setPhoto(capturedPhoto);
+                console.log("Kuva otettu ja tallennettu")
             }
         }
     };
 
     return (
-        <div className="flex flex-col items-center p-5">
-            {!photo ? (
-                <>
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="w-full rounded-lg"
-                        style={{
-                            width: "361px",
-                            height: "476px",
-                            top: "152px",
-                            left: "16px",
-                            gap: "0px",
-                        }}
-                    />
-                    <button
-                        onClick={capturePhoto}
-                        className="mt-4 px-6 py-2 text-lg bg-blue-500 text-black rounded-md cursor-pointer"
-                    >
-                        Capture Photo
-                    </button>
-                </>
-            ) : (
-                <>
-                    <img
-                        src={photo}
-                        alt="Captured"
-                        className="w-full rounded-lg mt-4"
-                    />
-                    <button
-                        onClick={() => setPhoto(null)}
-                        className="mt-4 px-6 py-2 text-lg bg-gray-500 text-black rounded-md cursor-pointer"
-                    >
-                        Retake
-                    </button>
-                </>
-            )}
+        <div className="flex flex-col items-center justify-center p-5 bg-gray-100 min-h-screen space-y-4">
+            <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full max-w-lg rounded-lg shadow-md"
+            />
+            <button
+                onClick={capturePhoto}
+                className="mt-4 px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
+            >
+                Ota kuva
+            </button>
             <canvas ref={canvasRef} className="hidden"></canvas>
         </div>
     );
 
+    */
+
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen p-5">
+            <div style={{
+                width: "361px",
+                height: "476px",
+                borderRadius: "10px",
+                overflow: "hidden",
+            }}
+            className="relative mb-5"
+            >
+                <Camera
+                    ref={cameraRef}
+                    facingMode="environment"
+                    errorMessages={{
+                        noCameraAccessible:
+                            "Kameraan ei saada yhteyttä",
+                        permissionDenied:
+                            "Kameran käyttöoikeus evätty",
+                        switchCamera:
+                            "Kameran vaihtaminen epäonnistui",
+                        canvas: "Canvas-elementtiä ei tueta",
+                    }}
+                />
+            </div>
+            <button
+                onClick={capturePhoto}
+                className="mt-4 px-6 py-3 text-black bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition"
+            >
+                Ota kuva
+            </button>
+            {photo && (
+                <div className="mt-4">
+                    <img src={photo} alt="Captured" className="w-full max-w-xs rounded-lg" />
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default CameraApp;
