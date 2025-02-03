@@ -1,4 +1,10 @@
+
+
 const Home = () => {
+
+    const handleClick = () => {
+        // navigate to camera page
+    }
 
     return(
         
@@ -12,9 +18,14 @@ const Home = () => {
 
             </div>
             <div>
-                <p>"Tunnista tuote" -nappi tähän</p>
+            <button
+                onClick={handleClick}
+                >
+                Tunnista tuote
+            </button>
             </div>
-
+            
+            
 
         </div>
  
