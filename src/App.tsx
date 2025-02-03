@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import Home from './pages/Home'
+import CameraApp from './pages/Camera';
 import './index.css'
-import './App.css'
-import CameraApp from './pages/Camera'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from './components/ui/Navbar';
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <CameraApp />
-    </>
+    <div>
+      
+      <BrowserRouter>
+      <Navbar />
+        <Routes>
+        
+          <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="camera" element={<CameraApp />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 
