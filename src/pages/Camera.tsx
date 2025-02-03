@@ -90,15 +90,10 @@ const CameraApp: React.FC = () => {
             </div>
             <button
                 onClick={capturePhoto}
-                className="mt-4 px-6 py-3 text-black bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition"
+                className="mt-4 px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
             >
                 Ota kuva
             </button>
-            {photo && (
-                <div className="mt-4">
-                    <img src={photo} alt="Captured" className="w-full max-w-xs rounded-lg" />
-                </div>
-            )}
         </div>
     );
 };
