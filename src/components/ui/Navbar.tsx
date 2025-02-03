@@ -37,7 +37,6 @@ const Navbar = () => {
                         <Settings size={28} color="#ffffff" strokeWidth={2.25} />
                     </button>
                     
-                    {/* <a href="#" >Asetusnappi</a> */}
                 </div>
             </div>
         </nav>
