@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Camera } from "react-camera-pro";
+import { useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
 
 
@@ -8,12 +9,19 @@ const CameraApp: React.FC = () => {
     //const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [photo, setPhoto] = useState<string | null>(null);
     const cameraRef = useRef<any>(null);
+    const navigete = useNavigate();
 
     const capturePhoto = () => {
         if (cameraRef.current) {
             const imageDataUrl = cameraRef.current.takePhoto();
             setPhoto(imageDataUrl);
             console.log("Kuva otetty ja tallennettu")
+        }
+    };
+
+    const handleNext = () => {
+        if (photo) {
+            navigete("/loading", {state: {photo}});
         }
     };
 
@@ -128,6 +136,9 @@ const CameraApp: React.FC = () => {
                 Ota kuva
             </button>
             <UploadButton setPhoto={setPhoto} />
+            {photo && (
+                <button onClick={handleNext} className="mt-4 px-6 py-3 text-white bg-blue-600 rounded-lg"> Jatka</button>
+            )}
         </div>
     );
 };
