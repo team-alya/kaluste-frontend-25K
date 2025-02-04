@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react";
+import UploadButton from "./UploadImage";
 
 
 const CameraApp: React.FC = () => {
@@ -54,6 +55,8 @@ const CameraApp: React.FC = () => {
                     >
                         Capture Photo
                     </button>
+                    <UploadButton />
+                    
                 </>
             ) : (
                 <>
