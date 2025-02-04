@@ -1,15 +1,27 @@
+import Home from './pages/Home'
+import CameraApp from './pages/Camera';
+import './index.css'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from './components/ui/Navbar';
 
 
-import './App.css'
-import CameraApp from './pages/Camera'
 
 function App() {
-  
 
   return (
-    <>
-      <CameraApp />
-    </>
+    <div>
+      
+      <BrowserRouter>
+      <Navbar />
+        <Routes>
+        
+          <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="camera" element={<CameraApp />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 
