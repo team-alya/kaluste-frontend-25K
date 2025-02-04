@@ -9,7 +9,7 @@ const CameraApp: React.FC = () => {
     //const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [photo, setPhoto] = useState<string | null>(null);
     const cameraRef = useRef<any>(null);
-    const navigete = useNavigate();
+    const navigate = useNavigate();
 
     const capturePhoto = () => {
         if (cameraRef.current) {
@@ -21,7 +21,7 @@ const CameraApp: React.FC = () => {
 
     const handleNext = () => {
         if (photo) {
-            navigete("/loading", {state: {photo}});
+            navigate("/loading", {state: {photo}});
         }
     };
 
