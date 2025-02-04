@@ -100,19 +100,26 @@ const CameraApp: React.FC = () => {
             }}
             className="relative mb-5"
             >
-                <Camera
-                    ref={cameraRef}
-                    facingMode="environment"
-                    errorMessages={{
-                        noCameraAccessible:
-                            "Kameraan ei saada yhteyttä",
-                        permissionDenied:
-                            "Kameran käyttöoikeus evätty",
-                        switchCamera:
-                            "Kameran vaihtaminen epäonnistui",
-                        canvas: "Canvas-elementtiä ei tueta",
-                    }}
-                />
+               {photo ? (
+                    <img
+                        src={photo}
+                        alt="Captured"
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="w-full h-full object-cover">
+                        <Camera
+                            ref={cameraRef}
+                            facingMode="environment"
+                            errorMessages={{
+                                noCameraAccessible: "Kameraan ei saada yhteyttä",
+                                permissionDenied: "Kameran käyttöoikeus evätty",
+                                switchCamera: "Kameran vaihtaminen epäonnistui",
+                                canvas: "Canvas-elementtiä ei tueta",
+                            }}
+                        />
+                    </div>
+                )}
             </div>
             <button
                 onClick={capturePhoto}
@@ -120,7 +127,7 @@ const CameraApp: React.FC = () => {
             >
                 Ota kuva
             </button>
-            <UploadButton />
+            <UploadButton setPhoto={setPhoto} />
         </div>
     );
 };

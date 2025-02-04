@@ -1,21 +1,22 @@
-import React, {useState, useRef} from "react";
+import React, { useRef } from "react";
 
-const UploadButton: React.FC = () => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
+interface UploadButtonProps {
+    setPhoto: (image: string) => void;
+}
+
+const UploadButton: React.FC<UploadButtonProps> = ({ setPhoto }) => {
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleButtonClick = () => {
-        fileInputRef.current?.click(); 
+        fileInputRef.current?.click();
     };
-    
-   
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImageSrc(reader.result as string); 
+                setPhoto(reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -23,21 +24,21 @@ const UploadButton: React.FC = () => {
 
     return (
         <div className="mt-4">
-            <button onClick={handleButtonClick} className="mt-4 px-6 py-2 text-lg bg-blue-500 text-black rounded-md cursor-pointer">
-                Upload Photo
+            <button
+                onClick={handleButtonClick}
+                className="mt-4 px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
+            >
+                Tuo galleriasta
             </button>
             <input
                 type="file"
                 accept="image/*"
                 ref={fileInputRef}
                 onChange={handleFileChange}
-                style={{ display: "none" }} 
+                style={{ display: "none" }}
             />
-            {imageSrc && (
-                <img src={imageSrc} alt="Captured" className="max-w-[400px] max-h-[300px] rounded-lg mt-4" />
-
-            )}
         </div>
     );
 };
- export default UploadButton;
+
+export default UploadButton;
