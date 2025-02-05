@@ -8,7 +8,10 @@ const Navbar = () => {
 
     const pages: Record<string, string> = {
         "/" : "Valitse toiminta",
-        "/camera" : "Ota kuva"
+        "/camera" : "Ota kuva", 
+        "/loading" : "Odota hetki",
+        "/accepted" : "Tuote tunnistettu",
+        "/rejected" : "Tuotetta tunnistettu"
     }
 
     return(
