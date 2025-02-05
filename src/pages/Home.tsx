@@ -26,18 +26,12 @@ const Home = () => {
                 <button
                     className="ml-8"
                     style={{backgroundImage: `url(${cam})`, height: '150px', width: '150px'}}
+                    onClick={handleClick}
                 >
-                    Tunnista tuote
+                    <p className="mt-23 text-white">Tunnista tuote</p>
                 </button> 
                            
-            {/* <button
             
-                className="bg-green-700 hover:bg-green-600 text-white font-bold text-[9px] py-3 px-3 rounded ml-8"
-                onClick={handleClick}
-                >
-                <Camera size={32} strokeWidth={1.5} />
-                <p>Tunnista tuote</p>
-            </button> */}
             </div>
             
             
