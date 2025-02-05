@@ -24,54 +24,6 @@ const CameraApp: React.FC = () => {
         }
     };
 
-    /*
-    useEffect(() => {
-        navigator.mediaDevices
-            .getUserMedia({ video: { facingMode: "enviroment" } })
-            .then((stream) => {
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            })
-            .catch((err) => console.error("Kamera häiriö:", err));
-    }, []); 
-
-    const capturePhoto = () => {
-        const canvas = canvasRef.current;
-        const video = videoRef.current;
-        if (canvas && video) {
-            const context = canvas.getContext("2d");
-            if (context) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const capturedPhoto = canvas.toDataURL("image/png");
-                setPhoto(capturedPhoto);
-                console.log("Kuva otettu ja tallennettu")
-            }
-        }
-    };
-
-    return (
-        <div className="flex flex-col items-center justify-center p-5 bg-gray-100 min-h-screen space-y-4">
-            <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                className="w-full max-w-lg rounded-lg shadow-md"
-            />
-            <button
-                onClick={capturePhoto}
-                className="mt-4 px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
-            >
-                Ota kuva
-            </button>
-            <canvas ref={canvasRef} className="hidden"></canvas>
-        </div>
-    );
-
-    */
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5">
             <div style={{
