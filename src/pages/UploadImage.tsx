@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Upload } from "lucide-react";
 
 interface UploadButtonProps {
     setPhoto: (image: string) => void;
@@ -26,9 +27,11 @@ const UploadButton: React.FC<UploadButtonProps> = ({ setPhoto }) => {
         <div className="mt-4">
             <button
                 onClick={handleButtonClick}
-                className="mt-4 px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
+                className="flex items-center justify-center gap-2 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-md hover:bg-green-700 transition"
             >
-                Tuo galleriasta
+                <span className="inline-flex items-center gap-2">
+                <Upload color="#ffffff" strokeWidth={2.5} className="w-5 h-5"/> Galleria
+                </span>
             </button>
             <input
                 type="file"
