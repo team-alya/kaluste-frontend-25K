@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-
+import { Camera } from 'lucide-react';
+import cam from '../assets/camera.png';
 
 const Home = () => {
 
@@ -14,19 +15,23 @@ const Home = () => {
         
         <div>
             <div>
-                <p>Valitse toiminta</p>
             </div>
-            <div>
-                <h1>Hei!</h1>
+            <div className="m-8" >
+                <h1 className="text-4xl font-bold">Hei!</h1>
                 <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
 
             </div>
             <div>
-            <button
-                onClick={handleClick}
+
+                <button
+                    className="ml-8"
+                    style={{backgroundImage: `url(${cam})`, height: '150px', width: '150px'}}
+                    onClick={handleClick}
                 >
-                Tunnista tuote
-            </button>
+                    <p className="mt-23 text-white">Tunnista tuote</p>
+                </button> 
+                           
+            
             </div>
             
             
