@@ -1,4 +1,5 @@
 import Home from './pages/Home'
+import Login from './pages/Login';
 import CameraApp from './pages/Camera';
 import LoadingPage from './pages/confirmation/Loading';
 import AcceptedPage from './pages/confirmation/Accepted';
@@ -18,6 +19,7 @@ function App() {
         
           <Route path="/">
             <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
             <Route path="camera" element={<CameraApp />} />
             <Route path="loading" element={<LoadingPage />} />
             <Route path="accepted" element={<AcceptedPage />} />

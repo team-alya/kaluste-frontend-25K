@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { Camera } from 'lucide-react';
 import cam from '../assets/camera.png';
 
 const Home = () => {
