@@ -9,7 +9,7 @@ export default function Login() {
     return(
 
         <div className="mt-20 flex justify-center">
-            <form >
+            <form>
                 <label>
                     <p className="text-xs mb-3"> Käyttäjätunnus</p>
                     <input 
