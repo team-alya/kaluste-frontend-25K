@@ -10,8 +10,10 @@ const LoadingPage: React.FC = () => {
     useEffect (() => {
         const timeout = setTimeout(() => {
             const random = Math.random() < 0.5;
+            //navigate randomly to /accepted or /rejected, passing the photo as state
             navigate (random ? "/accepted" : "/rejected", {state: {photo}});
         }, 2000);
+        //clear the timeout 
         return () => clearTimeout(timeout);
     }, [navigate, photo]);
 

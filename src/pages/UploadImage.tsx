@@ -9,14 +9,18 @@ const UploadButton: React.FC<UploadButtonProps> = ({ setPhoto }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleButtonClick = () => {
+        // Open file dialog when the button is clicked
         fileInputRef.current?.click();
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // read the file and set it as the photo
         const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
+            // when the file is read, set it as the photo
             reader.onload = () => {
+                //convert the image to data url and store it in the state
                 setPhoto(reader.result as string);
             };
             reader.readAsDataURL(file);

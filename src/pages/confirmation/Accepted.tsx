@@ -6,6 +6,7 @@ const AcceptedPage: React.FC = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    // Get the photo from the location state
     const photo = location.state?.photo || null;
 
 
