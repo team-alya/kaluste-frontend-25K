@@ -31,7 +31,7 @@ const UploadButton: React.FC<UploadButtonProps> = ({ setPhoto }) => {
         <div className="mt-4">
             <button
                 onClick={handleButtonClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-md hover:bg-green-700 transition"
+                className="flex items-center justify-center gap-2 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-lg shadow-green-600 hover:bg-green-700 transition"
             >
                 <span className="inline-flex items-center gap-2">
                 <Upload color="#ffffff" strokeWidth={2.5} className="w-5 h-5"/> Galleria
