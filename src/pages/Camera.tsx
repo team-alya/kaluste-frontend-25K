@@ -10,6 +10,7 @@ const CameraApp: React.FC = () => {
     const cameraRef = useRef<any>(null);
     const navigate = useNavigate();
 
+    // handles capturing the photo
     const capturePhoto = () => {
         if (cameraRef.current) {
             const imageDataUrl = cameraRef.current.takePhoto();
@@ -18,6 +19,7 @@ const CameraApp: React.FC = () => {
         }
     };
 
+    // navigates to loading page
     const handleNext = () => {
         if (photo) {
             navigate("/loading", {state: {photo}});
@@ -26,6 +28,7 @@ const CameraApp: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+            {/* camera function styling */}
             <div style={{
                 width: "361px",
                 height: "476px",
@@ -42,6 +45,7 @@ const CameraApp: React.FC = () => {
                     />
                 ) : (
                     <div className="w-full h-full object-cover">
+                        {/* app opens back camera if available and if not shows error messages */}
                         <Camera
                             ref={cameraRef}
                             facingMode="environment"
@@ -55,18 +59,22 @@ const CameraApp: React.FC = () => {
                     </div>
                 )}
             </div>
+            {/* buttons container */}
             <div className="flex flex-row gap-2 mt-4 items-center">
             <button
                 onClick={capturePhoto}
                 className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-md hover:bg-green-700 transition"
             >
+                {/* button that captures the picture */}
                 <span className="inline-flex items-center gap-2">
                 <Focus color="#ffffff" strokeWidth={2.5} className="w-5 h-5"/> Ota kuva
                 </span>
             </button>
+            {/* refrences button that allows user to upload a picture */}
             <UploadButton setPhoto={setPhoto} />
             {photo && (
                 <button onClick={handleNext} className="mt-4 px-6 py-3 text-white bg-green-300 rounded-full">
+                    {/* button that submits the photo for the AI analysis */}
                     <ArrowRight color="#0c6a17" strokeWidth={2.5} />
                 </button>
             )}
