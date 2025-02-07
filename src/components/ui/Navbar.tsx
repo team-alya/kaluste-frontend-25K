@@ -12,7 +12,8 @@ const Navbar = () => {
         "/loading" : "Odota hetki",
         "/accepted" : "Tuote tunnistettu",
         "/rejected" : "Tuotetta tunnistettu",
-        "/login" : "Kirjaudu sisään"
+        "/login" : "Kirjaudu sisään",
+        "/register" : "Rekisteröidy"
     }
 
     return(

@@ -7,6 +7,7 @@ import RejectedPage from './pages/confirmation/Rejected';
 import './index.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from './components/ui/Navbar';
+import Register from './pages/Register';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/">
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="camera" element={<CameraApp />} />
             <Route path="loading" element={<LoadingPage />} />
             <Route path="accepted" element={<AcceptedPage />} />
