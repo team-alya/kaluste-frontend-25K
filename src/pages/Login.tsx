@@ -5,7 +5,7 @@ export default function Login() {
 
     return(
 
-        <div className="mt-20 flex justify-center">
+        <div className="mt-15 flex justify-center">
             {/* form action/onSubmit vai button onClick? */}
             <form>
                 <label>
