@@ -63,7 +63,7 @@ const CameraApp: React.FC = () => {
             <div className="flex flex-row gap-2 mt-4 items-center">
             <button
                 onClick={capturePhoto}
-                className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-md hover:bg-green-700 transition"
+                className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-green-600 rounded-full shadow-lg shadow-green-600 hover:bg-green-700 transition"
             >
                 {/* button that captures the picture */}
                 <span className="inline-flex items-center gap-2">
@@ -73,7 +73,7 @@ const CameraApp: React.FC = () => {
             {/* refrences button that allows user to upload a picture */}
             <UploadButton setPhoto={setPhoto} />
             {photo && (
-                <button onClick={handleNext} className="mt-4 px-6 py-3 text-white bg-green-300 rounded-full">
+                <button onClick={handleNext} className="mt-4 px-6 py-3 text-white bg-green-300 shadow-lg shadow-green-400 rounded-full">
                     {/* button that submits the photo for the AI analysis */}
                     <ArrowRight color="#0c6a17" strokeWidth={2.5} />
                 </button>
