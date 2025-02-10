@@ -7,11 +7,12 @@ export default function Login() {
 
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [showLoginFailedMessage, setShowLoginFailedMessage] = useState<boolean>(false);
     // const [user, setUser] = useState(null);
 
     const handleLogin = (e: React.FormEvent) => {
+        setShowLoginFailedMessage(false);
         e.preventDefault();
-        
         fetch('http://localhost:3000/api/login', {
             method: 'POST',
             headers: {'Content-type' : 'application/json'},
@@ -20,17 +21,21 @@ export default function Login() {
                 password: password,
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                setShowLoginFailedMessage(true);
+                throw new Error('Kirjautuminen epäonnistui!');
+            } 
+            
+        return response.json();
+            
+        })
         .then(data => {
             // console.log(data);
-            if (data) {
                 setUsername('');
                 setPassword('');
                 localStorage.setItem("token", data.token);
                 navigate("/home");
-            } else {
-                console.log("Virhe");
-            }
         })
         .catch(err => console.error(err))
 
@@ -39,7 +44,8 @@ export default function Login() {
 
     return(
 
-        <div className="mt-10 flex flex-col items-center">
+        <div className="mt-20 flex flex-col items-center">
+           
             <form onSubmit={handleLogin}>
                 <label>
                     <p className="text-xs mb-3"> Käyttäjätunnus</p>
@@ -59,6 +65,11 @@ export default function Login() {
                         onChange={e => setPassword(e.target.value)}
                         />
                 </label>
+            {showLoginFailedMessage && (
+                <div className="text-center">
+                    <p className="text-red-500 text-sm">Kirjautuminen epäonnistui. Yritä uudelleen.</p>
+                </div>
+            )}
                 <div className="flex justify-center">
                     <button 
                         className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition"
