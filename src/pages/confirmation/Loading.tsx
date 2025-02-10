@@ -6,16 +6,18 @@ const LoadingPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const photo = location.state?.photo || null;
+    const username = location.state?.username || null;
 
     useEffect (() => {
         const timeout = setTimeout(() => {
             const random = Math.random() < 0.5;
             //navigate randomly to /accepted or /rejected, passing the photo as state
-            navigate (random ? "/accepted" : "/rejected", {state: {photo}});
+            navigate (random ? "/accepted" : "/rejected", {state: {photo, username}});
         }, 2000);
         //clear the timeout 
         return () => clearTimeout(timeout);
-    }, [navigate, photo]);
+    }, [navigate, photo, username]);
+   
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 text-center">
