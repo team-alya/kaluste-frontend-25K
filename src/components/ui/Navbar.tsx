@@ -7,13 +7,14 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const pages: Record<string, string> = {
-        "/" : "Valitse toiminta",
+        "/" : "Kirjaudu sisään",
+        "/home" : "Valitse toiminta",
         "/camera" : "Ota kuva", 
         "/loading" : "Odota hetki",
         "/accepted" : "Tuote tunnistettu",
         "/rejected" : "Tuotetta tunnistettu",
-        "/login" : "Kirjaudu sisään",
-        "/register" : "Rekisteröidy"
+        "/register" : "Rekisteröidy",
+        "/settings" : "Asetukset"
     }
 
     return(
@@ -38,7 +39,9 @@ const Navbar = () => {
             <div>
                 {/* settings button */}
                 <button className="text-sm px-2 py-2 leading-none border rounded-full text-white border-zinc-600 bg-zinc-600 hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0">
-                        <Settings size={20} color="#ffffff" strokeWidth={2.25} />
+                        <Settings size={20} color="#ffffff" strokeWidth={2.25}
+                        onClick={() => navigate("/settings")}
+                        />
                     </button>
                   
             </div>
