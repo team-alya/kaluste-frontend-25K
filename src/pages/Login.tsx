@@ -7,7 +7,7 @@ export default function Login() {
 
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,10 +23,14 @@ export default function Login() {
         .then(response => response.json())
         .then(data => {
             // console.log(data);
-            setUsername('');
-            setPassword('');
-            localStorage.setItem("token", data.token);
-            navigate("/");
+            if (data) {
+                setUsername('');
+                setPassword('');
+                localStorage.setItem("token", data.token);
+                navigate("/home");
+            } else {
+                console.log("Virhe");
+            }
         })
         .catch(err => console.error(err))
 
