@@ -39,9 +39,8 @@ export default function Login() {
 
     return(
 
-        <div className="mt-10 flex justify-center">
-            {/* form action/onSubmit vai button onClick? */}
-            <form>
+        <div className="mt-10 flex flex-col items-center">
+            <form onSubmit={handleLogin}>
                 <label>
                     <p className="text-xs mb-3"> Käyttäjätunnus</p>
                     <input 

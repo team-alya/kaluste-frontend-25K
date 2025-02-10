@@ -39,7 +39,7 @@ export default function Register() {
             })
             .then(data => {
                 console.log(data);
-                navigate("/login");
+                navigate("/");
             })
             .catch(err => console.error(err))
 

@@ -33,7 +33,7 @@ const AcceptedPage: React.FC = () => {
         <h2 className="text-xl font-bold text-black">Ota kyytiin</h2>
     </div>
     <button
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/home")}
         className="px-6 py-3 text-black bg-white rounded-lg border shadow-md hover:bg-gray-100 transition"
     >
         OK
