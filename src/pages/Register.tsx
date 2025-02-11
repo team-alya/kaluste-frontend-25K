@@ -45,7 +45,6 @@ export default function Register() {
         if (!validateForm()) {
             return;
         }
-        console.log(user);
 
             fetch('http://localhost:3000/api/register', {
                 method: 'POST',
