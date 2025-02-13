@@ -66,23 +66,22 @@ export default function Register() {
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {
-            console.log("Virhesanoma palvelimelta:", errorData);
-
             let errorMessage = "Rekisteröinti epäonnistui. Yritä uudelleen.";
-
+            // If registration fails due to username or email already being taken, show a more specific error message
             if (
               errorData.message &&
               errorData.message.includes("Username is taken")
             ) {
               errorMessage =
                 "Käyttäjätunnus on jo varattu. Valitse toinen käyttäjätunnus.";
+              // code 11000 is for duplicate key error MongoDB
             } else if (errorData.error?.code === 11000) {
               if (errorData.error.keyPattern?.email) {
                 errorMessage =
                   "Sähköposti on jo käytössä. Käytä toista sähköpostiosoitetta.";
               }
             }
-
+            // Update the state with the error message
             setErrors((prevErrors) => ({
               ...prevErrors,
               general: errorMessage,
@@ -91,6 +90,7 @@ export default function Register() {
         }
         return response.json();
       })
+      // If data is ok, show success message and redirect to login page
       .then((data) => {
         if (data) {
           console.log(data);
@@ -100,6 +100,7 @@ export default function Register() {
           }, 2000);
         }
       })
+      // If server connection fails, show a general error message
       .catch(() => {
         setErrors((prevErrorrs) => ({
           ...prevErrorrs,
@@ -109,95 +110,94 @@ export default function Register() {
   };
 
   return (
-  <div className="mt-10 flex justify-center">
-    <form 
-      onSubmit={handleRegister} 
-      className="space-y-7 w-full max-w-md flex flex-col items-center"
-    >
-      <label className="w-full max-w-xs">
-        <p className="text-xs mb-1">Käyttäjätunnus *</p>
-        <input
-          className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
-          type="text"
-          value={user.username}
-          onChange={(e) => setUser({ ...user, username: e.target.value })}
-        />
-        {errors.username && (
-          <p className="text-red-500 text-xs mt-1">{errors.username}</p>
-        )}
-      </label>
+    <div className="mt-10 flex justify-center">
+      <form
+        onSubmit={handleRegister}
+        className="space-y-7 w-full max-w-md flex flex-col items-center"
+      >
+        <label className="w-full max-w-xs">
+          <p className="text-xs mb-1">Käyttäjätunnus *</p>
+          <input
+            className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
+            type="text"
+            value={user.username}
+            onChange={(e) => setUser({ ...user, username: e.target.value })}
+          />
+          {errors.username && (
+            <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+          )}
+        </label>
 
-      <label className="w-full max-w-xs">
-        <p className="text-xs mb-1">Etunimi *</p>
-        <input
-          className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
-          type="text"
-          value={user.firstname}
-          onChange={(e) => setUser({ ...user, firstname: e.target.value })}
-        />
-        {errors.firstname && (
-          <p className="text-red-500 text-xs mt-1">{errors.firstname}</p>
-        )}
-      </label>
+        <label className="w-full max-w-xs">
+          <p className="text-xs mb-1">Etunimi *</p>
+          <input
+            className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
+            type="text"
+            value={user.firstname}
+            onChange={(e) => setUser({ ...user, firstname: e.target.value })}
+          />
+          {errors.firstname && (
+            <p className="text-red-500 text-xs mt-1">{errors.firstname}</p>
+          )}
+        </label>
 
-      <label className="w-full max-w-xs">
-        <p className="text-xs mb-1">Sukunimi *</p>
-        <input
-          className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
-          type="text"
-          value={user.lastname}
-          onChange={(e) => setUser({ ...user, lastname: e.target.value })}
-        />
-        {errors.lastname && (
-          <p className="text-red-500 text-xs mt-1">{errors.lastname}</p>
-        )}
-      </label>
+        <label className="w-full max-w-xs">
+          <p className="text-xs mb-1">Sukunimi *</p>
+          <input
+            className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
+            type="text"
+            value={user.lastname}
+            onChange={(e) => setUser({ ...user, lastname: e.target.value })}
+          />
+          {errors.lastname && (
+            <p className="text-red-500 text-xs mt-1">{errors.lastname}</p>
+          )}
+        </label>
 
-      <label className="w-full max-w-xs">
-        <p className="text-xs mb-1">Sähköpostiosoite *</p>
-        <input
-          className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
-          type="email"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
-        />
-        {errors.email && (
-          <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-        )}
-      </label>
+        <label className="w-full max-w-xs">
+          <p className="text-xs mb-1">Sähköpostiosoite *</p>
+          <input
+            className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
+            type="email"
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          )}
+        </label>
 
-      <label className="w-full max-w-xs">
-        <p className="text-xs mb-1">Salasana *</p>
-        <input
-          className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
-          type="password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-        )}
-      </label>
+        <label className="w-full max-w-xs">
+          <p className="text-xs mb-1">Salasana *</p>
+          <input
+            className="border-2 border-solid w-full min-h-12 pl-5 rounded-sm"
+            type="password"
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </label>
 
-      <div className="flex justify-center">
-        <button
-          className="gap-2 mt-4 px-15 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
-          type="submit"
-        >
-          Rekisteröidy
-        </button>
-      </div>
-
-      <div className="text-center">
-        {errors.general && (
-          <p className="text-red-500 text-xs mb-3">{errors.general}</p>
-        )}
-        {successMessage && (
-          <p className="text-emerald-700 text-xs mb-3">{successMessage}</p>
-        )}
-      </div>
-    </form>
-  </div>
-);
-
+        <div className="flex justify-center">
+          <button
+            className="gap-2 mt-4 px-15 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+            type="submit"
+          >
+            Rekisteröidy
+          </button>
+        </div>
+        {/* Show error messages and success message */}
+        <div className="text-center">
+          {errors.general && (
+            <p className="text-red-500 text-xs mb-3">{errors.general}</p>
+          )}
+          {successMessage && (
+            <p className="text-emerald-700 text-xs mb-3">{successMessage}</p>
+          )}
+        </div>
+      </form>
+    </div>
+  );
 }
