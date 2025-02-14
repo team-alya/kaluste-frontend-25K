@@ -35,7 +35,7 @@ export default function Login() {
         setPassword("");
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.user.username);
-       navigate("/home", { state: { username: data.user.username } });
+        navigate("/home", { state: { username: data.user.username } });
       })
       .catch((err) => console.error(err));
   };
@@ -50,6 +50,7 @@ export default function Login() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            id="username"
           />
         </label>
         <label>
@@ -59,6 +60,7 @@ export default function Login() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            id="password"
           />
         </label>
         {showLoginFailedMessage && (

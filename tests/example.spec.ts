@@ -1,18 +1,29 @@
 import { test, expect } from '@playwright/test';
 
 test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+  await page.goto('localhost:5173')
+  console.log(await page.title());
+  await expect(page).toHaveTitle(/Vite \+ React \+ TS/);
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+test('move to register page', async ({ page }) => {
+  await page.goto('localhost:5173')
+  await page.getByText("Rekisteröidy").click();
+  await expect(page).toHaveURL('http://localhost:5173/register');
 });
+
+test('incorrect log in credentialss', async ({ page }) => {
+  await page.goto('http://localhost:5173');
+
+  const usernameField = page.locator('#username');
+  await usernameField.fill("John Doe");
+
+  await expect(usernameField).toHaveValue("John Doe");
+
+  const passwordField = page.locator('#password');
+  await passwordField.fill("Salasana");
+
+  await expect(passwordField).toHaveValue("Salasana")
+});
+
+
