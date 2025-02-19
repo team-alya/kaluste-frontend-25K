@@ -8,7 +8,6 @@ export default function Login() {
   const [password, setPassword] = useState<string>("");
   const [showLoginFailedMessage, setShowLoginFailedMessage] =
     useState<boolean>(false);
-  // const [user, setUser] = useState(null);
 
   const handleLogin = (e: React.FormEvent) => {
     setShowLoginFailedMessage(false);
