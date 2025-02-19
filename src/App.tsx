@@ -31,6 +31,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 type Props = {}
 
+// check if user is authenticated before navigating 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthContext);
   if (!authenticated) return <Navigate to='/' replace />
@@ -45,10 +46,12 @@ function App(props: Props) {
         <AuthProvider>
           <Layout>
             <Routes>
+              {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              
               <Route path="/register" element={<Register />} />
+
               <Route element ={<PrivateRoutes />}>
+                {/* add here routes that an authenticated user can see */}
                 <Route path="home" element={<Home />} />
                 <Route path="/camera" element={<CameraApp />} />
                 <Route path="/loading" element={<LoadingPage />} />

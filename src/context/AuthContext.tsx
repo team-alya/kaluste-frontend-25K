@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
+// AuthContext for the app to check if a user is logged in
 
 type Props = {
     children?: ReactNode;
@@ -21,8 +22,6 @@ const AuthContext = createContext<IAuthContext>(initialValue);
 const AuthProvider = ({children}: Props) => {
     // initializes an auth state as unauthenticated (= false value)
     const [authenticated, setAuthenticated] = useState(initialValue.authenticated);
-
-    const navigate = useNavigate();
 
     return (
         <AuthContext.Provider value= {{authenticated, setAuthenticated}}>
