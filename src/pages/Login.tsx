@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-export default function Login() {
+
+
+const Login = () => {
+
+  const {authenticated, setAuthenticated} = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState<string>("");
@@ -32,9 +38,10 @@ export default function Login() {
         // console.log(data);
         setUsername("");
         setPassword("");
+        setAuthenticated(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.user.username);
-       navigate("/home", { state: { username: data.user.username } });
+        navigate("/home", { state: { username: data.user.username } });
       })
       .catch((err) => console.error(err));
   };
@@ -85,3 +92,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;
