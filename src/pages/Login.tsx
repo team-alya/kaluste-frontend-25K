@@ -45,7 +45,7 @@ export default function Login() {
         <label>
           <p className="text-xs mb-3"> Käyttäjätunnus</p>
           <input
-            className="border-2 border-solid min-w-xs max-w-lg min-h-12 mb-8 pl-5"
+            className="border-2 border-solid min-w-xs max-w-lg min-h-12 mb-8 pl-5 rounded-sm"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -54,7 +54,7 @@ export default function Login() {
         <label>
           <p className="text-xs mb-3">Salasana</p>
           <input
-            className="border-2 border-solid min-w-xs min-h-12 mb-8 pl-5"
+            className="border-2 border-solid min-w-xs min-h-12 mb-8 pl-5 rounded-sm"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -69,7 +69,7 @@ export default function Login() {
         )}
         <div className="flex justify-center">
           <button
-            className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition"
+            className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
             type="submit"
           >
             Kirjaudu sisään
@@ -77,7 +77,7 @@ export default function Login() {
         </div>
       </form>
       <button
-        className="gap-2 mt-4 px-15 py-3 h-12 text-emerald-700 bg-white border rounded-xs hover:bg-emerald-600"
+        className="gap-2 mt-4 px-15 py-3 h-12 text-emerald-700 bg-white border hover:bg-emerald-600 rounded-sm"
         onClick={() => navigate("/register")}
       >
         Rekisteröidy
