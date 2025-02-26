@@ -17,17 +17,41 @@ const CameraApp: React.FC = () => {
     if (cameraRef.current) {
       const imageDataUrl = cameraRef.current.takePhoto();
       setPhoto(imageDataUrl);
+      console.log(imageDataUrl);
       console.log("Kuva otettu ja tallennettu");
     }
   };
 
-  // navigates to loading page
-  const handleNext = () => {
+  // sends image to backend and navigates to loading page
+  const handleNext = async () => {
     if (photo) {
-      navigate("/loading", { state: { photo, username } });
+      try {
+        // Convert the data URL to a Blob
+        const response = await fetch(photo);
+        const blob = await response.blob();
+  
+        // Create form data
+        const formData = new FormData();
+        formData.append("image", blob, "photo.jpg");
+  
+        // Send the POST request
+        const result = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image", {
+          method: "POST",
+          body: formData,
+        });
+  
+        if (result.ok) {
+          console.log("Photo uploaded successfully");
+          navigate("/loading", { state: { photo, username } });
+        } else {
+          console.error("Failed to upload photo");
+        }
+      } catch (error) {
+        console.error("Error uploading photo:", error);
+      }
     }
-    console.log({username});
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
