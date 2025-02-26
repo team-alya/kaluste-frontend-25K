@@ -51,7 +51,7 @@ export default function Register() {
     }
     console.log(user);
 
-    fetch("http://localhost:3000/api/register", {
+    fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/register", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({

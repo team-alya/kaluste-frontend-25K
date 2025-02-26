@@ -18,7 +18,7 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     setShowLoginFailedMessage(false);
     e.preventDefault();
-    fetch("http://localhost:3000/api/login", {
+    fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({

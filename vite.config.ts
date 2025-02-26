@@ -5,4 +5,8 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
+  // for ngrok:
+  // server: {
+  //   allowedHosts: true
+  // }
 })

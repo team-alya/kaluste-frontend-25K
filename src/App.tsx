@@ -41,7 +41,7 @@ const PrivateRoutes = () => {
 function App(props: Props) {
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <BrowserRouter>
         <AuthProvider>
           <Layout>
