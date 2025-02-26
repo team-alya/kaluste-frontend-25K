@@ -8,7 +8,7 @@ import "./index.css";
 import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
-import Register from "./pages/Register";
+// import Register from "./pages/Register";
 import Settings from "./pages/Settings";
 import { useContext } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
@@ -48,7 +48,7 @@ function App(props: Props) {
             <Routes>
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              {/* <Route path="/register" element={<Register />} /> */}
 
               <Route element ={<PrivateRoutes />}>
                 {/* add here routes that an authenticated user can see */}

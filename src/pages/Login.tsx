@@ -83,12 +83,12 @@ const Login = () => {
           </button>
         </div>
       </form>
-      <button
+      {/* <button
         className="gap-2 mt-4 px-15 py-3 h-12 text-emerald-700 bg-white border hover:bg-emerald-600 rounded-sm"
         onClick={() => navigate("/register")}
       >
         Rekisteröidy
-      </button>
+      </button> */}
     </div>
   );
 }
