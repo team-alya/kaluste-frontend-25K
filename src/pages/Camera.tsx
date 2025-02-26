@@ -50,6 +50,7 @@ const CameraApp: React.FC = () => {
         console.error("Error uploading photo:", error);
       }
     }
+    
   };
 
 
