@@ -78,6 +78,7 @@ const Login = () => {
         )}
         <div className="flex justify-center">
           <button
+            data-testid="login-button"
             className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
             type="submit"
           >
