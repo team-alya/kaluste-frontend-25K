@@ -40,7 +40,9 @@ export default function FetchAllEvals() {
             <div className="m-5 flex flex-row items-center" key={e.id}>
               {/* Display image*/}
              
-              <img
+              
+
+              { e.image ? <img
                 className="rounded-full max-w-25 aspect-square"
                 src={
                   e.image.startsWith("data:image")
@@ -48,12 +50,9 @@ export default function FetchAllEvals() {
                     : `data:image/jpeg;base64,${e.image}`
                 }
                 alt="Evaluation"
-                // style={{
-                //   maxWidth: "300px",
-                //   height: "auto",
-                //   borderRadius: "10px",
-                // }}
-              />
+              /> : <img className="rounded-full max-w-25 aspect-square"
+            src='./src/assets/pnf.png'>
+              </img>}
 
               <p className="m-2">{e.evaluation.brand}</p>
               <p>{e.evaluation.model}</p>
