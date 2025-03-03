@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-export default function Login() {
+
+
+const Login = () => {
+
+  const {authenticated, setAuthenticated} = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showLoginFailedMessage, setShowLoginFailedMessage] =
     useState<boolean>(false);
-  // const [user, setUser] = useState(null);
 
   const handleLogin = (e: React.FormEvent) => {
     setShowLoginFailedMessage(false);
     e.preventDefault();
-    fetch("http://localhost:3000/api/login", {
+    fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -33,6 +38,7 @@ export default function Login() {
         // console.log(data);
         setUsername("");
         setPassword("");
+        setAuthenticated(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.user.username);
         navigate("/home", { state: { username: data.user.username } });
@@ -79,12 +85,14 @@ export default function Login() {
           </button>
         </div>
       </form>
-      <button
+      {/* <button
         className="gap-2 mt-4 px-15 py-3 h-12 text-emerald-700 bg-white border hover:bg-emerald-600 rounded-sm"
         onClick={() => navigate("/register")}
       >
         Rekisteröidy
-      </button>
+      </button> */}
     </div>
   );
 }
+
+export default Login;

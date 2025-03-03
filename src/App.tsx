@@ -5,11 +5,13 @@ import LoadingPage from "./pages/confirmation/Loading";
 import AcceptedPage from "./pages/confirmation/Accepted";
 import RejectedPage from "./pages/confirmation/Rejected";
 import "./index.css";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
-import Register from "./pages/Register";
+// import Register from "./pages/Register";
 import Settings from "./pages/Settings";
+import { useContext } from "react";
+import { AuthContext, AuthProvider } from "./context/AuthContext";
 
 // Layout component to render Navbar based on the page
 //Children prop is the content of the page
@@ -27,22 +29,39 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function App() {
+type Props = {}
+
+// check if user is authenticated before navigating 
+const PrivateRoutes = () => {
+  const { authenticated } = useContext(AuthContext);
+  if (!authenticated) return <Navigate to='/' replace />
+  return <Outlet />
+}
+
+function App(props: Props) {
+
   return (
-    <div>
+    <div className="overflow-hidden">
       <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route index element={<Login />} />
-            <Route path="home" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/camera" element={<CameraApp />} />
-            <Route path="/loading" element={<LoadingPage />} />
-            <Route path="/accepted" element={<AcceptedPage />} />
-            <Route path="/rejected" element={<RejectedPage />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-        </Layout>
+        <AuthProvider>
+          <Layout>
+            <Routes>
+              {/* add here routes that an UNauthenticated user can see */}
+              <Route index element={<Login />} />
+              {/* <Route path="/register" element={<Register />} /> */}
+
+              <Route element ={<PrivateRoutes />}>
+                {/* add here routes that an authenticated user can see */}
+                <Route path="home" element={<Home />} />
+                <Route path="/camera" element={<CameraApp />} />
+                <Route path="/loading" element={<LoadingPage />} />
+                <Route path="/accepted" element={<AcceptedPage />} />
+                <Route path="/rejected" element={<RejectedPage />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+            </Routes>
+          </Layout>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );

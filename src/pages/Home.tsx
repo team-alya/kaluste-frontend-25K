@@ -1,7 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import cam from "../assets/camera.png";
 
-const Home = () => {
+type Props = {}
+
+const Home = (props: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state?.username || null;
