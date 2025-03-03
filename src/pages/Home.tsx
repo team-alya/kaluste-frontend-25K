@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import cam from "../assets/camera.png";
+import check from "../assets/check.png";  
 
 type Props = {}
 
@@ -8,15 +9,9 @@ const Home = (props: Props) => {
   const location = useLocation();
   const username = location.state?.username || null;
 
-  
-
-  const handleClick = () => {
-    navigate("/camera", { state: { username } });
-  };
 
   return (
     <div>
-      <div></div>
       <div className="m-8">
         <div className="flex items-center space-x-2">
         <h1 className="text-4xl font-bold">Hei,</h1>
@@ -24,7 +19,8 @@ const Home = (props: Props) => {
         </div>
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>
-      <div>
+      <div className="flex flexdirection-row">
+        <div>
         <button
           className="ml-8"
           style={{
@@ -32,10 +28,24 @@ const Home = (props: Props) => {
             height: "150px",
             width: "150px",
           }}
-          onClick={handleClick}
+          onClick={() => navigate("/camera", { state: { username } })}
         >
           <p className="mt-23 text-white">Tunnista tuote</p>
         </button>
+      </div>
+      <div>
+        <button
+          className="ml-8"
+          style={{
+            backgroundImage: `url(${check})`,
+            height: "150px",
+            width: "150px",
+          }}
+          onClick={() => navigate("/evals")}
+        >
+          <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
+        </button>
+        </div>
       </div>
     </div>
   );

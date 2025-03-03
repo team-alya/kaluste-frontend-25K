@@ -50,8 +50,8 @@ function App(props: Props) {
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
               {/* <Route path="/register" element={<Register />} /> */}
-              
               <Route path="/evals" element={<FetchAllEvals />} />
+              
 
 
               <Route element ={<PrivateRoutes />}>
