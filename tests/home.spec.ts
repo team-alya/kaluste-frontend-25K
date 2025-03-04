@@ -18,7 +18,10 @@ test.beforeEach('Open start URL', async ({ page }) => {
   await expect(page).toHaveURL("http://localhost:5173/home");
 });
 
-test('homepage renders correctly', async ({ page }) => {
+test('homepage elements renders correctly', async ({ page }) => {
+  await expect(page.getByText('Valitse toiminta')).toBeVisible();
+  await expect(page.getByTestId('Hei')).toBeVisible();
+  await expect(page.getByTestId('username')).toBeVisible();
   await expect(page.getByText('Tervetuloa töihin, mitä haluaisit tehdä?')).toBeVisible();
 
   const button = page.getByRole('button', { name: 'Tunnista tuote' });
@@ -42,5 +45,11 @@ test('open settings page and return to home', async ({ page }) => {
   await page.click('[data-testid="back-button"]');
 
   await expect(page).toHaveURL('http://localhost:5173/home');
+});
+
+test('go back to login page', async ({ page }) => {
+  await page.click('[data-testid="back-button"]');
+
+  await expect(page).toHaveURL('http://localhost:5173');
 });
 

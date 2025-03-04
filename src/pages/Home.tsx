@@ -19,8 +19,8 @@ const Home = (props: Props) => {
       <div></div>
       <div className="m-8">
         <div className="flex items-center space-x-2">
-        <h1 className="text-4xl font-bold">Hei,</h1>
-        <p className="text-4xl font-bold text-emerald-700">{username}</p>
+        <h1 className="text-4xl font-bold" data-testid="Hei">Hei,</h1>
+        <p className="text-4xl font-bold text-emerald-700" data-testid="username">{username}</p>
         </div>
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>

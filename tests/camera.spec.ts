@@ -21,13 +21,24 @@ test.beforeEach('Open start URL', async ({ page }) => {
     await expect(page).toHaveURL('http://localhost:5173/camera');
   });
 
-test('camera page renders correctly', async ({ page }) => {
+test('camera page elements render correctly', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: 'Ota kuva' })).toBeVisible();
+  
   const cameraButton = page.getByRole('button', { name: 'Ota kuva' });
   await expect(cameraButton).toBeVisible();
 
   const galleryButton = page.getByRole('button', { name: 'Galleria' });
   await expect(galleryButton).toBeVisible();
 
+});
+
+test('open settings page and return to camera', async ({ page }) => {
+  await page.click('button.rounded-full');
+  await expect(page).toHaveURL('http://localhost:5173/settings');
+
+  await page.click('[data-testid="back-button"]');
+
+  await expect(page).toHaveURL('http://localhost:5173/camera');
 });
 
 test('open gallery and upload image', async ({ page }) => {
