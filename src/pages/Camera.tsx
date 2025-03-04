@@ -3,9 +3,12 @@ import { Camera } from "react-camera-pro";
 import { Focus, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
+import Loading from "./confirmation/Loading";
 
 const CameraApp: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const cameraRef = useRef<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,22 +20,58 @@ const CameraApp: React.FC = () => {
     if (cameraRef.current) {
       const imageDataUrl = cameraRef.current.takePhoto();
       setPhoto(imageDataUrl);
+      console.log(imageDataUrl);
       console.log("Kuva otettu ja tallennettu");
     }
   };
 
-  // navigates to loading page
-  const handleNext = () => {
+  // sends image to backend and navigates to loading page
+  const handleNext = async () => {
+    setLoading(true);
     if (photo) {
-      navigate("/loading", { state: { photo, username } });
+      try {
+        // Convert the data URL to a Blob
+        const response = await fetch(photo);
+        const blob = await response.blob();
+  
+        // Create form data
+        const formData = new FormData();
+        formData.append("image", blob, "photo.jpg");
+  
+        // Send the POST request
+        const result = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/imagetest", {
+          method: "POST",
+          body: formData,
+        });
+  
+        if (result.ok) {
+          
+          console.log("Photo uploaded successfully"); 
+          // navigate("/loading", { state: { photo, username } });
+
+          // save evaluation
+
+          // ...
+          setLoading(false);
+
+        } else {
+          console.error("Failed to upload photo");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error uploading photo:", error);
+      }
     }
-    console.log({username});
+    
   };
 
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+    <div>
       {/* camera function styling */}
-      <div
+      {!loading ? (
+       <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+         <div
         style={{
           width: "361px",
           height: "476px",
@@ -63,7 +102,6 @@ const CameraApp: React.FC = () => {
           </div>
         )}
       </div>
-      {/* buttons container */}
       <div className="flex flex-row gap-2 mt-4 items-center">
         <button
           onClick={capturePhoto}
@@ -87,6 +125,10 @@ const CameraApp: React.FC = () => {
           </button>
         )}
       </div>
+       </div>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

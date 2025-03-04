@@ -14,6 +14,7 @@ const Navbar = () => {
     "/rejected": "Tuotetta tunnistettu",
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
+    "/evals": "Tunnistetut tuotteet",
   };
 
   return (
