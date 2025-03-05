@@ -46,12 +46,13 @@ const CameraApp: React.FC = () => {
   
         if (result.ok) {
           
-          console.log("Photo uploaded successfully"); 
-          // navigate("/loading", { state: { photo, username } });
+          
 
-          // save evaluation
-
-          // ...
+          fetch('https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save', {
+            method: "POST",
+            body: formData,
+          });
+         
           setLoading(false);
 
         } else {
