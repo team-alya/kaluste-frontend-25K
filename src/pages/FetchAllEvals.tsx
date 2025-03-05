@@ -38,10 +38,7 @@ export default function FetchAllEvals() {
         <div className="flex flex-col">
           {evals.map((e: any) => (
             <div className="m-5 flex flex-row items-center" key={e.id}>
-              {/* Display image*/}
-             
-              
-
+              {/* Display image if available*/}
               { e.image ? <img
                 className="rounded-full max-w-25 aspect-square"
                 src={
@@ -50,7 +47,9 @@ export default function FetchAllEvals() {
                     : `data:image/jpeg;base64,${e.image}`
                 }
                 alt="Evaluation"
-              /> : <img className="rounded-full max-w-25 aspect-square"
+              /> : 
+              // display default image if no image is available
+              <img className="rounded-full max-w-25 aspect-square"
             src='./src/assets/pnf.png'>
               </img>}
 
@@ -63,6 +62,7 @@ export default function FetchAllEvals() {
         </div>
       ) : (
         <div>
+          {/* show loading spinner while fetching products */}
           <LoadingProducts />
         </div>
       )}
