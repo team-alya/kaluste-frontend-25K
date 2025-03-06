@@ -1,11 +1,14 @@
 import { useLocation } from "react-router-dom";
 
+
+
 export default function EvalDetails() {
 
     const location = useLocation();
     const evaluationData = location.state?.evaluation || null;
     const evaluation = evaluationData.evaluation || null;
     const image = evaluationData.image || null;
+   
     
 
    return (
@@ -33,9 +36,10 @@ export default function EvalDetails() {
             )}
           </div>
         ) : (
-          <div>
-            <p>Arviota ei löytynyt</p>
-          </div>
+         <div>
+            <p>Kalustetta ei löytynyt</p>
+         </div>
+          
         )}
       </div>
     </div>

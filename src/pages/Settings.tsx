@@ -1,4 +1,4 @@
-import Logout from "./Logout"
+import Logout from "./auth/Logout"
 import { useNavigate } from "react-router-dom";
 
 

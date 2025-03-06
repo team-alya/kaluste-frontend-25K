@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User } from "../types/user";
+import { User } from "../../types/user";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {

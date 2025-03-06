@@ -37,6 +37,7 @@ export default function FetchAllEvals() {
   };
 
   const fetchEval = (id: string) => {
+    
     fetch(`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/${id}`)
 
    .then((response) => {
@@ -47,7 +48,8 @@ export default function FetchAllEvals() {
    })
     .then((data) => {
       console.log(data);
-      navigate (`/eval/${id}`, {state: {evaluation: data}});   
+      navigate (`/eval/${id}`, {state: {evaluation: data}});
+         
     })
     .catch((error) => console.error(error));
   }

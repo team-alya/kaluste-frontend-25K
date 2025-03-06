@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/auth/Login";
 import CameraApp from "./pages/Camera";
 import LoadingPage from "./pages/confirmation/Loading";
 import AcceptedPage from "./pages/confirmation/Accepted";
