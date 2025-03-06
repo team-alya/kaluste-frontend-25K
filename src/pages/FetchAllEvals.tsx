@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import LoadingProducts from "./LoadingProductList";
-import { div } from "motion/react-client";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 export default function FetchAllEvals() {
 
   const [evals, setEvals] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState<boolean>(false);
+
+   const navigate = useNavigate();
+    const location = useLocation();
 
   useEffect(() => {
     fetchEvals();
@@ -32,6 +36,22 @@ export default function FetchAllEvals() {
       .catch((error) => console.error(error));
   };
 
+  const fetchEval = (id: string) => {
+    fetch(`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/${id}`)
+
+   .then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch evaluation");
+    }
+    return response.json();
+   })
+    .then((data) => {
+      console.log(data);
+      navigate (`/eval/${id}`, {state: {evaluation: data}});   
+    })
+    .catch((error) => console.error(error));
+  }
+
   return (
     <div>
       
@@ -43,7 +63,7 @@ export default function FetchAllEvals() {
                 {/* Display image if available*/}
                 <button
                 className="m-5 flex flex-row items-center p-4  border rounded-lg w-xs"
-                onClick={() => console.log(e.id)}
+                onClick={() => fetchEval(e.id)}
                 >
                 { e.image ? <img
                   className="rounded-full max-w-25 aspect-square"
