@@ -23,10 +23,10 @@ export default function EvalDetails() {
               )}
               </div>
               <div>
-                <p className="mb-3"><strong>Nimi:</strong> {evaluation.brand}</p>
-                <p className="mb-3"><strong>Malli:</strong> {evaluation.model}</p>
-                <p className="mb-3"><strong>Väri:</strong> {evaluation.color}</p>
-                <p className="mb-3"><strong>Mitat:</strong> {evaluation.dimensions?.width} x {evaluation.dimensions?.height} x {evaluation.dimensions?.length} cm</p>
+                <p className="mb-2"><strong>Merkki:</strong> {evaluation.brand}</p>
+                <p className="mb-2"><strong>Malli:</strong> {evaluation.model}</p>
+                <p className="mb-2"><strong>Väri:</strong> {evaluation.color}</p>
+                <p className="mb-2"><strong>Mitat:</strong> {evaluation.dimensions?.width} x {evaluation.dimensions?.height} x {evaluation.dimensions?.length} cm</p>
               </div>
             </div>
             
@@ -42,7 +42,7 @@ export default function EvalDetails() {
                   {evaluation.condition === "Erinomainen" && <img src='/src/assets/cond_excellent.png' />}
                 </div>
               </div>
-              <div className="ml-3">
+              <div className="ml-2">
                 <p><strong>Hinta: </strong></p>
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function EvalDetails() {
 
             <div className="m-6">
               <button
-                className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+                className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
                 >
                   Hyväksy tiedot
               </button>
