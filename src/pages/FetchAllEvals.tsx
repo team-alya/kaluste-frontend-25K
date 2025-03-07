@@ -47,7 +47,6 @@ export default function FetchAllEvals() {
     return response.json();
    })
     .then((data) => {
-      console.log(data);
       navigate (`/eval/${id}`, {state: {evaluation: data}});
          
     })

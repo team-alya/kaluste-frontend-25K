@@ -15,7 +15,10 @@ const Navbar = () => {
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
+    "/eval/": "Tarkista tuotetiedot",
   };
+
+  
 
   return (
     <nav className="relative flex items-center justify-between bg-black p-6">

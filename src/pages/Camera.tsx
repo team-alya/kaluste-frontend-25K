@@ -46,14 +46,16 @@ const CameraApp: React.FC = () => {
   
         if (result.ok) {
           
-          
+          // lisää evaluation formdataan
 
-          fetch('https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save', {
-            method: "POST",
-            body: formData,
-          });
+          // fetch('https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save', {
+          //   method: "POST",
+          //   body: formData,
+          // });
          
           setLoading(false);
+
+          navigate("/accepted");
 
         } else {
           console.error("Failed to upload photo");
