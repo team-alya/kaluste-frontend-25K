@@ -55,10 +55,16 @@ export default function FetchAllEvals() {
 
   return (
     <div>
-      
-      {isFetched ? (
+      { loading && <LoadingProducts />}
+      { isFetched && evals.length === 0 ? (
+        <div className="flex flex-col items-center justify-center p-5 mt-15 text-center">
+          <p>Ei tuotteita.</p>
+        </div>
+      ) : (
         <div>
           <div className="flex flex-col">
+            <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
+
             {evals.map((e: any) => (
               <div key={e.id}>
                 {/* Display image if available*/}
@@ -87,12 +93,8 @@ export default function FetchAllEvals() {
             ))}
           </div>
         </div>
-      ) : (
-        <div>
-          {/* show loading spinner while fetching products */}
-          <LoadingProducts />
-        </div>
       )}
+
     </div>
   );
 }

@@ -14,6 +14,7 @@ import { useContext } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
+import ErrorInfo from "./pages/Error";
 
 // Layout component to render Navbar based on the page
 //Children prop is the content of the page
@@ -53,7 +54,7 @@ function App(props: Props) {
               {/* <Route path="/register" element={<Register />} /> */}
               <Route path="/evals" element={<FetchAllEvals />} />
               <Route path="/eval/:id" element={<EvalDetails />} />
-              
+              <Route path="/accepted" element={<AcceptedPage />} />
 
 
               <Route element ={<PrivateRoutes />}>
@@ -61,10 +62,11 @@ function App(props: Props) {
                 <Route path="home" element={<Home />} />
                 <Route path="/camera" element={<CameraApp />} />
                 <Route path="/loading" element={<LoadingPage />} />
-                <Route path="/accepted" element={<AcceptedPage />} />
                 <Route path="/rejected" element={<RejectedPage />} />
                 <Route path="/settings" element={<Settings />} />
+              <Route path="/error" element={<ErrorInfo />} />
                 
+
               </Route>
             </Routes>
           </Layout>

@@ -23,7 +23,7 @@ export default function EvalDetails() {
               )}
               </div>
               <div>
-                <p className="mb-3"><strong>Nimi:</strong> {evaluation.brand}</p>
+                <p className="mb-3 ">Nimi: {evaluation.brand}</p>
                 <p className="mb-3"><strong>Malli:</strong> {evaluation.model}</p>
                 <p className="mb-3"><strong>Väri:</strong> {evaluation.color}</p>
                 <p className="mb-3"><strong>Mitat:</strong> {evaluation.dimensions?.width} x {evaluation.dimensions?.height} x {evaluation.dimensions?.length} cm</p>
@@ -51,9 +51,10 @@ export default function EvalDetails() {
               <p><strong>Lisätiedot: </strong></p>
             </div>
 
-            <div className="m-6">
+            <div className="flex justify-center absolute m-5 inset-x-0 bottom-0 h-16">
               <button
-                className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+                className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm
+                "
                 >
                   Hyväksy tiedot
               </button>

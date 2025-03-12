@@ -4,16 +4,20 @@ import { Focus, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
 import Loading from "./confirmation/Loading";
+import ErrorInfo from "./Error";
 
 const CameraApp: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [evaluation, setEvaluation] = useState<string>("");
+  const [showEvaluation, setShowEvaluation] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false); 
 
   const cameraRef = useRef<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state?.username || null;
-
+  // const photo = location.state?.photo || null;
 
   // handles capturing the photo
   const capturePhoto = () => {
@@ -29,7 +33,6 @@ const CameraApp: React.FC = () => {
   const handleNext = async () => {
     setLoading(true);
     if (photo) {
-      try {
         // Convert the data URL to a Blob
         const response = await fetch(photo);
         const blob = await response.blob();
@@ -37,36 +40,47 @@ const CameraApp: React.FC = () => {
         // Create form data
         const formData = new FormData();
         formData.append("image", blob, "photo.jpg");
-  
+        
         // Send the POST request
-        const result = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/imagetest", {
+        fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image", {
           method: "POST",
           body: formData,
-        });
+        })
   
-        if (result.ok) {
+        .then (response => {
+          if (!response.ok) {
+
+            setLoading(false);
+            navigate("/error", { state: { username }});
+            throw new Error ("Error fetching");
+          }
+           return response.json();
+        })
+        .then(data => {
           
-          // lisää evaluation formdataan
+          setEvaluation(data.evaluation);
+          setLoading(false);
+          navigate("/accepted", 
+            { state: 
+              { evaluation: 
+                data.evaluation, 
+                username, 
+                photo }});
 
-          // fetch('https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save', {
-          //   method: "POST",
-          //   body: formData,
-          // });
          
-          setLoading(false);
 
-          navigate("/accepted");
-
-        } else {
-          console.error("Failed to upload photo");
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error uploading photo:", error);
+        })
+        .catch(error => console.error(error));
       }
     }
+  
     
-  };
+          // fetch imagetest
+          // näytä tiedot käyttäjälle
+          // "ok" -> tallenna evaluaatio
+          
+    
+
 
 
   return (
