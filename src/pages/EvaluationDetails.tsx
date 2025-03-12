@@ -49,28 +49,10 @@ export default function EvalDetails() {
                 )}
               </div>
               <div>
-                <div className="flex items-center mb-3">
-                  <p className="mr-2">
-                    <strong>Nimi:</strong>
-                  </p>
-                  <Pencil
-                    size={18}
-                    className="text-gray-500 hover:text-gray-700 cursor-pointer"
-                    onClick={() => handleEditClick("name")}
-                  />
-                </div>
-
-                <p className="mb-3">
-                  <strong>Malli:</strong> {evaluation.model}
-                </p>
-                <p className="mb-3">
-                  <strong>Väri:</strong> {evaluation.color}
-                </p>
-                <p className="mb-3">
-                  <strong>Mitat:</strong> {evaluation.dimensions?.width} x{" "}
-                  {evaluation.dimensions?.height} x{" "}
-                  {evaluation.dimensions?.length} cm
-                </p>
+                <p className="mb-3 ">Nimi: {evaluation.brand}</p>
+                <p className="mb-3"><strong>Malli:</strong> {evaluation.model}</p>
+                <p className="mb-3"><strong>Väri:</strong> {evaluation.color}</p>
+                <p className="mb-3"><strong>Mitat:</strong> {evaluation.dimensions?.width} x {evaluation.dimensions?.height} x {evaluation.dimensions?.length} cm</p>
               </div>
             </div>
 
@@ -161,8 +143,10 @@ export default function EvalDetails() {
             </div>
 
             <div className="m-6">
-              <button className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
-                Hyväksy tiedot
+              <button
+                className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+                >
+                  Hyväksy tiedot
               </button>
             </div>
           </div>
