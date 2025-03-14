@@ -16,6 +16,7 @@ const Navbar = () => {
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
     "/eval/": "Tarkista tuotetiedot",
+    "/error": "Virhe",
   };
 
   
