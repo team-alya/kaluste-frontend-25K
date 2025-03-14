@@ -95,7 +95,9 @@ const AcceptedPage: React.FC = () => {
           >Ota vastaan</button>
 
 
-        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm">Hylkää</button>
+        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+          onClick={() => navigate("/home")}
+        >Hylkää</button>
       </div>
       
     </div>
