@@ -11,6 +11,9 @@ const AcceptedPage: React.FC = () => {
   const username = location.state?.username || null;
   const evaluation = location.state?.evaluation || null; 
 
+  const [saveOk, setSaveOk] = useState<boolean>(false);
+  const [okMessage, setOkMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
+
   const saveEval = async () => {
 
     const formData = new FormData();
@@ -29,10 +32,6 @@ const AcceptedPage: React.FC = () => {
 
     formData.append("image", blob, "photo.jpg");
 
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    })
-
     try {
       const response = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save ", {
         method: "POST",
@@ -41,9 +40,12 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
-      const data = await response.json();
-      console.log("Onnistui");
-      console.log(data);
+      
+      setSaveOk(true);
+      setTimeout(() => {
+        navigate("/home");
+      }, 4000);
+
     } catch (error) {
       console.error(error);
     }
@@ -75,6 +77,15 @@ const AcceptedPage: React.FC = () => {
         <p className="mb-2"><strong>Väri:</strong> {evaluation.color}</p>
         <p className="mb-2"><strong>Mitat:</strong> {evaluation.length || 0} cm x {evaluation.width || 0} cm x {evaluation.height || 0} cm</p>
         <p className="mb-2"><strong>Kunto:</strong> {evaluation.condition}</p>
+      </div>
+
+      <div>
+        {saveOk && (
+          <div>
+            <p className="m-5 text-lg font-semibold text-[#104930]">{okMessage}</p>
+            
+          </div>
+        )}
       </div>
 
       <div className="">
