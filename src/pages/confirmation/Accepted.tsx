@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
-import { div } from "motion/react-client";
+import { useState } from "react";
 
 const AcceptedPage: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +10,45 @@ const AcceptedPage: React.FC = () => {
   const photo = location.state?.photo || null;
   const username = location.state?.username || null;
   const evaluation = location.state?.evaluation || null; 
+
+  const saveEval = async () => {
+
+    const formData = new FormData();
+
+    const response = await fetch(photo);
+    const blob = await response.blob();
+
+    formData.append("merkki", evaluation.brand);
+    formData.append("malli", evaluation.model);
+    formData.append("vari", evaluation.color);
+    formData.append("pituus", evaluation.dimensions.length);
+    formData.append("leveys", evaluation.dimensions.width);
+    formData.append("korkeus", evaluation.dimensions.height);
+    formData.append("materiaalit", evaluation.materials);
+    formData.append("kunto", evaluation.condition);
+
+    formData.append("image", blob, "photo.jpg");
+
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    })
+
+    try {
+      const response = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save ", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Error saving evaluation");
+      }
+      const data = await response.json();
+      console.log("Onnistui");
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -39,7 +78,12 @@ const AcceptedPage: React.FC = () => {
       </div>
 
       <div className="">
-        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4">Ota vastaan</button>
+        <button 
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
+          onClick={() => saveEval()}
+          >Ota vastaan</button>
+
+
         <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm">Hylkää</button>
       </div>
       

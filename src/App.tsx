@@ -8,7 +8,6 @@ import "./index.css";
 import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
-// import Register from "./pages/Register";
 import Settings from "./pages/Settings";
 import { useContext } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
@@ -52,9 +51,7 @@ function App(props: Props) {
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
               {/* <Route path="/register" element={<Register />} /> */}
-              <Route path="/evals" element={<FetchAllEvals />} />
-              <Route path="/eval/:id" element={<EvalDetails />} />
-              <Route path="/accepted" element={<AcceptedPage />} />
+              
 
 
               <Route element ={<PrivateRoutes />}>
@@ -64,8 +61,10 @@ function App(props: Props) {
                 <Route path="/loading" element={<LoadingPage />} />
                 <Route path="/rejected" element={<RejectedPage />} />
                 <Route path="/settings" element={<Settings />} />
-              <Route path="/error" element={<ErrorInfo />} />
-                
+                <Route path="/error" element={<ErrorInfo />} />
+                <Route path="/evals" element={<FetchAllEvals />} />
+                <Route path="/eval/:id" element={<EvalDetails />} />
+                <Route path="/accepted" element={<AcceptedPage />} />
 
               </Route>
             </Routes>

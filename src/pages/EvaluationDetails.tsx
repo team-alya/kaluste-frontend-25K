@@ -5,7 +5,7 @@ export default function EvalDetails() {
     const location = useLocation();
     const evaluationData = location.state?.evaluation || null;
     const evaluation = evaluationData.evaluation || null;
-    const image = evaluationData.image || null;
+    const image = evaluationData.imageId || null;
    
    return (
     <div>
@@ -16,7 +16,7 @@ export default function EvalDetails() {
               <div>
               {image && (
                   <img 
-                    src={image} 
+                    src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `} 
                     alt="Kalusteen kuva" 
                     className="mr-5 max-w-40 rounded-lg"
                   />
@@ -39,7 +39,7 @@ export default function EvalDetails() {
                   {evaluation.condition === "Ei tiedossa" && <p>Ei tiedossa</p>}
                   {evaluation.condition === "Huono" && <img src="/src/assets/cond_poor.png"/>}
                   {evaluation.condition === "Hyvä" && <img src="/src/assets/cond_good.png"/>}
-                  {evaluation.condition === "Erinomainen" && <img src='/src/assets/cond_excellent.png' />}
+                  {evaluation.condition === "Erinomainen" || evaluation.condition === "Uusi" && <img src='/src/assets/cond_excellent.png' />}
                 </div>
               </div>
               <div className="ml-3">
@@ -55,6 +55,7 @@ export default function EvalDetails() {
               <button
                 className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm
                 "
+                onClick={() => console.log(evaluationData)}
                 >
                   Hyväksy tiedot
               </button>
