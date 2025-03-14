@@ -39,7 +39,7 @@ export default function EvalDetails() {
                   {evaluation.condition === "Ei tiedossa" && <p>Ei tiedossa</p>}
                   {evaluation.condition === "Huono" && <img src="/src/assets/cond_poor.png"/>}
                   {evaluation.condition === "Hyvä" && <img src="/src/assets/cond_good.png"/>}
-                  {evaluation.condition === "Erinomainen" || evaluation.condition === "Uusi" && <img src='/src/assets/cond_excellent.png' />}
+                  {evaluation.condition === "Erinomainen" || evaluation.condition === "Uusi" && <img src='/src/assets/cond_excellent.png' />} | {evaluation.condition}
                 </div>
               </div>
               <div className="ml-2">
