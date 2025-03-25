@@ -8,12 +8,12 @@ import "./index.css";
 import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
-// import Register from "./pages/Register";
 import Settings from "./pages/Settings";
 import { useContext } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
+import ErrorInfo from "./pages/Error";
 
 // Layout component to render Navbar based on the page
 //Children prop is the content of the page
@@ -51,8 +51,6 @@ function App(props: Props) {
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
               {/* <Route path="/register" element={<Register />} /> */}
-              <Route path="/evals" element={<FetchAllEvals />} />
-              <Route path="/eval/:id" element={<EvalDetails />} />
               
 
 
@@ -61,10 +59,13 @@ function App(props: Props) {
                 <Route path="home" element={<Home />} />
                 <Route path="/camera" element={<CameraApp />} />
                 <Route path="/loading" element={<LoadingPage />} />
-                <Route path="/accepted" element={<AcceptedPage />} />
                 <Route path="/rejected" element={<RejectedPage />} />
                 <Route path="/settings" element={<Settings />} />
-                
+                <Route path="/error" element={<ErrorInfo />} />
+                <Route path="/evals" element={<FetchAllEvals />} />
+                <Route path="/eval/:id" element={<EvalDetails />} />
+                <Route path="/accepted" element={<AcceptedPage />} />
+
               </Route>
             </Routes>
           </Layout>
