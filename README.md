@@ -25,19 +25,13 @@ To run the program, follow the instructions below:
 
 **1. Clone the Github repository:**
 
-` git clone https://github.com/team-alya/kaluste-frontend-25K.git` 
+`git clone https://github.com/team-alya/kaluste-frontend-25K.git` 
 
 **2. Install dependencies:**
 
-` npm install`
+`npm install`
 
-**3. Copy envs:**
-
-```bash
-cp .env.example .env
-```
-
-**4. Start the app:**
+**3. Start the app:**
 
 `npm run dev`
 
