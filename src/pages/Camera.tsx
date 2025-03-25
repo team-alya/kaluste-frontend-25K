@@ -9,9 +9,6 @@ import ErrorInfo from "./Error";
 const CameraApp: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [evaluation, setEvaluation] = useState<string>("");
-  const [showEvaluation, setShowEvaluation] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false); 
 
   const cameraRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -58,12 +55,10 @@ const CameraApp: React.FC = () => {
         })
         .then(data => {
           
-          setEvaluation(data.evaluation);
           setLoading(false);
           navigate("/accepted", 
             { state: 
-              { evaluation: 
-                data.evaluation, 
+              { evaluation: data.evaluation, 
                 username, 
                 photo }});
 
@@ -74,15 +69,6 @@ const CameraApp: React.FC = () => {
       }
     }
   
-    
-          // fetch imagetest
-          // näytä tiedot käyttäjälle
-          // "ok" -> tallenna evaluaatio
-          
-    
-
-
-
   return (
     <div>
       {/* camera function styling */}

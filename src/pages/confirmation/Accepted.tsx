@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
-import { div } from "motion/react-client";
+import { useState } from "react";
 
 const AcceptedPage: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +10,47 @@ const AcceptedPage: React.FC = () => {
   const photo = location.state?.photo || null;
   const username = location.state?.username || null;
   const evaluation = location.state?.evaluation || null; 
+
+  const [saveOk, setSaveOk] = useState<boolean>(false);
+  const [okMessage, setOkMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
+
+  const saveEval = async () => {
+
+    const formData = new FormData();
+
+    const response = await fetch(photo);
+    const blob = await response.blob();
+
+    formData.append("merkki", evaluation.brand);
+    formData.append("malli", evaluation.model);
+    formData.append("vari", evaluation.color);
+    formData.append("pituus", evaluation.dimensions.length);
+    formData.append("leveys", evaluation.dimensions.width);
+    formData.append("korkeus", evaluation.dimensions.height);
+    formData.append("materiaalit", evaluation.materials);
+    formData.append("kunto", evaluation.condition);
+
+    formData.append("image", blob, "photo.jpg");
+
+    try {
+      const response = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save ", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Error saving evaluation");
+      }
+      
+      setSaveOk(true);
+      setTimeout(() => {
+        navigate("/home");
+      }, 4000);
+
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -38,9 +79,25 @@ const AcceptedPage: React.FC = () => {
         <p className="mb-2"><strong>Kunto:</strong> {evaluation.condition}</p>
       </div>
 
+      <div>
+        {saveOk && (
+          <div>
+            <p className="m-5 text-lg font-semibold text-[#104930]">{okMessage}</p>
+            
+          </div>
+        )}
+      </div>
+
       <div className="">
-        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4">Ota vastaan</button>
-        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm">Hylkää</button>
+        <button 
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
+          onClick={() => saveEval()}
+          >Ota vastaan</button>
+
+
+        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+          onClick={() => navigate("/home")}
+        >Hylkää</button>
       </div>
       
     </div>
