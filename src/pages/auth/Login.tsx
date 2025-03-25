@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   return (
-    <div className="mt-20 flex flex-col items-center">
+    <div className="mt-15 flex flex-col items-center">
       <form onSubmit={handleLogin}>
         <label>
           <p className="text-xs mb-3"> Käyttäjätunnus</p>
