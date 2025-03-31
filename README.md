@@ -41,4 +41,42 @@ For this app to work with all its functionalities you also need to have the back
 
 ## Images of the user interface
 
+#### Login Page
 
+![kirjautumissivu](assets/demo_pictures/demopics_1.jpeg)
+
+#### Front Page
+
+![etusivu](assets/demo_pictures/demopics_2.jpeg)
+
+#### Camera View
+
+![kamera](assets/demo_pictures/demopics_3.jpeg)
+
+#### Picture Taken/Uploaded
+
+![kuva otettu tai ladattu](assets/demo_pictures/demopics_4.jpeg)
+
+#### Loading View
+
+![latausnakyma](assets/demo_pictures/demopics_5.jpeg)
+
+#### Indentified View
+
+![tunnistettu](assets/demo_pictures/demopics_6.jpeg)
+
+#### Accepted View
+
+![hyvaksytty](assets/demo_pictures/demopics_7.jpeg)
+
+#### Listed objects View
+
+
+
+#### Object Page View
+
+![tuotenakyma](assets/demo_pictures/demopics_9.jpeg)
+
+#### Settings Page
+
+![asetukset](assets/demo_pictures/demopics_10.jpeg)
