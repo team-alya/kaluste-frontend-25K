@@ -8,6 +8,10 @@ export default function EvalDetails() {
   const evaluation = evaluationData?.evaluation || null;
   const image = evaluationData?.imageId || null;
 
+   const evalDate = evaluationData?.timeStamp
+    ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
+    : "Päivämäärä puuttuu";
+    
   // Usestate for editing fields
   const [isEditing, setIsEditing] = useState({
     info: false,
@@ -51,7 +55,11 @@ export default function EvalDetails() {
           <div>
             <>
               <div className="flex flex-row items-start m-6 mt-10">
+                
                 <div>
+                    <p className="text-gray-500 text-sm mb-2">
+                  <strong>Lisätty:</strong> {evalDate}
+                </p>
                   {image && (
                     <img
                       src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
@@ -61,6 +69,7 @@ export default function EvalDetails() {
                   )}
                 </div>
                 <div>
+                
                   {!isEditing.info ? (
                     <>
                       <div className="flex items-center mb-2">
