@@ -28,7 +28,7 @@ const Home = (props: Props) => {
             height: "150px",
             width: "150px",
           }}
-          onClick={() => navigate("/camera", { state: { username } })}
+          onClick={() => navigate("/camera", { state: { username, from: location.pathname } })}
         >
           <p className="mt-23 text-white">Tunnista tuote</p>
         </button>
@@ -41,7 +41,7 @@ const Home = (props: Props) => {
             height: "150px",
             width: "150px",
           }}
-          onClick={() => navigate("/evals")}
+          onClick={() => navigate("/evals", { state: { from: location.pathname } })}
         >
           <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
         </button>

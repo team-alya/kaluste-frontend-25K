@@ -96,7 +96,7 @@ export default function Register() {
           console.log(data);
           setSuccessMessage("Rekisteröinti onnistui! Jatka kirjautumalla.");
           setTimeout(() => {
-            navigate("/");
+            navigate("/", { state: { from: location.pathname } });
           }, 2000);
         }
       })

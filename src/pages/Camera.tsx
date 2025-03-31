@@ -48,7 +48,7 @@ const CameraApp: React.FC = () => {
           if (!response.ok) {
 
             setLoading(false);
-            navigate("/error", { state: { username }});
+            navigate("/error", { state: { username, from: location.pathname }});
             throw new Error ("Error fetching");
           }
            return response.json();
@@ -60,7 +60,8 @@ const CameraApp: React.FC = () => {
             { state: 
               { evaluation: data.evaluation, 
                 username, 
-                photo }});
+                photo,
+                from: location.pathname }});
 
          
 

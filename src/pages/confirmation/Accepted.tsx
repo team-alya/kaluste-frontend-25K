@@ -43,7 +43,7 @@ const AcceptedPage: React.FC = () => {
       
       setSaveOk(true);
       setTimeout(() => {
-        navigate("/home");
+        navigate("/home", { state: { from: location.pathname } });
       }, 4000);
 
     } catch (error) {
@@ -96,7 +96,7 @@ const AcceptedPage: React.FC = () => {
 
 
         <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/home", { state: { from: location.pathname } })}
         >Hylkää</button>
       </div>
       
