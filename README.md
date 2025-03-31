@@ -43,7 +43,7 @@ For this app to work with all its functionalities you also need to have the back
 
 #### Login Page
 
-![kirjautumissivu](src/assets/demo_pictures/demopics_1.jpeg)
+![kirjautumissivu](src/assets/demo_pictures/demopics_1_resize.jpeg)
 
 #### Front Page
 
