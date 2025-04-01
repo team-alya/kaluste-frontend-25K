@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
+import { nav } from "motion/react-client";
 
 export default function EvalDetails() {
   const location = useLocation();
@@ -28,7 +29,10 @@ export default function EvalDetails() {
     width: evaluation?.dimensions?.width || "",
     height: evaluation?.dimensions?.height || "",
     length: evaluation?.dimensions?.length || "",
+    condition: evaluation?.condition || "Ei tiedossa",
+    materials: evaluation?.materials || [], 
   });
+  const navigate = useNavigate();
 
   //Open edit field when pencil icon is clicked
   const handleEditClick = (field: string) => {
@@ -41,12 +45,48 @@ export default function EvalDetails() {
   ) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
-
-  // Save edited field and close edit field
-  const handleSave = (field: string) => {
+// Save the changes
+  const handleSave = async (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    console.log("Tallennettu:", formData);
+
+    try {
+      const updatedData = {
+        merkki: formData.brand,
+        malli: formData.model,
+        vari: formData.color,
+        mitat: {
+          pituus: formData.length,
+          leveys: formData.width,
+          korkeus: formData.height,
+        },
+        kunto: formData.condition,
+        materiaalit: formData.materials || [], 
+      };
+
+      const response = await fetch(
+        `http://localhost:3000/api/evaluation/${evaluationData.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Tietojen päivittäminen epäonnistui");
+      }
+
+      const updatedEvaluation = await response.json();
+      console.log("Päivitys onnistui:", updatedEvaluation);
+
+    
+
+      navigate("/evals", { state: { evaluation: updatedEvaluation } });
+    } catch (error) {
+      console.error("Virhe päivitettäessä:", error);
+    }
   };
+
 
   return (
     <div>
@@ -146,7 +186,7 @@ export default function EvalDetails() {
                         />
                       </div>
                       <button
-                        onClick={() => handleSave("info")}
+                      
                         className="bg-emerald-700 text-white p-1 rounded mt-2"
                       >
                         Tallenna
@@ -238,7 +278,7 @@ export default function EvalDetails() {
               </div>
 
               <div className="flex justify-center absolute m-5 inset-x-0 bottom-0 h-16">
-                <button className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
+                <button onClick={() => handleSave("info")} className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
                   Hyväksy tiedot
                 </button>
               </div>

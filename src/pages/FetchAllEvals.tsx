@@ -3,12 +3,23 @@ import LoadingProducts from "./LoadingProductList";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function FetchAllEvals() {
-  const [evals, setEvals] = useState([]);
+  interface Evaluation {
+    id: string;
+    timeStamp?: string;
+    imageId?: string;
+    evaluation: {
+      brand: string;
+      model: string;
+    };
+  }
+
+  const [evals, setEvals] = useState<Evaluation[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const location = useLocation();
+  
 
   useEffect(() => {
     fetchEvals();
@@ -46,6 +57,7 @@ export default function FetchAllEvals() {
       })
       .catch((error) => console.error(error));
   };
+   
 
   return (
     <div>
