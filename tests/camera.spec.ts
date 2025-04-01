@@ -49,3 +49,12 @@ test('open gallery and upload image', async ({ page }) => {
 
   await expect(page.locator('img[alt="Captured"]')).toBeVisible();
 });
+
+test('open camera and take a picture', async ({ page, context }) => {
+
+  await context.grantPermissions(['camera']);
+
+  await page.waitForSelector('[data-testid="capture-button"]', { state: 'visible' });
+
+  await page.click('[data-testid="capture-button"]');
+});
