@@ -31,8 +31,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-type Props = {}
-
 // check if user is authenticated before navigating 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthContext);
@@ -40,7 +38,7 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-function App(props: Props) {
+function App() {
 
   return (
     <div className="overflow-hidden">
