@@ -4,7 +4,6 @@ import { Focus, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
 import Loading from "./confirmation/Loading";
-import ErrorInfo from "./Error";
 
 const CameraApp: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
