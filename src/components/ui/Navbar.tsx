@@ -5,7 +5,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Säilytä username joko location.state:sta tai localStoragesta
+  
   const username = location.state?.username || localStorage.getItem("username") || null;
 
   const pages: Record<string, string> = {
