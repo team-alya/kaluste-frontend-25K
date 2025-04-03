@@ -8,11 +8,10 @@ const AcceptedPage: React.FC = () => {
   const location = useLocation();
   // Get the photo from the location state
   const photo = location.state?.photo || null;
-  const username = location.state?.username || null;
   const evaluation = location.state?.evaluation || null; 
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
-  const [okMessage, setOkMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
+  const [okMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
 
   const saveEval = async () => {
 

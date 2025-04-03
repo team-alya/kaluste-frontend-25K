@@ -91,7 +91,7 @@ export default function FetchAllEvals() {
                   
                 { e.imageId ? <img
                   className="rounded-full max-w-25 aspect-square"
-                  src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${e.imageId}`}
+                  src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
                   alt="Tuotekuva"
                 /> : 
                 // display default image if no image is available
