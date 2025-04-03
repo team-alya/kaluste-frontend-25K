@@ -4,9 +4,9 @@ import { Focus, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
 import Loading from "./confirmation/Loading";
-import ErrorInfo from "./Error";
 
 const CameraApp: React.FC = () => {
+
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -14,7 +14,7 @@ const CameraApp: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state?.username || null;
-  // const photo = location.state?.photo || null;
+  const token = localStorage.getItem("token");
 
   // handles capturing the photo
   const capturePhoto = () => {
@@ -25,6 +25,7 @@ const CameraApp: React.FC = () => {
       console.log("Kuva otettu ja tallennettu");
     }
   };
+
 
   // sends image to backend and navigates to loading page
   const handleNext = async () => {
@@ -39,8 +40,11 @@ const CameraApp: React.FC = () => {
         formData.append("image", blob, "photo.jpg");
         
         // Send the POST request
-        fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image", {
+        fetch(import.meta.env.VITE_BACKEND_URL + "image", {
           method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
           body: formData,
         })
   

@@ -27,7 +27,7 @@ const Navbar = () => {
     '/error',
   ];
 
-  const isRestricted = restricted.includes(previous) || location.state?.from.startsWith('/eval/');
+  const isRestricted = restricted.includes(previous);
   const pageToNavigate = isRestricted ? '/home' : previous || '/home';
 
   return (

@@ -1,4 +1,4 @@
-import logo from "/src/assets/logo.webp";
+import logo from "/assets/logo.webp";
 
 const AuthNavbar = () => {
   return (

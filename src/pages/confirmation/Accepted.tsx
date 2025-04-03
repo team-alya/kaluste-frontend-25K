@@ -32,9 +32,14 @@ const AcceptedPage: React.FC = () => {
 
     formData.append("image", blob, "photo.jpg");
 
+  const token = localStorage.getItem("token");
+
     try {
-      const response = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save ", {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/save ", {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
         body: formData,
       });
       if (!response.ok) {

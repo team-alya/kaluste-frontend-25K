@@ -52,13 +52,14 @@ export default function EvalDetails() {
             <>
               <div className="flex flex-row items-start m-6 mt-10">
                 <div>
-                  {image && (
-                    <img
-                      src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
+                  { image ? <img
+                      src={import.meta.env.VITE_BACKEND_URL + `image/${evaluationData.imageId} `}
                       alt="Kalusteen kuva"
                       className="mr-5 max-w-40 rounded-lg"
-                    />
-                  )}
+                    /> : <img className="rounded-full max-w-25 aspect-square"
+                    src='/assets/pnf.png'
+                    alt="Tuotekuvaa ei löytynyt">
+                      </img>}
                 </div>
                 <div>
                   {!isEditing.info ? (
