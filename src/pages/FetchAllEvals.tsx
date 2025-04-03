@@ -104,8 +104,8 @@ export default function FetchAllEvals() {
                   alt="Tuotekuvaa ei löytynyt">
                 </img> }
 
-                <p className="m-2">{e.evaluation.brand}</p>
-                <p>{e.evaluation.model}</p>
+                <p className="m-2 ">{e.evaluation.brand}</p>
+                
                   
                 </button>             
               </div>
