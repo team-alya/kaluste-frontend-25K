@@ -99,15 +99,20 @@ export default function EvalDetails() {
                     <p className="text-gray-500 text-sm mb-2">
                   <strong>Lisätty:</strong> {evalDate}
                 </p>
-                  {image && (
-                    <img
-                      src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
-                      alt="Kalusteen kuva"
-                      className="mr-5 max-w-40 rounded-lg"
-                    /> : <img className="rounded-full max-w-25 aspect-square"
-                    src='/assets/pnf.png'
-                    alt="Tuotekuvaa ei löytynyt">
-                      </img>}
+         {image ? (
+  <img
+    src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
+    alt="Kalusteen kuva"
+    className="mr-5 max-w-40 rounded-lg"
+  />
+) : (
+  <img className="rounded-full max-w-25 aspect-square"
+    src='/assets/pnf.png'
+    alt="Tuotekuvaa ei löytynyt">
+  </img>
+)}
+
+
                 </div>
                 <div>
                 
@@ -207,14 +212,14 @@ export default function EvalDetails() {
                       <p>Ei tiedossa</p>
                     )}
                     {evaluation.condition === "Huono" && (
-                      <img src="/src/assets/cond_poor.png" />
+                      <img src="/assets/cond_poor.png" />
                     )}
                     {evaluation.condition === "Hyvä" && (
-                      <img src="/src/assets/cond_good.png" />
+                      <img src="/assets/cond_good.png" />
                     )}
                     {evaluation.condition === "Erinomainen" ||
                       (evaluation.condition === "Uusi" && (
-                        <img src="/src/assets/cond_excellent.png" />
+                        <img src="/assets/cond_excellent.png" />
                       ))}{" "}
                     {evaluation.condition}
                   </div>
