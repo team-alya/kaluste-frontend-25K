@@ -72,7 +72,7 @@ export default function FetchAllEvals() {
     <div>
       { loading && <LoadingProducts />}
       { isFetched && evals.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-5 mt-15 text-center">
+        <div className="flex flex-col items-center  p-5 mt-15 text-center">
           <p>Ei tuotteita.</p>
         </div>
       ) : (
@@ -85,7 +85,7 @@ export default function FetchAllEvals() {
               return (
                 <div key={e.id}>
                   <button
-                    className="m-5 flex flex-row items-center p-4 border rounded-lg w-xs"
+                    className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
                     onClick={() => {
                       sessionStorage.setItem(
                     "evalData",
@@ -95,6 +95,7 @@ export default function FetchAllEvals() {
                     }}
                   >
                     {/* Display image if available */}
+                    <div className="">
                     {e.imageId ? (
                       <img
                         className="rounded-full max-w-25 aspect-square"
@@ -109,8 +110,8 @@ export default function FetchAllEvals() {
                         alt="Tuotekuvaa ei löytynyt"
                       />
                     )}
-
-                    <div className="ml-4">
+                    </div>
+                    <div className="ml-4 min-w-1/2 flex flex-col justify-center">
                       <p className="m-2 ">{e.evaluation.brand}</p>
                       
                       <p className="text-sm text-gray-500">{evalDate}</p>

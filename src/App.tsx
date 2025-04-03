@@ -50,10 +50,6 @@ function App() {
             <Routes>
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              <Route path="/evals" element={<FetchAllEvals />} />
-              {/* <Route path="/register" element={<Register />} /> */}
-              
-
 
               <Route element ={<PrivateRoutes />}>
                 {/* add here routes that an authenticated user can see */}
@@ -63,7 +59,7 @@ function App() {
                 <Route path="/rejected" element={<RejectedPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/error" element={<ErrorInfo />} />
-                
+                <Route path="/evals" element={<FetchAllEvals />} />
                 <Route path="/eval/:id" element={<EvalDetails />} />
                 <Route path="/accepted" element={<AcceptedPage />} />
 
