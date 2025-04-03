@@ -60,7 +60,7 @@ export default function FetchAllEvals() {
     return response.json();
    })
     .then((data) => {
-      navigate (`/eval/${id}`, {state: {evaluation: data, from: location.pathname}});
+      navigate (`/eval/${id}`, {state: { evaluation: data, from: location.pathname}});
          
     })
     .catch((error) => console.error(error));
@@ -84,6 +84,10 @@ export default function FetchAllEvals() {
                 <button
                 className="m-5 flex flex-row items-center p-4  border rounded-lg w-xs"
                 onClick={() => {
+                  sessionStorage.setItem(
+                    "evalData",
+                    JSON.stringify({ evaluation: e, imageId: e.imageId })
+                  );
                   fetchEval(e.id);
                 }}
                 >

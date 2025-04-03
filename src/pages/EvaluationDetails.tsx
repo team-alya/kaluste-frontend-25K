@@ -1,13 +1,16 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
-import { div } from "motion/react-client";
+import { useEffect } from "react";
 
 export default function EvalDetails() {
+
   const location = useLocation();
-  const evaluationData = location.state?.evaluation || null;
-  const evaluation = evaluationData?.evaluation || null;
-  const image = evaluationData?.imageId || null;
+
+  const [evaluationData, setEvaluationData] = useState<{
+    evaluation: any;
+    imageId: string | null;
+  } | null>(null);
 
   // Usestate for editing fields
   const [isEditing, setIsEditing] = useState({
@@ -15,6 +18,24 @@ export default function EvalDetails() {
     price: false,
     notes: false,
   });
+
+  useEffect(() => {
+    const stateData = location.state?.evaluation;
+    if (stateData) {
+      setEvaluationData(stateData);
+      localStorage.setItem("evaluationData", JSON.stringify(stateData));
+
+    } else {
+      const storedData = localStorage.getItem("evaluationData");
+      if (storedData) {
+        setEvaluationData(JSON.parse(storedData));
+      }
+    }
+  }, [location.state]);
+
+  const evaluation = evaluationData?.evaluation || null;
+  const image = evaluationData?.imageId || null;
+
   const [formData, setFormData] = useState({
     info: evaluation?.info || "",
     price: evaluation?.price || "",
@@ -26,6 +47,7 @@ export default function EvalDetails() {
     height: evaluation?.dimensions?.height || "",
     length: evaluation?.dimensions?.length || "",
   });
+
 
   //Open edit field when pencil icon is clicked
   const handleEditClick = (field: string) => {
@@ -42,7 +64,6 @@ export default function EvalDetails() {
   // Save edited field and close edit field
   const handleSave = (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    console.log("Tallennettu:", formData);
   };
 
   return (
