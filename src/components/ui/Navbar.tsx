@@ -51,7 +51,9 @@ const Navbar = () => {
             size={20}
             color="#ffffff"
             strokeWidth={2.25}
-            onClick={() => navigate("/settings", { state: { from: location.pathname } })}
+            onClick={() => {
+              navigate("/settings", { state: { from: location.pathname } });
+            }}
           />
         </button>
       </div>
