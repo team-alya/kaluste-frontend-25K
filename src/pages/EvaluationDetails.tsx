@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
+import { div } from "motion/react-client";
 
 export default function EvalDetails() {
   const location = useLocation();
@@ -154,20 +155,28 @@ export default function EvalDetails() {
                     <strong>Kunto: </strong>
                   </p>
                   <div>
-                    {evaluation.condition === "Ei tiedossa" && (
-                      <p>Ei tiedossa</p>
-                    )}
-                    {evaluation.condition === "Huono" && (
-                      <img src="/src/assets/cond_poor.png" />
-                    )}
-                    {evaluation.condition === "Hyvä" && (
-                      <img src="/src/assets/cond_good.png" />
-                    )}
-                    {evaluation.condition === "Erinomainen" ||
-                      (evaluation.condition === "Uusi" && (
-                        <img src="/src/assets/cond_excellent.png" />
-                      ))}{" "}
-                    {evaluation.condition}
+                  {(() => {
+                      const conditionMap: { [key: string]: { img: string; text: string } } = {
+                        "Ei tiedossa": { img: "", text: "Ei tiedossa" },
+                        Huono: { img: "/assets/cond_poor.png", text: "Huono" },
+                        Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
+                        // Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
+                        Erinomainen: { img: "/assets/cond_excellent.png", text: "Erinomainen" },
+                        Uusi: { img: "/assets/cond_excellent.png", text: "Uusi" },
+                      };
+
+                      const condition = evaluation.condition;
+                      const conditionData = conditionMap[condition];
+
+                      if (!conditionData) return <p>{condition || "Tuntematon kunto"}</p>;
+
+                      return (
+                         <div>
+                          {conditionData.img && <img src={conditionData.img} alt={conditionData.text} />}
+                          <p>{conditionData.text}</p>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
