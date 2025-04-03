@@ -12,6 +12,8 @@ export default function FetchAllEvals() {
    const navigate = useNavigate();
     const location = useLocation();
 
+    
+
   useEffect(() => {
     fetchEvals();
   }, []);
@@ -78,34 +80,41 @@ export default function FetchAllEvals() {
           <div className="flex flex-col">
             <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
 
-            {evals.map((e: any) => (
-              <div key={e.id}>
-                
-                <button
-                className="m-5 flex flex-row items-center p-4  border rounded-lg w-xs"
-                onClick={() => {
-                  fetchEval(e.id);
-                }}
-                >
-                  {/* Display image if available*/}
-                  
-                { e.imageId ? <img
-                  className="rounded-full max-w-25 aspect-square"
-                  src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
-                  alt="Tuotekuva"
-                /> : 
-                // display default image if no image is available
-                <img className="rounded-full max-w-25 aspect-square"
-                  src='/assets/pnf.png'
-                  alt="Tuotekuvaa ei löytynyt">
-                </img> }
+            {evals.map((e: any) => {
+              const evalDate = e.timeStamp ? new Date(e.timeStamp).toLocaleDateString("fi-FI") : "Päivämäärä puuttuu";
+              return (
+                <div key={e.id}>
+                  <button
+                    className="m-5 flex flex-row items-center p-4 border rounded-lg w-xs"
+                    onClick={() => {
+                      fetchEval(e.id);
+                    }}
+                  >
+                    {/* Display image if available */}
+                    {e.imageId ? (
+                      <img
+                        className="rounded-full max-w-25 aspect-square"
+                        src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
+                        alt="Tuotekuva"
+                      />
+                    ) : (
+                      // Display default image if no image is available
+                      <img
+                        className="rounded-full max-w-25 aspect-square"
+                        src="/assets/pnf.png"
+                        alt="Tuotekuvaa ei löytynyt"
+                      />
+                    )}
 
-                <p className="m-2">{e.evaluation.brand}</p>
-                <p>{e.evaluation.model}</p>
-                  
-                </button>             
-              </div>
-            ))}
+                    <div className="ml-4">
+                      <p className="m-2">{e.evaluation.brand}</p>
+                      <p>{e.evaluation.model}</p>
+                      <p className="text-sm text-gray-500">{evalDate}</p>
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
