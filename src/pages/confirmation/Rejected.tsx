@@ -8,10 +8,7 @@ const RejectedPage: React.FC = () => {
   // Get the photo from the location state
   const photo = location.state?.photo || null;
   const username = location.state?.username || null;
-
   
-  
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-5 text-center">
       {photo ? (
@@ -30,7 +27,7 @@ const RejectedPage: React.FC = () => {
         </h2>
       </div>
       <button
-        onClick={() => navigate("/home", { state: { username } })}
+        onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
         className="px-6 py-3 text-black bg-white rounded-lg border shadow-md hover:bg-gray-100 transition"
       >
         OK

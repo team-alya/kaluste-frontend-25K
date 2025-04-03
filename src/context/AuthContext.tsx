@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useState } from "react"
-import { useNavigate } from "react-router-dom";
 
 // AuthContext for the app to check if a user is logged in
 

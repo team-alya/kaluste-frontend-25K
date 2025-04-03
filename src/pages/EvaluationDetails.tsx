@@ -104,8 +104,10 @@ export default function EvalDetails() {
                       src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
                       alt="Kalusteen kuva"
                       className="mr-5 max-w-40 rounded-lg"
-                    />
-                  )}
+                    /> : <img className="rounded-full max-w-25 aspect-square"
+                    src='/assets/pnf.png'
+                    alt="Tuotekuvaa ei löytynyt">
+                      </img>}
                 </div>
                 <div>
                 
