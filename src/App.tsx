@@ -15,6 +15,7 @@ import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
 import ErrorInfo from "./pages/Error";
 
+
 // Layout component to render Navbar based on the page
 //Children prop is the content of the page
 function Layout({ children }: { children: React.ReactNode }) {
@@ -39,6 +40,7 @@ const PrivateRoutes = () => {
 }
 
 function App() {
+
 
   return (
     <div className="overflow-hidden">

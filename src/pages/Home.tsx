@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import cam from "../assets/camera.png";
-import check from "../assets/check.png";  
+import cam from "/assets/camera.png";
+import check from "/assets/check.png";  
+
 
 
 const Home = () => {

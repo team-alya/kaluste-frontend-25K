@@ -26,7 +26,7 @@
 
 //   // Validate form fields and store errors in the newErrors object, then update the state
 //   const validateForm = () => {
-//     let newErrors: { [key: string]: string } = {};
+//     const newErrors: { [key: string]: string } = {};
 
 //     if (!user.username.trim())
 //       newErrors.username = "Käyttäjätunnus on pakollinen.";

@@ -1,7 +1,6 @@
 import { CircleX } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-
 const ErrorInfo: React.FC = () => {
 
     const navigate = useNavigate();

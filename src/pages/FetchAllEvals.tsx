@@ -16,11 +16,18 @@ export default function FetchAllEvals() {
     fetchEvals();
   }, []);
 
+  const token = localStorage.getItem("token");
+
   const fetchEvals = () => {
     setLoading(true);
-    fetch(
-      "https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/all "
-    )
+    
+    fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/all", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch evaluations");
@@ -37,8 +44,14 @@ export default function FetchAllEvals() {
   };
 
   const fetchEval = (id: string) => {
-    
-    fetch(`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/${id}`)
+    const url = import.meta.env.VITE_BACKEND_URL + `evaluation/${id}`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      })
 
    .then((response) => {
     if (!response.ok) {
@@ -78,14 +91,14 @@ export default function FetchAllEvals() {
                   
                 { e.imageId ? <img
                   className="rounded-full max-w-25 aspect-square"
-                  src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${e.imageId}`}
+                  src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
                   alt="Tuotekuva"
                 /> : 
                 // display default image if no image is available
                 <img className="rounded-full max-w-25 aspect-square"
-              src='./src/assets/pnf.png'
-              alt="Tuotekuvaa ei löytynyt">
-                </img>}
+                  src='/assets/pnf.png'
+                  alt="Tuotekuvaa ei löytynyt">
+                </img> }
 
                 <p className="m-2">{e.evaluation.brand}</p>
                 <p>{e.evaluation.model}</p>

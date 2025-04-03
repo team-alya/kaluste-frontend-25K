@@ -2,8 +2,6 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-
-
 const Login = () => {
 
   const { setAuthenticated } = useContext(AuthContext);
@@ -18,7 +16,7 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     setShowLoginFailedMessage(false);
     e.preventDefault();
-    fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/login", {
+    fetch(import.meta.env.VITE_BACKEND_URL + "/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -35,7 +33,6 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        // console.log(data);
         setUsername("");
         setPassword("");
         setAuthenticated(true);
