@@ -20,7 +20,6 @@ export default function EvalDetails() {
     notes: false,
   });
   const [formData, setFormData] = useState({
-    info: evaluation?.info || "",
     price: evaluation?.price || "",
     notes: evaluation?.notes || "",
     brand: evaluation?.brand || "",
