@@ -55,7 +55,7 @@ export default function FetchAllEvals() {
 
    .then((response) => {
     if (!response.ok) {
-      throw new Error("Failed to fetch evaluation");
+      throw new Error("Failed to fetch evaluation!");
     }
     return response.json();
    })
