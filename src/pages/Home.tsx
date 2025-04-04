@@ -2,8 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import cam from "/assets/camera.png";
 import check from "/assets/check.png";  
 
-
-
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +41,6 @@ const Home = () => {
           }}
           onClick={() => {
             navigate("/evals", { state: { from: location.pathname } });
-            // console.log(window.localStorage.getItem("token"));
           }}
         >
           <p className="mt-23 text-white">Tekoälyn tunnistamat</p>

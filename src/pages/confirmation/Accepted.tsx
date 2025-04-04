@@ -6,7 +6,6 @@ import { useState } from "react";
 const AcceptedPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Get the photo from the location state
   const photo = location.state?.photo || null;
   const evaluation = location.state?.evaluation || null; 
 
@@ -31,13 +30,11 @@ const AcceptedPage: React.FC = () => {
 
     formData.append("image", blob, "photo.jpg");
 
-  const token = localStorage.getItem("token");
-
     try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/save ", {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         },
         body: formData,
       });

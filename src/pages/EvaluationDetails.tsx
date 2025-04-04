@@ -129,22 +129,19 @@ export default function EvalDetails() {
                   <strong>Lisätty:</strong> {evalDate}
                 </p>
          {image ? (
-  <img
-  src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
-    alt="Kalusteen kuva"
-    className="mr-5 max-w-40 rounded-lg"
-  />
-) : (
-  <img className="rounded-full max-w-25 aspect-square"
-    src='/assets/pnf.png'
-    alt="Tuotekuvaa ei löytynyt">
-  </img>
-)}
-
-
-                </div>
+            <img
+            src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
+              alt="Kalusteen kuva"
+              className="mr-5 max-w-40 rounded-lg"
+            />
+          ) : (
+            <img className="rounded-full max-w-25 aspect-square"
+              src='/assets/pnf.png'
+              alt="Tuotekuvaa ei löytynyt">
+            </img>
+          )}
+            </div>
                 <div>
-                
                   {!isEditing.info ? (
                     <>
                       <div className="flex items-center mb-2">

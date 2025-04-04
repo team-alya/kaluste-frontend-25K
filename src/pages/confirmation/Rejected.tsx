@@ -5,7 +5,6 @@ import { CircleX } from "lucide-react";
 const RejectedPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Get the photo from the location state
   const photo = location.state?.photo || null;
   const username = location.state?.username || null;
   

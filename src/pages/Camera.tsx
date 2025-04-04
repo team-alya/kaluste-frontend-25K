@@ -17,7 +17,7 @@ const CameraApp: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state?.username || null;
-  const token = localStorage.getItem("token");
+;
 
   // handles capturing the photo
   const capturePhoto = () => {
@@ -43,7 +43,7 @@ const CameraApp: React.FC = () => {
       fetch(import.meta.env.VITE_BACKEND_URL + "/api/photo", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         },
         body: formData,
       })
@@ -85,7 +85,7 @@ const CameraApp: React.FC = () => {
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/image", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
           },
           body: formData,
         })

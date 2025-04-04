@@ -9,10 +9,8 @@ export default function FetchAllEvals() {
   const [loading, setLoading] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState<boolean>(false);
 
-   const navigate = useNavigate();
-    const location = useLocation();
-
-    
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetchEvals();
@@ -21,13 +19,11 @@ export default function FetchAllEvals() {
   
   const fetchEvals = async () => {
     setLoading(true);
-
-    console.log("Token: " + window.localStorage.getItem("token"));
     
     await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ` + window.localStorage.getItem("token"),
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       })
@@ -51,7 +47,7 @@ export default function FetchAllEvals() {
     await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ` + window.localStorage.getItem("token"),
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       })

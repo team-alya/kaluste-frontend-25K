@@ -9,7 +9,7 @@ import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "rea
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
 import Settings from "./pages/Settings";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
@@ -34,7 +34,15 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 // check if user is authenticated before navigating 
 const PrivateRoutes = () => {
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        setAuthenticated(false);
+    }
+}, [setAuthenticated]);
+
   if (!authenticated) return <Navigate to='/' replace />
   return <Outlet />
 }
