@@ -1,12 +1,17 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
 
+import { useEffect } from "react";
+
 export default function EvalDetails() {
+
   const location = useLocation();
-  const evaluationData = location.state?.evaluation || null;
-  const evaluation = evaluationData?.evaluation || null;
-  const image = evaluationData?.imageId || null;
+
+  const [evaluationData, setEvaluationData] = useState<{
+    evaluation: any;
+    imageId: string | null;
+  } | null>(null);
 
    const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
@@ -18,8 +23,25 @@ export default function EvalDetails() {
     price: false,
     notes: false,
   });
+
+  useEffect(() => {
+    const stateData = location.state?.evaluation;
+    if (stateData) {
+      setEvaluationData(stateData);
+      localStorage.setItem("evaluationData", JSON.stringify(stateData));
+
+    } else {
+      const storedData = localStorage.getItem("evaluationData");
+      if (storedData) {
+        setEvaluationData(JSON.parse(storedData));
+      }
+    }
+  }, [location.state]);
+
+  const evaluation = evaluationData?.evaluation || null;
+  const image = evaluationData?.imageId || null;
+
   const [formData, setFormData] = useState({
-    info: evaluation?.info || "",
     price: evaluation?.price || "",
     notes: evaluation?.notes || "",
     brand: evaluation?.brand || "",
@@ -28,7 +50,11 @@ export default function EvalDetails() {
     width: evaluation?.dimensions?.width || "",
     height: evaluation?.dimensions?.height || "",
     length: evaluation?.dimensions?.length || "",
+    condition: evaluation?.condition || "Ei tiedossa",
+    materials: evaluation?.materials || [], 
   });
+
+  const navigate = useNavigate();
 
   //Open edit field when pencil icon is clicked
   const handleEditClick = (field: string) => {
@@ -41,12 +67,48 @@ export default function EvalDetails() {
   ) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
-
-  // Save edited field and close edit field
-  const handleSave = (field: string) => {
+// Save the changes
+  const handleSave = async (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    console.log("Tallennettu:", formData);
+
+    try {
+      const updatedData = {
+        merkki: formData.brand,
+        malli: formData.model,
+        vari: formData.color,
+        mitat: {
+          pituus: formData.length,
+          leveys: formData.width,
+          korkeus: formData.height,
+        },
+        kunto: formData.condition,
+        materiaalit: formData.materials || [], 
+      };
+
+      const response = await fetch(
+         import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Tietojen päivittäminen epäonnistui");
+      }
+
+      const updatedEvaluation = await response.json();
+      console.log("Päivitys onnistui:", updatedEvaluation);
+
+    
+
+      navigate("/evals", { state: { evaluation: updatedEvaluation } });
+    } catch (error) {
+      console.error("Virhe päivitettäessä:", error);
+    }
   };
+
 
   return (
     <div>
@@ -60,13 +122,20 @@ export default function EvalDetails() {
                     <p className="text-gray-500 text-sm mb-2">
                   <strong>Lisätty:</strong> {evalDate}
                 </p>
-                  {image && (
-                    <img
-                      src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
-                      alt="Kalusteen kuva"
-                      className="mr-5 max-w-40 rounded-lg"
-                    />
-                  )}
+         {image ? (
+  <img
+  src={import.meta.env.VITE_BACKEND_URL + `image/${evaluationData.imageId} `}
+    alt="Kalusteen kuva"
+    className="mr-5 max-w-40 rounded-lg"
+  />
+) : (
+  <img className="rounded-full max-w-25 aspect-square"
+    src='/assets/pnf.png'
+    alt="Tuotekuvaa ei löytynyt">
+  </img>
+)}
+
+
                 </div>
                 <div>
                 
@@ -146,7 +215,7 @@ export default function EvalDetails() {
                         />
                       </div>
                       <button
-                        onClick={() => handleSave("info")}
+                      
                         className="bg-emerald-700 text-white p-1 rounded mt-2"
                       >
                         Tallenna
@@ -162,20 +231,28 @@ export default function EvalDetails() {
                     <strong>Kunto: </strong>
                   </p>
                   <div>
-                    {evaluation.condition === "Ei tiedossa" && (
-                      <p>Ei tiedossa</p>
-                    )}
-                    {evaluation.condition === "Huono" && (
-                      <img src="/src/assets/cond_poor.png" />
-                    )}
-                    {evaluation.condition === "Hyvä" && (
-                      <img src="/src/assets/cond_good.png" />
-                    )}
-                    {evaluation.condition === "Erinomainen" ||
-                      (evaluation.condition === "Uusi" && (
-                        <img src="/src/assets/cond_excellent.png" />
-                      ))}{" "}
-                    {evaluation.condition}
+                  {(() => {
+                      const conditionMap: { [key: string]: { img: string; text: string } } = {
+                        "Ei tiedossa": { img: "", text: "Ei tiedossa" },
+                        Huono: { img: "/assets/cond_poor.png", text: "Huono" },
+                        Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
+                        // Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
+                        Erinomainen: { img: "/assets/cond_excellent.png", text: "Erinomainen" },
+                        Uusi: { img: "/assets/cond_excellent.png", text: "Uusi" },
+                      };
+
+                      const condition = evaluation.condition;
+                      const conditionData = conditionMap[condition];
+
+                      if (!conditionData) return <p>{condition || "Tuntematon kunto"}</p>;
+
+                      return (
+                         <div>
+                          {conditionData.img && <img src={conditionData.img} alt={conditionData.text} />}
+                          <p>{conditionData.text}</p>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -238,7 +315,7 @@ export default function EvalDetails() {
               </div>
 
               <div className="flex justify-center absolute m-5 inset-x-0 bottom-0 h-16">
-                <button className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
+                <button onClick={() => handleSave("info")} className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
                   Hyväksy tiedot
                 </button>
               </div>

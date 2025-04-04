@@ -8,11 +8,10 @@ const AcceptedPage: React.FC = () => {
   const location = useLocation();
   // Get the photo from the location state
   const photo = location.state?.photo || null;
-  const username = location.state?.username || null;
   const evaluation = location.state?.evaluation || null; 
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
-  const [okMessage, setOkMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
+  const [okMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
 
   const saveEval = async () => {
 
@@ -32,9 +31,14 @@ const AcceptedPage: React.FC = () => {
 
     formData.append("image", blob, "photo.jpg");
 
+  const token = localStorage.getItem("token");
+
     try {
-      const response = await fetch("https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/evaluation/save ", {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/save ", {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
         body: formData,
       });
       if (!response.ok) {
@@ -43,7 +47,7 @@ const AcceptedPage: React.FC = () => {
       
       setSaveOk(true);
       setTimeout(() => {
-        navigate("/home", { state: { username } });
+        navigate("/home", { state: { from: location.pathname } });
       }, 4000);
 
     } catch (error) {
@@ -96,7 +100,7 @@ const AcceptedPage: React.FC = () => {
 
 
         <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
-          onClick={() => navigate("/home", { state: { username } })}
+          onClick={() => navigate("/home", { state: { from: location.pathname } })}
         >Hylkää</button>
       </div>
       

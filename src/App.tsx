@@ -15,6 +15,7 @@ import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
 import ErrorInfo from "./pages/Error";
 
+
 // Layout component to render Navbar based on the page
 //Children prop is the content of the page
 function Layout({ children }: { children: React.ReactNode }) {
@@ -31,8 +32,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-type Props = {}
-
 // check if user is authenticated before navigating 
 const PrivateRoutes = () => {
   const { authenticated } = useContext(AuthContext);
@@ -40,7 +39,8 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-function App(props: Props) {
+function App() {
+
 
   return (
     <div className="overflow-hidden">
@@ -50,9 +50,6 @@ function App(props: Props) {
             <Routes>
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              {/* <Route path="/register" element={<Register />} /> */}
-              
-
 
               <Route element ={<PrivateRoutes />}>
                 {/* add here routes that an authenticated user can see */}

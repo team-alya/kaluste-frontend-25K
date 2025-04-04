@@ -1,14 +1,7 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useLocation} from 'react-router-dom';
+import React from 'react';
+
 
 const LoadingPage: React.FC = () => {
-
-    //const navigate = useNavigate();
-    //const location = useLocation();
-    //const photo = location.state?.photo || null;
-    //const username = location.state?.username || null;
-
-   
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 text-center">

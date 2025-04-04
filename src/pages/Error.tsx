@@ -1,7 +1,6 @@
 import { CircleX } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-
 const ErrorInfo: React.FC = () => {
 
     const navigate = useNavigate();
@@ -20,7 +19,7 @@ const ErrorInfo: React.FC = () => {
       </div>
 
       <button className="px-6 py-3 text-black bg-white rounded-lg border shadow-md hover:bg-gray-100 transition"
-      onClick={() => navigate("/home", { state: { username } })} 
+      onClick={() => navigate("/home", { state: { username, from: location.pathname } })} 
       >OK</button>
      
     </div>
