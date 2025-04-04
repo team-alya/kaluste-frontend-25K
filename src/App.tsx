@@ -50,9 +50,6 @@ function App() {
             <Routes>
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              {/* <Route path="/register" element={<Register />} /> */}
-              
-
 
               <Route element ={<PrivateRoutes />}>
                 {/* add here routes that an authenticated user can see */}
