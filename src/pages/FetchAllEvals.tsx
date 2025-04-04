@@ -18,12 +18,12 @@ export default function FetchAllEvals() {
     fetchEvals();
   }, []);
 
-  const token = localStorage.getItem("token");
+  const token = window.localStorage.getItem("token");
 
   const fetchEvals = () => {
     setLoading(true);
 
-    console.log(token);
+    console.log("Token: " + token);
     
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",

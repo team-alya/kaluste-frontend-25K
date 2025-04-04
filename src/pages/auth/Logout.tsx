@@ -1,4 +1,4 @@
 export default function Logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("username");
+  window.localStorage.removeItem("token");
+  window.localStorage.removeItem("username");
 }
