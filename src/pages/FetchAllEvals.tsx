@@ -23,7 +23,7 @@ export default function FetchAllEvals() {
   const fetchEvals = () => {
     setLoading(true);
     
-    fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/all", {
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -46,7 +46,7 @@ export default function FetchAllEvals() {
   };
 
   const fetchEval = (id: string) => {
-    const url = import.meta.env.VITE_BACKEND_URL + `evaluation/${id}`;
+    const url = import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`;
     fetch(url, {
       method: "GET",
       headers: {
@@ -99,7 +99,7 @@ export default function FetchAllEvals() {
                     {e.imageId ? (
                       <img
                         className="rounded-full max-w-25 aspect-square"
-                        src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
+                        src={import.meta.env.VITE_BACKEND_URL + `/api/image/${e.imageId}`}
                         alt="Tuotekuva"
                       />
                     ) : (

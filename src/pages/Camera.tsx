@@ -40,7 +40,7 @@ const CameraApp: React.FC = () => {
       const formData = new FormData();
       formData.append("image", blob, "photo.jpg");
 
-      fetch(import.meta.env.VITE_BACKEND_URL + "photo", {
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/photo", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -82,7 +82,7 @@ const CameraApp: React.FC = () => {
         formData.append("image", blob, "photo.jpg");
         
         // Send the POST request
-        fetch(import.meta.env.VITE_BACKEND_URL + "image", {
+        fetch(import.meta.env.VITE_BACKEND_URL + "/api/image", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`,
