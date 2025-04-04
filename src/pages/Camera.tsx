@@ -216,6 +216,7 @@ const CameraApp: React.FC = () => {
             </button>
             <button
               className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
+              onClick={handleNext}
             >
               Hyväksy kuva
             </button>
