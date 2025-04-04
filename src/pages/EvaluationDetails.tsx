@@ -9,8 +9,10 @@ export default function EvalDetails() {
 
   const [evaluationData, setEvaluationData] = useState<{
     evaluation: any;
-    imageId: string | null;
-  } | null>(null);
+    imageId: string;
+    id?: string;
+    timeStamp?: string;
+  }>();
 
    const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
@@ -70,6 +72,11 @@ export default function EvalDetails() {
   const handleSave = async (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
 
+    if (!evaluationData?.id) {
+      console.error("Ei löytynyt tietoja.");
+      return;
+    }
+
     try {
       const updatedData = {
         merkki: formData.brand,
@@ -85,7 +92,7 @@ export default function EvalDetails() {
       };
 
       const response = await fetch(
-         import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}`,
+         import.meta.env.VITE_BACKEND_URL + `${evaluationData?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -123,7 +130,7 @@ export default function EvalDetails() {
                 </p>
          {image ? (
   <img
-  src={import.meta.env.VITE_BACKEND_URL + `image/${evaluationData.imageId} `}
+  src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
     alt="Kalusteen kuva"
     className="mr-5 max-w-40 rounded-lg"
   />
