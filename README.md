@@ -47,27 +47,27 @@ For this app to work with all its functionalities you also need to have the back
 
 #### Front Page
 
-![etusivu](src/assets/demo_pictures/demopics_2_resize.jpg)
+![etusivu](src/assets/demo_pictures/demopics_2_resize_new.jpg)
 
 #### Camera View
 
-![kamera](src/assets/demo_pictures/demopics_3_resize.jpg)
+![kamera](src/assets/demo_pictures/demopics_3_resize_new.jpg)
 
 #### Picture Taken/Uploaded
 
-![kuva otettu tai ladattu](src/assets/demo_pictures/demopics_4_resize.jpg)
+![kuva otettu tai ladattu](src/assets/demo_pictures/demopics_4_resize_new.jpg)
 
 #### Loading View
 
-![latausnakyma](src/assets/demo_pictures/demopics_5_resize.jpg)
+![latausnakyma](src/assets/demo_pictures/demopics_5_resize_new.jpg)
 
 #### Indentified View
 
-![tunnistettu](src/assets/demo_pictures/demopics_6_resize.jpg)
+![tunnistettu](src/assets/demo_pictures/demopics_6_resize_new.jpg)
 
 #### Accepted View
 
-![hyvaksytty](src/assets/demo_pictures/demopics_7_resize.jpg)
+![hyvaksytty](src/assets/demo_pictures/demopics_7_resize_new.jpg)
 
 #### Listed objects View
 
@@ -75,8 +75,8 @@ For this app to work with all its functionalities you also need to have the back
 
 #### Object Page View
 
-![tuotenakyma](src/assets/demo_pictures/demopics_9_resize.jpg)
+![tuotenakyma](src/assets/demo_pictures/demopics_9_resize_new.jpg)
 
 #### Settings Page
 
-![asetukset](src/assets/demo_pictures/demopics_10_resize.jpg)
+![asetukset](src/assets/demo_pictures/demopics_10_resize_new.jpg)
