@@ -41,7 +41,10 @@ const Home = () => {
             height: "150px",
             width: "150px",
           }}
-          onClick={() => navigate("/evals", { state: { from: location.pathname } })}
+          onClick={() => {
+            navigate("/evals", { state: { from: location.pathname } });
+            // console.log(window.localStorage.getItem("token"));
+          }}
         >
           <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
         </button>

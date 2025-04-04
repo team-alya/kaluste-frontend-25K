@@ -20,12 +20,12 @@ export default function FetchAllEvals() {
 
   const token = window.localStorage.getItem("token");
 
-  const fetchEvals = () => {
+  const fetchEvals = async () => {
     setLoading(true);
 
     console.log("Token: " + token);
     
-    fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
+    await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -47,9 +47,9 @@ export default function FetchAllEvals() {
       .catch((error) => console.error(error));
   };
 
-  const fetchEval = (id: string) => {
+  const fetchEval = async (id: string) => {
     const url = import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`;
-    fetch(url, {
+    await fetch(url, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
