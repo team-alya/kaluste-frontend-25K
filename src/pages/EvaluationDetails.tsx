@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
-
 import { useEffect } from "react";
 
 export default function EvalDetails() {
