@@ -22,6 +22,8 @@ export default function FetchAllEvals() {
 
   const fetchEvals = () => {
     setLoading(true);
+
+    console.log(token);
     
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
