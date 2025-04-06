@@ -9,24 +9,21 @@ export default function FetchAllEvals() {
   const [loading, setLoading] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState<boolean>(false);
 
-   const navigate = useNavigate();
-    const location = useLocation();
-
-    
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetchEvals();
   }, []);
 
-  const token = localStorage.getItem("token");
-
-  const fetchEvals = () => {
+  
+  const fetchEvals = async () => {
     setLoading(true);
     
-    fetch(import.meta.env.VITE_BACKEND_URL + "evaluation/all", {
+    await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       })
@@ -45,24 +42,24 @@ export default function FetchAllEvals() {
       .catch((error) => console.error(error));
   };
 
-  const fetchEval = (id: string) => {
-    const url = import.meta.env.VITE_BACKEND_URL + `evaluation/${id}`;
-    fetch(url, {
+  const fetchEval = async (id: string) => {
+    const url = import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`;
+    await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       })
 
    .then((response) => {
     if (!response.ok) {
-      throw new Error("Failed to fetch evaluation");
+      throw new Error("Failed to fetch evaluation!");
     }
     return response.json();
    })
     .then((data) => {
-      navigate (`/eval/${id}`, {state: {evaluation: data, from: location.pathname}});
+      navigate (`/eval/${id}`, {state: { evaluation: data, from: location.pathname}});
          
     })
     .catch((error) => console.error(error));
@@ -72,7 +69,7 @@ export default function FetchAllEvals() {
     <div>
       { loading && <LoadingProducts />}
       { isFetched && evals.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-5 mt-15 text-center">
+        <div className="flex flex-col items-center  p-5 mt-15 text-center">
           <p>Ei tuotteita.</p>
         </div>
       ) : (
@@ -85,16 +82,21 @@ export default function FetchAllEvals() {
               return (
                 <div key={e.id}>
                   <button
-                    className="m-5 flex flex-row items-center p-4 border rounded-lg w-xs"
+                    className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
                     onClick={() => {
-                      fetchEval(e.id);
+                      sessionStorage.setItem(
+                    "evalData",
+                    JSON.stringify({ evaluation: e, imageId: e.imageId })
+                  );
+                  fetchEval(e.id);
                     }}
                   >
                     {/* Display image if available */}
+                    <div className="">
                     {e.imageId ? (
                       <img
                         className="rounded-full max-w-25 aspect-square"
-                        src={import.meta.env.VITE_BACKEND_URL + `image/${e.imageId}`}
+                        src={import.meta.env.VITE_BACKEND_URL + `/api/image/${e.imageId}`}
                         alt="Tuotekuva"
                       />
                     ) : (
@@ -105,10 +107,10 @@ export default function FetchAllEvals() {
                         alt="Tuotekuvaa ei löytynyt"
                       />
                     )}
-
-                    <div className="ml-4">
-                      <p className="m-2">{e.evaluation.brand}</p>
-                      <p>{e.evaluation.model}</p>
+                    </div>
+                    <div className="ml-4 min-w-1/2 flex flex-col justify-center">
+                      <p className="m-2 ">{e.evaluation.brand}</p>
+                      
                       <p className="text-sm text-gray-500">{evalDate}</p>
                     </div>
                   </button>

@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     setShowLoginFailedMessage(false);
     e.preventDefault();
-    fetch(import.meta.env.VITE_BACKEND_URL + "/login", {
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -36,8 +36,8 @@ const Login = () => {
         setUsername("");
         setPassword("");
         setAuthenticated(true);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.user.username);
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("username", data.user.username);
         navigate("/home", { state: { username: data.user.username, from: location.pathname } });
       })
       .catch((err) => console.error(err));
@@ -80,12 +80,6 @@ const Login = () => {
           </button>
         </div>
       </form>
-      {/* <button
-        className="gap-2 mt-4 px-15 py-3 h-12 text-emerald-700 bg-white border hover:bg-emerald-600 rounded-sm"
-        onClick={() => navigate("/register")}
-      >
-        Rekisteröidy
-      </button> */}
     </div>
   );
 }

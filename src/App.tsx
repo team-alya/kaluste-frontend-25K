@@ -9,7 +9,7 @@ import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "rea
 import Navbar from "./components/ui/Navbar";
 import AuthNavbar from "./components/ui/LoginNavbar";
 import Settings from "./pages/Settings";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
@@ -32,17 +32,24 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-type Props = {}
-
 // check if user is authenticated before navigating 
 const PrivateRoutes = () => {
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        setAuthenticated(false);
+    }
+}, [setAuthenticated]);
+
   if (!authenticated) return <Navigate to='/' replace />
   return <Outlet />
 }
 
-function App(props: Props) {
+function App() {
 
+  
 
   return (
     <div className="overflow-hidden">
@@ -52,9 +59,6 @@ function App(props: Props) {
             <Routes>
               {/* add here routes that an UNauthenticated user can see */}
               <Route index element={<Login />} />
-              {/* <Route path="/register" element={<Register />} /> */}
-              
-
 
               <Route element ={<PrivateRoutes />}>
                 {/* add here routes that an authenticated user can see */}

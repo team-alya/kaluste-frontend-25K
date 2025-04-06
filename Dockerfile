@@ -1,28 +1,15 @@
-# Build
+# Build vaihe
 FROM node:20-alpine AS builder
-
 WORKDIR /app
-
 COPY package*.json ./
-RUN npm install
-
+RUN npm ci
 COPY . .
-
 RUN npm run build
 
-
-
-# Production
+# Tuotantovaihe
 FROM node:20-alpine
-
 WORKDIR /app
-
-# Install a lightweight static file server
-RUN npm install -g serve
-
-# Copy built files from the builder stage
 COPY --from=builder /app/dist ./dist
-
-# Expose port 3000 and serve the application
-EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+RUN npm install -g serve
+EXPOSE 8080
+CMD ["serve", "-s", "dist", "-p", "8080"]

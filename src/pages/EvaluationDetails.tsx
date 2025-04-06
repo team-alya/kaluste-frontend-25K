@@ -1,13 +1,18 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
-
+import { useEffect } from "react";
 
 export default function EvalDetails() {
+
   const location = useLocation();
-  const evaluationData = location.state?.evaluation || null;
-  const evaluation = evaluationData?.evaluation || null;
-  const image = evaluationData?.imageId || null;
+
+  const [evaluationData, setEvaluationData] = useState<{
+    evaluation: any;
+    imageId: string;
+    id?: string;
+    timeStamp?: string;
+  }>();
 
    const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
@@ -19,6 +24,24 @@ export default function EvalDetails() {
     price: false,
     notes: false,
   });
+
+  useEffect(() => {
+    const stateData = location.state?.evaluation;
+    if (stateData) {
+      setEvaluationData(stateData);
+      localStorage.setItem("evaluationData", JSON.stringify(stateData));
+
+    } else {
+      const storedData = localStorage.getItem("evaluationData");
+      if (storedData) {
+        setEvaluationData(JSON.parse(storedData));
+      }
+    }
+  }, [location.state]);
+
+  const evaluation = evaluationData?.evaluation || null;
+  const image = evaluationData?.imageId || null;
+
   const [formData, setFormData] = useState({
     price: evaluation?.price || "",
     notes: evaluation?.notes || "",
@@ -31,6 +54,7 @@ export default function EvalDetails() {
     condition: evaluation?.condition || "Ei tiedossa",
     materials: evaluation?.materials || [], 
   });
+
   const navigate = useNavigate();
 
   //Open edit field when pencil icon is clicked
@@ -48,6 +72,11 @@ export default function EvalDetails() {
   const handleSave = async (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
 
+    if (!evaluationData?.id) {
+      console.error("Ei löytynyt tietoja.");
+      return;
+    }
+
     try {
       const updatedData = {
         merkki: formData.brand,
@@ -63,7 +92,7 @@ export default function EvalDetails() {
       };
 
       const response = await fetch(
-        `http://localhost:3000/api/evaluation/${evaluationData.id}`,
+         import.meta.env.VITE_BACKEND_URL + `${evaluationData?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -100,22 +129,19 @@ export default function EvalDetails() {
                   <strong>Lisätty:</strong> {evalDate}
                 </p>
          {image ? (
-  <img
-    src={`https://kalustearvio-25k-backend-kalustearvio-25k.2.rahtiapp.fi/api/image/${evaluationData.imageId} `}
-    alt="Kalusteen kuva"
-    className="mr-5 max-w-40 rounded-lg"
-  />
-) : (
-  <img className="rounded-full max-w-25 aspect-square"
-    src='/assets/pnf.png'
-    alt="Tuotekuvaa ei löytynyt">
-  </img>
-)}
-
-
-                </div>
+            <img
+            src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
+              alt="Kalusteen kuva"
+              className="mr-5 max-w-40 rounded-lg"
+            />
+          ) : (
+            <img className="rounded-full max-w-25 aspect-square"
+              src='/assets/pnf.png'
+              alt="Tuotekuvaa ei löytynyt">
+            </img>
+          )}
+            </div>
                 <div>
-                
                   {!isEditing.info ? (
                     <>
                       <div className="flex items-center mb-2">
@@ -208,20 +234,28 @@ export default function EvalDetails() {
                     <strong>Kunto: </strong>
                   </p>
                   <div>
-                    {evaluation.condition === "Ei tiedossa" && (
-                      <p>Ei tiedossa</p>
-                    )}
-                    {evaluation.condition === "Huono" && (
-                      <img src="/assets/cond_poor.png" />
-                    )}
-                    {evaluation.condition === "Hyvä" && (
-                      <img src="/assets/cond_good.png" />
-                    )}
-                    {evaluation.condition === "Erinomainen" ||
-                      (evaluation.condition === "Uusi" && (
-                        <img src="/assets/cond_excellent.png" />
-                      ))}{" "}
-                    {evaluation.condition}
+                  {(() => {
+                      const conditionMap: { [key: string]: { img: string; text: string } } = {
+                        "Ei tiedossa": { img: "", text: "Ei tiedossa" },
+                        Huono: { img: "/assets/cond_poor.png", text: "Huono" },
+                        Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
+                        // Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
+                        Erinomainen: { img: "/assets/cond_excellent.png", text: "Erinomainen" },
+                        Uusi: { img: "/assets/cond_excellent.png", text: "Uusi" },
+                      };
+
+                      const condition = evaluation.condition;
+                      const conditionData = conditionMap[condition];
+
+                      if (!conditionData) return <p>{condition || "Tuntematon kunto"}</p>;
+
+                      return (
+                         <div>
+                          {conditionData.img && <img src={conditionData.img} alt={conditionData.text} />}
+                          <p>{conditionData.text}</p>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 

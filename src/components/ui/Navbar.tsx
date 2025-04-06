@@ -51,11 +51,15 @@ const Navbar = () => {
       </div>
       <div>
         {/* settings button */}
-        <button
-          className="text-sm px-2 py-2 leading-none border rounded-full text-white border-zinc-600 bg-zinc-600 hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0"
-          onClick={() => handleNavigate("/settings")}
-        >
-          <Settings size={20} color="#ffffff" strokeWidth={2.25} />
+        <button className="text-sm px-2 py-2 leading-none border rounded-full text-white border-zinc-600 bg-zinc-600 hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0">
+          <Settings
+            size={20}
+            color="#ffffff"
+            strokeWidth={2.25}
+            onClick={() => {
+              navigate("/settings", { state: { from: location.pathname } });
+            }}
+          />
         </button>
       </div>
     </nav>

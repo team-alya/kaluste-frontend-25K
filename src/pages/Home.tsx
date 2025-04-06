@@ -2,8 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import cam from "/assets/camera.png";
 import check from "/assets/check.png";  
 
-
-
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,7 +39,9 @@ const Home = () => {
             height: "150px",
             width: "150px",
           }}
-          onClick={() => navigate("/evals", { state: { from: location.pathname } })}
+          onClick={() => {
+            navigate("/evals", { state: { from: location.pathname } });
+          }}
         >
           <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
         </button>
