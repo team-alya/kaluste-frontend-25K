@@ -15,17 +15,26 @@ const Navbar = () => {
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
+    "/eval/": "Tarkista tuotetiedot",
+    "/error": "Virhe",
   };
+
+  const previous = location.state?.from;
+  const restricted = [
+    '/loading', 
+    '/accepted',
+    '/rejected',
+    '/error',
+  ];
+
+  const isRestricted = restricted.includes(previous);
+  const pageToNavigate = isRestricted ? '/home' : previous || '/home';
 
   return (
     <nav className="relative flex items-center justify-between bg-black p-6">
       {/* shows arrow if user is not on home page */}
       {location.pathname !== "/" && (
-        <button
-          data-testid="back-button"
-          className="absolute left-6"
-          onClick={() => navigate(-1)}
-        >
+        <button className="absolute left-6" data-testid="back-button" onClick={() => navigate(pageToNavigate)}>
           <ArrowLeft size={28} color="#ffffff" strokeWidth={2.25} />
         </button>
       )}
@@ -45,7 +54,9 @@ const Navbar = () => {
             size={20}
             color="#ffffff"
             strokeWidth={2.25}
-            onClick={() => navigate("/settings")}
+            onClick={() => {
+              navigate("/settings", { state: { from: location.pathname } });
+            }}
           />
         </button>
       </div>
