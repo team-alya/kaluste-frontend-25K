@@ -37,7 +37,10 @@ const Login = () => {
         setPassword("");
         setAuthenticated(true);
         window.localStorage.setItem("token", data.token);
+        console.log('window.localstoragen token: ' + data.token);
+        console.log('Localstorage token: ' + localStorage.getItem("token"));
         window.localStorage.setItem("username", data.user.username);
+        console.log(data.user.username);
         navigate("/home", { state: { username: data.user.username, from: location.pathname } });
       })
       .catch((err) => console.error(err));
