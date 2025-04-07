@@ -16,7 +16,9 @@ export default function FetchAllEvals() {
     fetchEvals();
   }, []);
 
-  
+  const token = window.localStorage.getItem("token");
+  console.log(token);
+
   const fetchEvals = async () => {
     setLoading(true);
     
@@ -26,6 +28,7 @@ export default function FetchAllEvals() {
         "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
+      credentials: "include",
       })
       .then((response) => {
         if (!response.ok) {
