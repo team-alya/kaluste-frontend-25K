@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import LoadingProducts from "./LoadingProductList";
 import { useLocation, useNavigate } from "react-router-dom";
 
-
 export default function FetchAllEvals() {
 
   const [evals, setEvals] = useState([]);
@@ -18,16 +17,11 @@ export default function FetchAllEvals() {
 
   const fetchEvals = async () => {
     setLoading(true);
-    const token = window.localStorage.getItem("token");
-    console.log("localStorage token: " + token);
-  
-    const token2 = sessionStorage.getItem("token");
-    console.log("sessiontoken: " + token2);
     
     await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
    })
