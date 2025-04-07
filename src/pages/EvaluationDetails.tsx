@@ -59,8 +59,19 @@ export default function EvalDetails() {
 
   //Open edit field when pencil icon is clicked
   const handleEditClick = (field: string) => {
-    setIsEditing((prev) => ({ ...prev, [field]: true }));
-  };
+  setFormData({
+    ...formData,
+    brand: evaluation?.brand || "",
+    model: evaluation?.model || "",
+    color: evaluation?.color || "",
+    width: evaluation?.dimensions?.width || "",
+    height: evaluation?.dimensions?.height || "",
+    length: evaluation?.dimensions?.length || "",
+    price: evaluation?.price || "",
+    notes: evaluation?.notes || "",
+  });
+  setIsEditing((prev) => ({ ...prev, [field]: true }));
+};
 
   const handleInputChange = (
     e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>,
@@ -92,10 +103,13 @@ export default function EvalDetails() {
       };
 
       const response = await fetch(
-         import.meta.env.VITE_BACKEND_URL + `${evaluationData?.id}`,
+         import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+        headers: {
+  "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+  "Content-Type": "application/json",
+},
           body: JSON.stringify(updatedData),
         }
       );

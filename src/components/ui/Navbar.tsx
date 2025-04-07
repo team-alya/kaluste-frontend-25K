@@ -31,7 +31,7 @@ const Navbar = () => {
   
   const handleNavigate = (path: string) => {
     if (path !== location.pathname) {
-      navigate(path, { state: { from: location.pathname, username } });
+      navigate(path, { state: {username, from: location.pathname } });
     }
   };
 
@@ -57,7 +57,7 @@ const Navbar = () => {
             color="#ffffff"
             strokeWidth={2.25}
             onClick={() => {
-              navigate("/settings", { state: { from: location.pathname } });
+              navigate("/settings", { state:  { username,  from: location.pathname } });
             }}
           />
         </button>
