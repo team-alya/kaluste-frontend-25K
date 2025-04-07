@@ -16,19 +16,18 @@ export default function FetchAllEvals() {
     fetchEvals();
   }, []);
 
-  const token = window.localStorage.getItem("token");
-  console.log(token);
-
-  const token2 = localStorage.getItem("token");
-  console.log(token2);
-
   const fetchEvals = async () => {
     setLoading(true);
+    const token = window.localStorage.getItem("token");
+    console.log("localStorage token: " + token);
+  
+    const token2 = sessionStorage.getItem("token");
+    console.log("sessiontoken: " + token2);
     
     await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
    })

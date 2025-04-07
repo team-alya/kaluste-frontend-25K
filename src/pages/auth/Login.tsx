@@ -39,6 +39,9 @@ const Login = () => {
         window.localStorage.setItem("token", data.token);
         console.log('window.localstoragen token: ' + data.token);
         console.log('Localstorage token: ' + localStorage.getItem("token"));
+        window.sessionStorage.setItem("token", data.token);
+        const token = window.sessionStorage.getItem("token");
+        console.log('Sessionstorage token: ' + token);
         window.localStorage.setItem("username", data.user.username);
         console.log(data.user.username);
         navigate("/home", { state: { username: data.user.username, from: location.pathname } });
