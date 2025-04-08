@@ -14,8 +14,9 @@ const AcceptedPage: React.FC = () => {
   const [okMessage] = useState<string>(
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
+  const [stockMessage, setStockMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  
   useEffect(() => {
     const storedUsername = location.state?.username || localStorage.getItem("username");
     if (storedUsername) {
@@ -29,6 +30,11 @@ const AcceptedPage: React.FC = () => {
       localStorage.setItem("username", username);
     }
   }, [username]);
+
+  // check stock availability when the component is mounted
+  useEffect(() => {
+    checkStock();
+  }, []);
 
   // saving the evaluation to the backend if the user accepts the evaluation
   const saveEval = async () => {
@@ -82,6 +88,50 @@ const AcceptedPage: React.FC = () => {
     }
   };
 
+  // Function to check stock availability
+  const checkStock = async () => {
+    setLoading(true);
+    if (!evaluation) {
+      setStockMessage("Arviointitietoja ei ole saatavilla.");
+      setLoading(false);
+      return;
+    }
+  
+    try {
+      // create a requestData object with the evaluation details
+      const requestData = {
+        malli: evaluation.model,
+        merkki: evaluation.brand,
+      };
+  
+      //
+      const stockResponse = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+  
+      if (!stockResponse.ok) {
+        const errorData = await stockResponse.json();
+        setStockMessage(`Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`);
+        return;
+      }
+  
+      const data = await stockResponse.json();
+      setStockMessage(data.message)
+    } catch (error) {
+      setStockMessage("virhe varastotilanteen tarkistuksessa.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
       <div className="flex items-center gap-2 mb-10">
@@ -130,18 +180,31 @@ const AcceptedPage: React.FC = () => {
         )}
       </div>
 
-      {/* save button */}
       <div>
+         {/* Show stock info */}
+        
+          <p className="text-md text-emerald-700 mt-4">{stockMessage}</p>
+       
+        {/* save button */}
         <button 
           className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
           onClick={() => saveEval()}
-          >Ota vastaan</button>
+        >
+          Ota vastaan
+        </button>
 
-      {/* reject button */}
-        <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+        {/* reject button */}
+        <button 
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm"
           onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
-        >Hylkää</button>
+        >
+          Hylkää
+        </button>
+
+       
       </div>
+
+      
     </div>
   );
 };
