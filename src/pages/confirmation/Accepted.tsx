@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
-import { useState } from "react";
-
 // show the user a successful evaluation and the option to save or reject it
 
 const AcceptedPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const photo = location.state?.photo || null;
-  const evaluation = location.state?.evaluation || null; 
-
+  const evaluation = location.state?.evaluation || null;
+  const [username, setUsername] = useState<string | null>(null);
   const [saveOk, setSaveOk] = useState<boolean>(false);
-  const [okMessage] = useState<string>('Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle.');
+  const [okMessage] = useState<string>(
+    "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
+  );
+
+  
+  useEffect(() => {
+    const storedUsername = location.state?.username || localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, [location.state]);
+
+  
+  useEffect(() => {
+    if (username) {
+      localStorage.setItem("username", username);
+    }
+  }, [username]);
 
   // saving the evaluation to the backend if the user accepts the evaluation
   const saveEval = async () => {
@@ -41,13 +56,16 @@ const AcceptedPage: React.FC = () => {
     try {
 
       // send to the backend
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          },
+          body: formData,
+        }
+      );
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
@@ -56,14 +74,12 @@ const AcceptedPage: React.FC = () => {
       // and redirect the user to the homepage after 4 seconds
       setSaveOk(true);
       setTimeout(() => {
-        navigate("/home", { state: { from: location.pathname } });
+        navigate("/home", { state: { username, from: location.pathname } });
       }, 4000);
-
     } catch (error) {
       console.error(error);
     }
-
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -86,11 +102,22 @@ const AcceptedPage: React.FC = () => {
       
       {/* show the evaluation details to the user */}
       <div className="flex flex-col text-left mt-2">
-        <p className="mb-2"><strong>Merkki:</strong> {evaluation.brand}</p>
-        <p className="mb-2"><strong>Malli:</strong> {evaluation.model}</p>
-        <p className="mb-2"><strong>Väri:</strong> {evaluation.color}</p>
-        <p className="mb-2"><strong>Mitat:</strong> {evaluation.length || 0} cm x {evaluation.width || 0} cm x {evaluation.height || 0} cm</p>
-        <p className="mb-2"><strong>Kunto:</strong> {evaluation.condition}</p>
+        <p className="mb-2">
+          <strong>Merkki:</strong> {evaluation.brand}
+        </p>
+        <p className="mb-2">
+          <strong>Malli:</strong> {evaluation.model}
+        </p>
+        <p className="mb-2">
+          <strong>Väri:</strong> {evaluation.color}
+        </p>
+        <p className="mb-2">
+          <strong>Mitat:</strong> {evaluation.length || 0} cm x {evaluation.width || 0} cm x{" "}
+          {evaluation.height || 0} cm
+        </p>
+        <p className="mb-2">
+          <strong>Kunto:</strong> {evaluation.condition}
+        </p>
       </div>
 
       <div>
@@ -98,7 +125,6 @@ const AcceptedPage: React.FC = () => {
         {saveOk && (
           <div>
             <p className="m-5 text-lg font-semibold text-[#104930]">{okMessage}</p>
-            
           </div>
         )}
       </div>
@@ -115,9 +141,7 @@ const AcceptedPage: React.FC = () => {
           onClick={() => navigate("/home", { state: { from: location.pathname } })}
         >Hylkää</button>
       </div>
-      
     </div>
-
   );
 };
 

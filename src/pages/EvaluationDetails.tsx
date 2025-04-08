@@ -67,8 +67,19 @@ export default function EvalDetails() {
 
   // open edit view when the pencil icon is clicked
   const handleEditClick = (field: string) => {
-    setIsEditing((prev) => ({ ...prev, [field]: true }));
-  };
+  setFormData({
+    ...formData,
+    brand: evaluation?.brand || "",
+    model: evaluation?.model || "",
+    color: evaluation?.color || "",
+    width: evaluation?.dimensions?.width || "",
+    height: evaluation?.dimensions?.height || "",
+    length: evaluation?.dimensions?.length || "",
+    price: evaluation?.price || "",
+    notes: evaluation?.notes || "",
+  });
+  setIsEditing((prev) => ({ ...prev, [field]: true }));
+};
 
   // update useState when the user inputs data
   const handleInputChange = (
@@ -106,9 +117,10 @@ export default function EvalDetails() {
          import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json",
-                      "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
-           },
+        headers: {
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
           body: JSON.stringify(updatedData),
         }
       );

@@ -5,6 +5,12 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  
+
+
+  
+  const username = location.state?.username || localStorage.getItem("username") || null;
+
   // endpoints and their corresponding texts displayed in the navbar
   const pages: Record<string, string> = {
     "/": "Kirjaudu sisään",
@@ -12,11 +18,11 @@ const Navbar = () => {
     "/camera": "Ota kuva",
     "/loading": "Odota hetki",
     "/accepted": "Tuote tunnistettu",
-    "/rejected": "Tuotetta tunnistettu",
+    "/rejected": "Tuotetta ei tunnistettu",
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
-    "/eval/": "Tarkista tuotetiedot",
+    "/eval": "Tarkista tuotetiedot",
     "/error": "Virhe",
   };
 
@@ -35,20 +41,27 @@ const Navbar = () => {
 
   // check if the user is navigating back to restricted pages
   // if yes, navigate to the homepage
-  const pageToNavigate = isRestricted ? '/home' : previous || '/home';
+  const pageToNavigate = isRestricted || previous.startsWith("/eval") ? "/home" : previous || "/home";
+
+  
+  const handleNavigate = (path: string) => {
+    if (path !== location.pathname) {
+      navigate(path, { state: {username, from: location.pathname } });
+    }
+  };
 
   return (
     <nav className="relative flex items-center justify-between bg-black p-6">
-      {/* "previous" arrow if the user is not on the homepage */}
+    {/* shows arrow if user is not on home page */}
       {location.pathname !== "/" && (
-        <button className="absolute left-6" onClick={() => navigate(pageToNavigate)}>
+        <button className="absolute left-6" onClick={() => handleNavigate(pageToNavigate)}>
           <ArrowLeft size={28} color="#ffffff" strokeWidth={2.25} />
         </button>
       )}
       <div>
-        {/* displays text in the navbar based on the endpoint */}
+      {/* shows text in nav bar based on user location */}
         <h1 className="absolute left-1/2 transform -translate-x-1/2 font-sans text-white text-lg font-medium">
-          {pages[location.pathname]}
+          {pages[location.pathname] || "Sivu"}
         </h1>
       </div>
       <div>
@@ -59,7 +72,7 @@ const Navbar = () => {
             color="#ffffff"
             strokeWidth={2.25}
             onClick={() => {
-              navigate("/settings", { state: { from: location.pathname } });
+              navigate("/settings", { state:  { username,  from: location.pathname } });
             }}
           />
         </button>
