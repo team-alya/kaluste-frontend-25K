@@ -29,6 +29,7 @@ const UploadButton: React.FC<UploadButtonProps> = ({ setPhoto }) => {
 
     return (
         <div className="mt-4">
+            {/* open the file selection dialog */}
             <button
                 onClick={handleButtonClick}
                 className="flex items-center justify-center gap-2 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition"

@@ -1,5 +1,8 @@
 import React from 'react';
 
+// before the product list is shown to the user, show this loading component
+// while waiting for the backend to respond
+
 const LoadingProducts: React.FC = () => {
 
     return (

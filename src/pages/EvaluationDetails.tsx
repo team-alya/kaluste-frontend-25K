@@ -3,6 +3,8 @@ import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useEffect } from "react";
 
+// editing state for the evaluation
+
 export default function EvalDetails() {
 
   const location = useLocation();
@@ -14,11 +16,12 @@ export default function EvalDetails() {
     timeStamp?: string;
   }>();
 
+  // evaluation creation date
    const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
     : "Päivämäärä puuttuu";
     
-  // Usestate for editing fields
+  // state used for editing
   const [isEditing, setIsEditing] = useState({
     info: false,
     price: false,
@@ -26,17 +29,22 @@ export default function EvalDetails() {
   });
 
   useEffect(() => {
+    // check if evaluation data is received from the previous page
+    // if yes, save it to state and localStorage
+    // save to localStorage to retain data when navigating back to the page (since state does not persist)
     const stateData = location.state?.evaluation;
     if (stateData) {
       setEvaluationData(stateData);
       localStorage.setItem("evaluationData", JSON.stringify(stateData));
 
+      // if no data, fetch it from localStorage (e.g., when navigating back to the page)
     } else {
       const storedData = localStorage.getItem("evaluationData");
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
       }
     }
+    // re-execute if location.state changes, e.g., when navigating back
   }, [location.state]);
 
   const evaluation = evaluationData?.evaluation || null;
@@ -57,18 +65,20 @@ export default function EvalDetails() {
 
   const navigate = useNavigate();
 
-  //Open edit field when pencil icon is clicked
+  // open edit view when the pencil icon is clicked
   const handleEditClick = (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
   };
 
+  // update useState when the user inputs data
   const handleInputChange = (
     e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
-// Save the changes
+
+  // save changes and send them to the backend
   const handleSave = async (field: string) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
 
@@ -91,11 +101,14 @@ export default function EvalDetails() {
         materiaalit: formData.materials || [], 
       };
 
+      // send update request and data to the backend
       const response = await fetch(
-         import.meta.env.VITE_BACKEND_URL + `${evaluationData?.id}`,
+         import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+                      "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+           },
           body: JSON.stringify(updatedData),
         }
       );
@@ -108,7 +121,7 @@ export default function EvalDetails() {
       console.log("Päivitys onnistui:", updatedEvaluation);
 
     
-
+      // after saving, navigate back to the product list
       navigate("/evals", { state: { evaluation: updatedEvaluation } });
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
@@ -119,22 +132,24 @@ export default function EvalDetails() {
   return (
     <div>
       <div>
+        {/* product evaluation details, if available */}
         {evaluation ? (
           <div>
             <>
               <div className="flex flex-row items-start m-6 mt-10">
-                
                 <div>
                     <p className="text-gray-500 text-sm mb-2">
-                  <strong>Lisätty:</strong> {evalDate}
-                </p>
-         {image ? (
+                      <strong>Lisätty:</strong> {evalDate}
+                    </p>
+          {/* show image if available */}
+          {image ? (
             <img
-            src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
+              src={import.meta.env.VITE_BACKEND_URL + `/api/image/${evaluationData?.imageId} `}
               alt="Kalusteen kuva"
               className="mr-5 max-w-40 rounded-lg"
             />
           ) : (
+            // if not, show placeholder image
             <img className="rounded-full max-w-25 aspect-square"
               src='/assets/pnf.png'
               alt="Tuotekuvaa ei löytynyt">
@@ -142,6 +157,8 @@ export default function EvalDetails() {
           )}
             </div>
                 <div>
+
+                  {/* evaluation details if not being edited */}
                   {!isEditing.info ? (
                     <>
                       <div className="flex items-center mb-2">
@@ -171,6 +188,7 @@ export default function EvalDetails() {
                       </p>
                     </>
                   ) : (
+                    // details in edit view
                     <>
                       <input
                         type="text"
@@ -217,8 +235,8 @@ export default function EvalDetails() {
                           placeholder="Pituus"
                         />
                       </div>
+
                       <button
-                      
                         className="bg-emerald-700 text-white p-1 rounded mt-2"
                       >
                         Tallenna
@@ -227,19 +245,21 @@ export default function EvalDetails() {
                   )}
                 </div>
               </div>
-
+                  
+                  {/* condition details visually */}
               <div className="flex flex-row ml-6">
                 <div className="max-w-40">
                   <p>
                     <strong>Kunto: </strong>
                   </p>
                   <div>
+                    {/* show different image based on the reported condition of the product */}
                   {(() => {
                       const conditionMap: { [key: string]: { img: string; text: string } } = {
                         "Ei tiedossa": { img: "", text: "Ei tiedossa" },
                         Huono: { img: "/assets/cond_poor.png", text: "Huono" },
                         Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
-                        // Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
+                        Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
                         Erinomainen: { img: "/assets/cond_excellent.png", text: "Erinomainen" },
                         Uusi: { img: "/assets/cond_excellent.png", text: "Uusi" },
                       };
@@ -247,10 +267,12 @@ export default function EvalDetails() {
                       const condition = evaluation.condition;
                       const conditionData = conditionMap[condition];
 
+                      // if no conditon data is available, show default text
                       if (!conditionData) return <p>{condition || "Tuntematon kunto"}</p>;
 
                       return (
                          <div>
+                          {/* condition details as image and text*/}
                           {conditionData.img && <img src={conditionData.img} alt={conditionData.text} />}
                           <p>{conditionData.text}</p>
                         </div>
@@ -259,6 +281,7 @@ export default function EvalDetails() {
                   </div>
                 </div>
 
+                    {/* price information */}
                 <div className="flex flex-col ml-8">
                   <div className="flex items-center">
                     <p className="mr-2">
@@ -270,6 +293,7 @@ export default function EvalDetails() {
                       onClick={() => handleEditClick("price")}
                     />
                   </div>
+                  {/* price editing */}
                   <div className="mt-1">
                     {!isEditing.price ? (
                       <p>{formData.price || "Ei tiedossa"}</p>
@@ -287,6 +311,7 @@ export default function EvalDetails() {
                 </div>
               </div>
 
+              {/* additional information text */}
               <div className="m-6 flex flex-col max-w-md">
                 {" "}
                 <div className="flex items-center">
@@ -299,12 +324,14 @@ export default function EvalDetails() {
                     onClick={() => handleEditClick("notes")}
                   />
                 </div>
+                {/* displaying additional information */}
                 <div className="mt-1 break-words">
                   {!isEditing.notes ? (
                     <p className="whitespace-pre-line break-words">
                       {formData.notes || "Ei tiedossa"}
                     </p>
                   ) : (
+                    // editing additional information
                     <textarea
                       className="border border-black p-1 rounded mt-1 w-full max-w-md resize-y"
                       value={formData.notes}
@@ -317,6 +344,7 @@ export default function EvalDetails() {
                 </div>
               </div>
 
+              {/* save button for details */}
               <div className="flex justify-center absolute m-5 inset-x-0 bottom-0 h-16">
                 <button onClick={() => handleSave("info")} className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
                   Hyväksy tiedot
@@ -326,6 +354,7 @@ export default function EvalDetails() {
           </div>
         ) : (
           <div>
+            {/* if no evaluation data is available, show placeholder text */}
             <p>Kalustetta ei löytynyt</p>
           </div>
         )}

@@ -1,6 +1,8 @@
 import { CircleX } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// error page displayed when data fetching fails
+
 const ErrorInfo: React.FC = () => {
 
     const navigate = useNavigate();
@@ -8,18 +10,17 @@ const ErrorInfo: React.FC = () => {
     const username = location.state?.username || null;
 
     return( 
-
         <div className="flex flex-col items-center justify-center min-h-screen p-5 text-center">
-      
+          <p className="text-gray-500">Tietojen hakeminen epäonnistui. Yritä myöhemmin uudelleen.</p>
 
-    <p className="text-gray-500">Tietojen hakeminen epäonnistui. Yritä myöhemmin uudelleen.</p>
+          <div className="flex items-center gap-2 mb-4">
+            <CircleX size={40} className="text-red-600" />
+          </div>
 
-      <div className="flex items-center gap-2 mb-4">
-        <CircleX size={40} className="text-red-600" />
-      </div>
-
-      <button className="px-6 py-3 text-black bg-white rounded-lg border shadow-md hover:bg-gray-100 transition"
-      onClick={() => navigate("/home", { state: { username, from: location.pathname } })} 
+      {/* OK button that takes the user back to the homepage */}
+      <button 
+        className="px-6 py-3 text-black bg-white rounded-lg border shadow-md hover:bg-gray-100 transition"
+        onClick={() => navigate("/home", { state: { username, from: location.pathname } })} 
       >OK</button>
      
     </div>

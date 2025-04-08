@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import cam from "/assets/camera.png";
 import check from "/assets/check.png";  
 
+// homepage component that is displayed after the user has logged in
+
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,6 +21,7 @@ const Home = () => {
       </div>
       <div className="flex flexdirection-row">
         <div>
+          {/* button that navigates to camera page */}
         <button
           className="ml-8"
           style={{
@@ -32,6 +35,7 @@ const Home = () => {
         </button>
       </div>
       <div>
+        {/* button that navigates to product list */}
         <button
           className="ml-8"
           style={{
