@@ -6,12 +6,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   
-
-
-  
   const username = location.state?.username || localStorage.getItem("username") || null;
 
-  // endpoints and their corresponding texts displayed in the navbar
   const pages: Record<string, string> = {
     "/": "Kirjaudu sisään",
     "/home": "Valitse toiminta",
@@ -26,21 +22,10 @@ const Navbar = () => {
     "/error": "Virhe",
   };
 
-  // store the previous page for navigation purposes
-  const previous = location.state?.from;
-
-  // pages that cannot be navigated back to
-  const restricted = [
-    '/loading', 
-    '/accepted',
-    '/rejected',
-    '/error',
-  ];
+  const previous = location.state?.from || "";
+  const restricted = ["/loading", "/accepted", "/rejected", "/error"];
 
   const isRestricted = restricted.includes(previous);
-
-  // check if the user is navigating back to restricted pages
-  // if yes, navigate to the homepage
   const pageToNavigate = isRestricted || previous.startsWith("/eval") ? "/home" : previous || "/home";
 
   
@@ -65,7 +50,7 @@ const Navbar = () => {
         </h1>
       </div>
       <div>
-        {/* settings icon/button */}
+        {/* settings button */}
         <button className="text-sm px-2 py-2 leading-none border rounded-full text-white border-zinc-600 bg-zinc-600 hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0">
           <Settings
             size={20}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
+
 // show the user a successful evaluation and the option to save or reject it
 
 const AcceptedPage: React.FC = () => {
@@ -138,7 +139,7 @@ const AcceptedPage: React.FC = () => {
 
       {/* reject button */}
         <button className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
-          onClick={() => navigate("/home", { state: { from: location.pathname } })}
+          onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
         >Hylkää</button>
       </div>
     </div>

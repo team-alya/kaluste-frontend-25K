@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useEffect } from "react";
@@ -26,7 +26,14 @@ export default function EvalDetails() {
     info: false,
     price: false,
     notes: false,
+    condition: false
   });
+
+ 
+  const [saveOk, setSaveOk] = useState<boolean>(false);
+  const [okMessage] = useState<string>(
+    "Tiedot päivitetty onnistuneesti."
+  );
 
   useEffect(() => {
     // check if evaluation data is received from the previous page
@@ -63,7 +70,6 @@ export default function EvalDetails() {
     materials: evaluation?.materials || [], 
   });
 
-  const navigate = useNavigate();
 
   // open edit view when the pencil icon is clicked
   const handleEditClick = (field: string) => {
@@ -77,6 +83,7 @@ export default function EvalDetails() {
     length: evaluation?.dimensions?.length || "",
     price: evaluation?.price || "",
     notes: evaluation?.notes || "",
+    condition: evaluation?.condition || ""
   });
   setIsEditing((prev) => ({ ...prev, [field]: true }));
 };
@@ -88,6 +95,7 @@ export default function EvalDetails() {
   ) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
+
 
   // save changes and send them to the backend
   const handleSave = async (field: string) => {
@@ -116,7 +124,7 @@ export default function EvalDetails() {
       const response = await fetch(
          import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
         {
-          method: "PUT",
+        method: "PUT",
         headers: {
         "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
@@ -131,10 +139,10 @@ export default function EvalDetails() {
 
       const updatedEvaluation = await response.json();
       console.log("Päivitys onnistui:", updatedEvaluation);
-
+      setSaveOk(true);
     
       // after saving, navigate back to the product list
-      navigate("/evals", { state: { evaluation: updatedEvaluation } });
+      
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -247,12 +255,6 @@ export default function EvalDetails() {
                           placeholder="Pituus"
                         />
                       </div>
-
-                      <button
-                        className="bg-emerald-700 text-white p-1 rounded mt-2"
-                      >
-                        Tallenna
-                      </button>
                     </>
                   )}
                 </div>
@@ -260,15 +262,35 @@ export default function EvalDetails() {
                   
                   {/* condition details visually */}
               <div className="flex flex-row ml-6">
-                <div className="max-w-40">
-                  <p>
-                    <strong>Kunto: </strong>
-                  </p>
+                  
+              <div className="flex flex-col">
+                  <div className="flex items-center">
+                    <p className="mr-2">
+                      <strong>Kunto: </strong>
+                    </p>
+                    <Pencil
+                          size={18}
+                          className=" text-gray-500 hover:text-gray-700 cursor-pointer"
+                          onClick={() => handleEditClick("condition")}
+                        />
+                  </div>
+                  <div className="mt-1">
+                    {isEditing.condition && (
+                      <input
+                        type="text"
+                        className="border border-black p-1 rounded mt-1 w-24"
+                        value={formData.condition}
+                        onChange={(e) => handleInputChange(e, "condition")}
+                        onBlur={() => handleSave("condition")}
+                        autoFocus
+                      />
+                    )}
+                  </div>
                   <div>
+                    
                     {/* show different image based on the reported condition of the product */}
                   {(() => {
                       const conditionMap: { [key: string]: { img: string; text: string } } = {
-                        "Ei tiedossa": { img: "", text: "Ei tiedossa" },
                         Huono: { img: "/assets/cond_poor.png", text: "Huono" },
                         Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
                         Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
@@ -280,13 +302,18 @@ export default function EvalDetails() {
                       const conditionData = conditionMap[condition];
 
                       // if no conditon data is available, show default text
-                      if (!conditionData) return <p>{condition || "Tuntematon kunto"}</p>;
+                      if (!conditionData) return <p>{"Tuntematon kunto"}</p>;
 
                       return (
                          <div>
                           {/* condition details as image and text*/}
-                          {conditionData.img && <img src={conditionData.img} alt={conditionData.text} />}
-                          <p>{conditionData.text}</p>
+                          {conditionData.img && 
+                            <img 
+                              className="max-w-40"
+                              src={conditionData.img} 
+                              alt={conditionData.text} />
+                          }
+                          <p className="mt-3"> {conditionData.text}</p>
                         </div>
                       );
                     })()}
@@ -355,11 +382,21 @@ export default function EvalDetails() {
                   )}
                 </div>
               </div>
+              
+              
+              {/* show success message if data is saved successfully */}
+              {saveOk && (
+                <div>
+                  <p className="text-lg font-semibold text-[#104930] text-center">{okMessage}</p>
+                </div>
+              )}
 
               {/* save button for details */}
-              <div className="flex justify-center absolute m-5 inset-x-0 bottom-0 h-16">
-                <button onClick={() => handleSave("info")} className="gap-2 mt-4 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
-                  Hyväksy tiedot
+              <div className="flex justify-center absolute mb-5 inset-x-0 bottom-0 h-16">
+                <button 
+                  onClick={() => handleSave("info")} 
+                  className="gap-2 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm">
+                  Tallenna
                 </button>
               </div>
             </>
