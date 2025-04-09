@@ -33,6 +33,7 @@ const AuthProvider = ({ children }: Props) => {
     // if the browser refreshes, the user remains logged in
     useEffect(() => {
         const token = localStorage.getItem("token");
+        console.log(token);
         if (token) {
             setAuthenticated(true);
         } else {
