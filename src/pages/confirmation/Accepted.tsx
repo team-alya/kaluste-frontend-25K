@@ -126,6 +126,7 @@ const AcceptedPage: React.FC = () => {
       const data = await stockResponse.json();
       setStockMessage(data.message)
     } catch (error) {
+      console.log(error);
       setStockMessage("virhe varastotilanteen tarkistuksessa.");
     } finally {
       setLoading(false);
