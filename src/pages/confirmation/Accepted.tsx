@@ -15,7 +15,7 @@ const AcceptedPage: React.FC = () => {
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
   const [stockMessage, setStockMessage] = useState<string | null>(null);
-  const [setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const storedUsername = location.state?.username || localStorage.getItem("username");
