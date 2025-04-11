@@ -160,16 +160,6 @@ const AcceptedPage: React.FC = () => {
         <p className="mb-2">
           <strong>Malli:</strong> {evaluation.model}
         </p>
-        <p className="mb-2">
-          <strong>Väri:</strong> {evaluation.color}
-        </p>
-        <p className="mb-2">
-          <strong>Mitat:</strong> {evaluation.length || 0} cm x {evaluation.width || 0} cm x{" "}
-          {evaluation.height || 0} cm
-        </p>
-        <p className="mb-2">
-          <strong>Kunto:</strong> {evaluation.condition}
-        </p>
       </div>
 
       <div>
@@ -184,7 +174,7 @@ const AcceptedPage: React.FC = () => {
       <div>
          {/* Show stock info */}
         
-          <p className="text-md text-emerald-700 mt-4">{stockMessage}</p>
+          <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900">{stockMessage}</p>
        
         {/* save button */}
         <button 
