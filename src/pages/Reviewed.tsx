@@ -6,7 +6,7 @@ const Reviewed = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [isFetched, setIsFetched] = useState<boolean>(false);
-    const [evals, setEvals] = useState([]);
+    const [evals, ] = useState([]);
 
     // fetch all evals and filter "reviewed" evals
 
@@ -74,7 +74,6 @@ const Reviewed = () => {
                             "evalData",
                             JSON.stringify({ evaluation: e, imageId: e.imageId })
                             );
-                            fetchEval(e.id);
                             }}
                         >
                             {/* display the image if available */}
