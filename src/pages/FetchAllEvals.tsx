@@ -75,7 +75,8 @@ export default function FetchAllEvals() {
 
   return (
     <div>
-      {/* if a product is being loaded, render the loading component */}
+      {/* if products are being loaded, render the loading component */}
+
       { loading && <LoadingProducts />}
 
       {/* if products are fetched but the list is empty */}
@@ -96,16 +97,16 @@ export default function FetchAllEvals() {
                 <div key={e.id}>
                   {/* create a clickable button for the product card */}
                   <button
-                    className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
-                    onClick={() => {
+                      className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
+                      onClick={() => {
                       // save the evaluated product's data to sessionStorage for back navigation
                       sessionStorage.setItem(
-                    "evalData",
-                    JSON.stringify({ evaluation: e, imageId: e.imageId })
-                  );
-                  fetchEval(e.id);
-                    }}
-                  >
+                      "evalData",
+                      JSON.stringify({ evaluation: e, imageId: e.imageId })
+                      );
+                      fetchEval(e.id);
+                      }}
+                    >
                     {/* display the image if available */}
                     <div className="">
                     {e.imageId ? (
