@@ -145,7 +145,7 @@ const AcceptedPage: React.FC = () => {
         <img
           src={photo}
           alt="Approved"
-          className="w-[250px] h-[250px] object-cover rounded-lg mb-4 shadow-md"
+          className=" w-[250px] h-[250px] object-cover rounded-lg mb-4 shadow-md"
         />
       ) : (
         // or text if the photo is not available for some reason

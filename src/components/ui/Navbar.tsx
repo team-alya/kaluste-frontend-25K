@@ -2,10 +2,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Settings } from "lucide-react";
 
 const Navbar = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
-
-  
   const username = location.state?.username || localStorage.getItem("username") || null;
 
   const pages: Record<string, string> = {
@@ -22,24 +21,22 @@ const Navbar = () => {
     "/error": "Virhe",
   };
 
-  const previous = location.state?.from || "";
-  const restricted = ["/loading", "/accepted", "/rejected", "/error"];
+  const previousPage = location.state?.from || "/home";
+  const restrictedPages = ["/", "/accepted", "/rejected", "/loading", "/error"];
 
-  const isRestricted = restricted.includes(previous);
-  const pageToNavigate = isRestricted || previous.startsWith("/eval") ? "/home" : previous || "/home";
-
-  
-  const handleNavigate = (path: string) => {
-    if (path !== location.pathname) {
-      navigate(path, { state: {username, from: location.pathname } });
-    }
-  };
+  const handleNavigate = () => {
+    if (!restrictedPages.includes(previousPage)) {
+      navigate(-1);
+  } else {
+    navigate("/home", { state: { username, from: location.pathname } });
+  }
+}
 
   return (
     <nav className="relative flex items-center justify-between bg-black p-6">
     {/* shows arrow if user is not on home page */}
       {location.pathname !== "/" && (
-        <button className="absolute left-6" onClick={() => handleNavigate(pageToNavigate)}>
+        <button className="absolute left-6" onClick={handleNavigate}>
           <ArrowLeft size={28} color="#ffffff" strokeWidth={2.25} />
         </button>
       )}
@@ -63,7 +60,7 @@ const Navbar = () => {
         </button>
       </div>
     </nav>
-  );
+    );
 };
 
 export default Navbar;
