@@ -19,6 +19,8 @@ const Navbar = () => {
     "/evals": "Tunnistetut tuotteet",
     "/eval": "Tarkista tuotetiedot",
     "/error": "Virhe",
+    "/reviewed": "Käsitellyt tuotteet",
+    "/archive": "Arkisto",
   };
 
   const previousPage = location.state?.from || "/home";
