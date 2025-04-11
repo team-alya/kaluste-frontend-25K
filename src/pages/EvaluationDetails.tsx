@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useEffect } from "react";
+import { Evaluation } from "../types/evaluation";
 
 // editing state for the evaluation
 
@@ -10,7 +11,7 @@ export default function EvalDetails() {
   const location = useLocation();
 
   const [evaluationData, setEvaluationData] = useState<{
-    evaluation: any;
+    evaluation: Evaluation;
     imageId: string;
     id?: string;
     timeStamp?: string;
