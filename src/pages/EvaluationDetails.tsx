@@ -202,8 +202,9 @@ export default function EvalDetails() {
                       </p>
                       <p className="mb-2">
                         <strong>Mitat:</strong>{" "}
-                        {formData.width || evaluation.dimensions?.width} x
-                        {formData.height || evaluation.dimensions?.height} x
+                        <br></br>
+                        {formData.width || evaluation.dimensions?.width} x {" "}
+                        {formData.height || evaluation.dimensions?.height} x {" "}
                         {formData.length || evaluation.dimensions?.length} cm
                       </p>
                     </>
