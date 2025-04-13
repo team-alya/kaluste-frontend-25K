@@ -1,33 +1,42 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
+import { Evaluation } from "../types/evaluation"; 
+import { useNavigate } from "react-router-dom";
+
+
+type EvaluationData = {
+  evaluation: Evaluation;
+  imageId: string;
+  id?: string;
+  timeStamp?: string;
+};
+
+type FormData = {
+  price: string;
+  notes: string;
+  brand: string;
+  model: string;
+  color: string;
+  width: string;
+  height: string;
+  length: string;
+  condition: string;
+  materials: string[];
+};
+
+type EditingState = {
+  info: boolean;
+  price: boolean;
+  notes: boolean;
+  condition: boolean;
+};
+
 export default function EvalDetails() {
   const location = useLocation();
+   const navigate = useNavigate();
 
-  const [evaluationData, setEvaluationData] = useState<{
-    evaluation: Evaluation;
-    imageId: string;
-    id?: string;
-    timeStamp?: string;
-  }>();
-
-  const evalDate = evaluationData?.timeStamp
-    ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
-    : "Päivämäärä puuttuu";
-
-  const [isEditing, setIsEditing] = useState({
-    info: false,
-    price: false,
-    notes: false,
-    condition: false,
-  });
-
-  const [saveOk, setSaveOk] = useState(false);
-  const [okMessage] = useState("Tiedot päivitetty onnistuneesti.");
-
-  const evaluation = evaluationData?.evaluation || {};
-  const image = evaluationData?.imageId || null;
-
-  const [formData, setFormData] = useState({
+  const [evaluationData, setEvaluationData] = useState<EvaluationData | undefined>();
+  const [formData, setFormData] = useState<FormData>({
     price: "",
     notes: "",
     brand: "",
@@ -39,6 +48,22 @@ export default function EvalDetails() {
     condition: "",
     materials: [],
   });
+  const [isEditing, setIsEditing] = useState<EditingState>({
+    info: false,
+    price: false,
+    notes: false,
+    condition: false,
+  });
+
+  const [saveOk, setSaveOk] = useState<boolean>(false);
+  const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
+
+  const evaluation = evaluationData?.evaluation ?? null;
+  const image = evaluationData?.imageId || null;
+
+  const evalDate = evaluationData?.timeStamp
+    ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
+    : "Päivämäärä puuttuu";
 
   useEffect(() => {
     const stateData = location.state?.evaluation;
@@ -74,15 +99,12 @@ export default function EvalDetails() {
     if (saveOk) {
       const timer = setTimeout(() => {
         setSaveOk(false);
-      }, 3000); // Näytetään 3 sekuntia
-
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [saveOk]);
 
-  const handleEditClick = (field: string) => {
-    setIsEditing((prev) => ({ ...prev, [field]: true }));
-  };
+ 
 
   const handleEditAllClick = () => {
     setIsEditing({
@@ -95,7 +117,7 @@ export default function EvalDetails() {
 
   const handleInputChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    field: string
+    field: keyof FormData
   ) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
@@ -154,16 +176,29 @@ export default function EvalDetails() {
     }
   };
 
+  const SendToExpert = () => {
+   
+    const expertData = {
+      brand: formData.brand,
+      model: formData.model,
+      color: formData.color,
+      width: formData.width,
+      height: formData.height,
+      length: formData.length,
+      condition: formData.condition,
+      price: formData.price,
+      notes: formData.notes,
+    };
+
+    console.log("Lähetetään expertille:", expertData);
+    navigate("/reviewed", {
+      state: { expertData },
+    });
+  };
+
   return (
     <div>
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={handleEditAllClick}
-          className="gap-2 px-12 py-2 h-12 text-white bg-blue-700 shadow-md hover:bg-blue-600 transition rounded-sm"
-        >
-          Muokkaa Kaikkia
-        </button>
-      </div>
+
 
       {evaluation ? (
         <div>
@@ -188,122 +223,14 @@ export default function EvalDetails() {
                   alt="Tuotekuvaa ei löytynyt"
                 />
               )}
+               <button
+    onClick={handleEditAllClick}
+    className="mt-3 px-4 py-1 text-sm text-white bg-gray-500 shadow-sm transition rounded"
+    style={{ width: '90%', height: "40px"}}
+  >
+    Muokkaa tietoja
+  </button>
             </div>
-                <div>
-
-                  {/* evaluation details if not being edited */}
-                  {!isEditing.info ? (
-                    <>
-                      <div className="flex items-center mb-2">
-                        <p className="mr-2">
-                          <strong>Merkki:</strong>{" "}
-                          {formData.brand || evaluation.brand}
-                        </p>
-                        <Pencil
-                          size={18}
-                          className=" text-gray-500 hover:text-gray-700 cursor-pointer"
-                          onClick={() => handleEditClick("info")}
-                        />
-                      </div>
-                      <p className="mb-2">
-                        <strong>Malli:</strong>{" "}
-                        {formData.model || evaluation.model}
-                      </p>
-                      <p className="mb-2">
-                        <strong>Väri:</strong>{" "}
-                        {formData.color || evaluation.color}
-                      </p>
-                      <p className="mb-2">
-                        <strong>Mitat:</strong>{" "}
-                        <br></br>
-                        {formData.width || evaluation.dimensions?.width} x {" "}
-                        {formData.height || evaluation.dimensions?.height} x {" "}
-                        {formData.length || evaluation.dimensions?.length} cm
-                      </p>
-                    </>
-                  ) : (
-                    // details in edit view
-                    <>
-                      <input
-                        type="text"
-                        className="border border-black p-1 rounded w-40 mb-2"
-                        value={formData.brand}
-                        onChange={(e) => handleInputChange(e, "brand")}
-                        placeholder="Merkki"
-                        autoFocus
-                      />
-                      <input
-                        type="text"
-                        className="border border-black p-1 rounded w-40 mb-2"
-                        value={formData.model}
-                        onChange={(e) => handleInputChange(e, "model")}
-                        placeholder="Malli"
-                      />
-                      <input
-                        type="text"
-                        className="border border-black p-1 rounded w-40 mb-2"
-                        value={formData.color}
-                        onChange={(e) => handleInputChange(e, "color")}
-                        placeholder="Väri"
-                      />
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          className="border border-black p-1 rounded w-12"
-                          value={formData.width}
-                          onChange={(e) => handleInputChange(e, "width")}
-                          placeholder="Leveys"
-                        />
-                        <input
-                          type="text"
-                          className="border border-black p-1 rounded w-12"
-                          value={formData.height}
-                          onChange={(e) => handleInputChange(e, "height")}
-                          placeholder="Korkeus"
-                        />
-                        <input
-                          type="text"
-                          className="border border-black p-1 rounded w-12"
-                          value={formData.length}
-                          onChange={(e) => handleInputChange(e, "length")}
-                          placeholder="Pituus"
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-                  
-                  {/* condition details visually */}
-              <div className="flex flex-row ml-6">
-                  
-              <div className="flex flex-col">
-                  <div className="flex items-center">
-                    <p className="mr-2">
-                      <strong>Kunto: </strong>
-                    </p>
-                    <Pencil
-                          size={18}
-                          className=" text-gray-500 hover:text-gray-700 cursor-pointer"
-                          onClick={() => handleEditClick("condition")}
-                        />
-                  </div>
-                  <div className="mt-1">
-                    {isEditing.condition && (
-                      <input
-                        type="text"
-                        className="border border-black p-1 rounded mt-1 w-24"
-                        value={formData.condition}
-                        onChange={(e) => handleInputChange(e, "condition")}
-                        onBlur={() => handleSave("condition")}
-                        autoFocus
-                      />
-                    )}
-                  </div>
-                  <div>
-                    
-                    {/* show different image based on the reported condition of the product */}
-                  {(() => {
 
             <div>
               {!isEditing.info ? (
@@ -373,7 +300,9 @@ export default function EvalDetails() {
                 </>
               )}
             </div>
+            
           </div>
+          
 
           <div className="flex flex-row ml-6">
             <div className="flex flex-col">
@@ -475,12 +404,20 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div className="flex justify-center absolute mb-5 inset-x-0 bottom-0 h-16">
+          <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
             <button
               onClick={handleSaveAll}
-              className="gap-2 px-12 py-2 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+              className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+              style={{ width: "90%", height: "50px" }}
             >
               Tallenna kaikki
+            </button>
+            <button
+              className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+              style={{ width: "90%", height: "50px" }}
+              onClick={SendToExpert}
+            >
+              Lisää expertin listaan
             </button>
           </div>
         </div>
@@ -491,4 +428,6 @@ export default function EvalDetails() {
       )}
     </div>
   );
+  
 }
+
