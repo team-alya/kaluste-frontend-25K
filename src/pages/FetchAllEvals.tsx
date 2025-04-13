@@ -128,7 +128,7 @@ export default function FetchAllEvals() {
                     </div>
                     {/* display the brand and product addition date to the user */}
                     <div className="ml-4 min-w-1/2 flex flex-col justify-center">
-                      <p className="m-2 ">{e.evaluation.brand}</p>
+                      <p className="m-2 ">{e.brand}</p>
                       
                       <p className="text-sm text-gray-500">{evalDate}</p>
                     </div>
