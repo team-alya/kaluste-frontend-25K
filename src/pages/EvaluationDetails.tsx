@@ -4,7 +4,7 @@ export default function EvalDetails() {
   const location = useLocation();
 
   const [evaluationData, setEvaluationData] = useState<{
-    evaluation: any;
+    evaluation: Evaluation;
     imageId: string;
     id?: string;
     timeStamp?: string;
@@ -189,6 +189,121 @@ export default function EvalDetails() {
                 />
               )}
             </div>
+                <div>
+
+                  {/* evaluation details if not being edited */}
+                  {!isEditing.info ? (
+                    <>
+                      <div className="flex items-center mb-2">
+                        <p className="mr-2">
+                          <strong>Merkki:</strong>{" "}
+                          {formData.brand || evaluation.brand}
+                        </p>
+                        <Pencil
+                          size={18}
+                          className=" text-gray-500 hover:text-gray-700 cursor-pointer"
+                          onClick={() => handleEditClick("info")}
+                        />
+                      </div>
+                      <p className="mb-2">
+                        <strong>Malli:</strong>{" "}
+                        {formData.model || evaluation.model}
+                      </p>
+                      <p className="mb-2">
+                        <strong>Väri:</strong>{" "}
+                        {formData.color || evaluation.color}
+                      </p>
+                      <p className="mb-2">
+                        <strong>Mitat:</strong>{" "}
+                        <br></br>
+                        {formData.width || evaluation.dimensions?.width} x {" "}
+                        {formData.height || evaluation.dimensions?.height} x {" "}
+                        {formData.length || evaluation.dimensions?.length} cm
+                      </p>
+                    </>
+                  ) : (
+                    // details in edit view
+                    <>
+                      <input
+                        type="text"
+                        className="border border-black p-1 rounded w-40 mb-2"
+                        value={formData.brand}
+                        onChange={(e) => handleInputChange(e, "brand")}
+                        placeholder="Merkki"
+                        autoFocus
+                      />
+                      <input
+                        type="text"
+                        className="border border-black p-1 rounded w-40 mb-2"
+                        value={formData.model}
+                        onChange={(e) => handleInputChange(e, "model")}
+                        placeholder="Malli"
+                      />
+                      <input
+                        type="text"
+                        className="border border-black p-1 rounded w-40 mb-2"
+                        value={formData.color}
+                        onChange={(e) => handleInputChange(e, "color")}
+                        placeholder="Väri"
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          className="border border-black p-1 rounded w-12"
+                          value={formData.width}
+                          onChange={(e) => handleInputChange(e, "width")}
+                          placeholder="Leveys"
+                        />
+                        <input
+                          type="text"
+                          className="border border-black p-1 rounded w-12"
+                          value={formData.height}
+                          onChange={(e) => handleInputChange(e, "height")}
+                          placeholder="Korkeus"
+                        />
+                        <input
+                          type="text"
+                          className="border border-black p-1 rounded w-12"
+                          value={formData.length}
+                          onChange={(e) => handleInputChange(e, "length")}
+                          placeholder="Pituus"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+                  
+                  {/* condition details visually */}
+              <div className="flex flex-row ml-6">
+                  
+              <div className="flex flex-col">
+                  <div className="flex items-center">
+                    <p className="mr-2">
+                      <strong>Kunto: </strong>
+                    </p>
+                    <Pencil
+                          size={18}
+                          className=" text-gray-500 hover:text-gray-700 cursor-pointer"
+                          onClick={() => handleEditClick("condition")}
+                        />
+                  </div>
+                  <div className="mt-1">
+                    {isEditing.condition && (
+                      <input
+                        type="text"
+                        className="border border-black p-1 rounded mt-1 w-24"
+                        value={formData.condition}
+                        onChange={(e) => handleInputChange(e, "condition")}
+                        onBlur={() => handleSave("condition")}
+                        autoFocus
+                      />
+                    )}
+                  </div>
+                  <div>
+                    
+                    {/* show different image based on the reported condition of the product */}
+                  {(() => {
 
             <div>
               {!isEditing.info ? (
