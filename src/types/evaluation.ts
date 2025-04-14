@@ -9,6 +9,7 @@ export interface Evaluation {
     materials: string[]; 
     price: string;
     notes: string;
+    status: string;
     timeStamp: string;
     id: string;
     imageId: string;
