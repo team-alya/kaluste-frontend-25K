@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import LoadingProducts from "./LoadingProductList";
 import { Evaluation } from "../types/evaluation";
+import { useLocation } from "react-router-dom";
 
 
 const Reviewed = () => {
@@ -8,6 +9,10 @@ const Reviewed = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isFetched, setIsFetched] = useState<boolean>(false);
     const [evals, ] = useState([]);
+    const location = useLocation();
+    const expertData =location.state?.expertData || null;
+
+    console.log("Vastaanotetttu", expertData);
 
     // fetch all evals and filter "reviewed" evals
 

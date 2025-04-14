@@ -22,6 +22,7 @@ type FormData = {
   length: string;
   condition: string;
   materials: string[];
+  status: string;
 };
 
 type EditingState = {
@@ -47,6 +48,7 @@ export default function EvalDetails() {
     length: "",
     condition: "",
     materials: [],
+    status: "",
   });
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
@@ -91,6 +93,7 @@ export default function EvalDetails() {
         length: evaluation.dimensions?.length || "",
         condition: evaluation.condition || "Ei tiedossa",
         materials: evaluation.materials || [],
+        status: evaluation.status || "Ei tiedossa",
       });
     }
   }, [evaluationData]);
@@ -149,6 +152,7 @@ export default function EvalDetails() {
         hinta: formData.price,
         lisatiedot: formData.notes,
         materiaalit: formData.materials || [],
+        status: formData.status,
       };
 
       const response = await fetch(
@@ -165,6 +169,8 @@ export default function EvalDetails() {
       );
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Palvelimen virhe:", errorText);
         throw new Error("Tietojen päivittäminen epäonnistui");
       }
 
@@ -176,24 +182,58 @@ export default function EvalDetails() {
     }
   };
 
-  const SendToExpert = () => {
-   
-    const expertData = {
-      brand: formData.brand,
-      model: formData.model,
-      color: formData.color,
-      width: formData.width,
-      height: formData.height,
-      length: formData.length,
-      condition: formData.condition,
-      price: formData.price,
-      notes: formData.notes,
-    };
+  const SendToExpert = async () => {
 
-    console.log("Lähetetään expertille:", expertData);
-    navigate("/reviewed", {
-      state: { expertData },
-    });
+      if (!evaluationData?.id) {
+      console.error("Ei löytynyt tietoja.");
+      return;
+    }
+    try {
+      const expertData = {
+        merkki: formData.brand,
+        malli: formData.model,
+        vari: formData.color,
+        mitat: {
+          pituus: formData.length,
+          leveys: formData.width,
+          korkeus: formData.height,
+        },
+        kunto: formData.condition,
+        hinta: formData.price,
+        lisatiedot: formData.notes,
+        materiaalit: formData.materials || [],
+        status: "reviewed",
+      };
+ console.log("Lähetettävä data:", expertData);
+      const response = await fetch(
+        `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(expertData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Palvelimen virhe:", errorText);
+        throw new Error("Tietojen lähettäminen epäonnistui");
+      }
+
+      const updatedExpertData = await response.json();
+      setSaveOk(true);
+      console.log("Päivitys onnistui:", updatedExpertData);
+
+      console.log("Lähetetään expertille:", expertData);
+      navigate("/reviewed", {
+        state: { expertData },
+      });
+    } catch (error) {
+      console.error("Virhe lähettäessä:", error);
+    }
   };
 
   return (
