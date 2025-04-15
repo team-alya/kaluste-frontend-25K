@@ -71,7 +71,7 @@ For this app to work with all its functionalities you also need to have the back
 
 #### Listed objects View
 
-
+![listattu](src/assets/demo_pictures/demopics_8_resize_new.jpg)
 
 #### Object Page View
 

@@ -1,5 +1,6 @@
 import React from 'react';
 
+// a loading component shown to user when fetching data from the backend
 
 const LoadingPage: React.FC = () => {
 

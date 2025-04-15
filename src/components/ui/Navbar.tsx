@@ -2,8 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Settings } from "lucide-react";
 
 const Navbar = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
+  const username = location.state?.username || localStorage.getItem("username") || null;
 
   const pages: Record<string, string> = {
     "/": "Kirjaudu sisään",
@@ -11,37 +13,39 @@ const Navbar = () => {
     "/camera": "Ota kuva",
     "/loading": "Odota hetki",
     "/accepted": "Tuote tunnistettu",
-    "/rejected": "Tuotetta tunnistettu",
+    "/rejected": "Tuotetta ei tunnistettu",
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
-    "/eval/": "Tarkista tuotetiedot",
+    "/eval": "Tarkista tuotetiedot",
     "/error": "Virhe",
+    "/reviewed": "Käsitellyt tuotteet",
+    "/archive": "Arkisto",
   };
 
-  const previous = location.state?.from;
-  const restricted = [
-    '/loading', 
-    '/accepted',
-    '/rejected',
-    '/error',
-  ];
+  const previousPage = location.state?.from || "/home";
+  const restrictedPages = ["/", "/accepted", "/rejected", "/loading", "/error"];
 
-  const isRestricted = restricted.includes(previous);
-  const pageToNavigate = isRestricted ? '/home' : previous || '/home';
+  const handleNavigate = () => {
+    if (!restrictedPages.includes(previousPage)) {
+      navigate(-1);
+  } else {
+    navigate("/home", { state: { username, from: location.pathname } });
+  }
+}
 
   return (
     <nav className="relative flex items-center justify-between bg-black p-6">
-      {/* shows arrow if user is not on home page */}
+    {/* shows arrow if user is not on home page */}
       {location.pathname !== "/" && (
-        <button className="absolute left-6" data-testid="back-button" onClick={() => navigate(pageToNavigate)}>
+        <button className="absolute left-6" onClick={handleNavigate}>
           <ArrowLeft size={28} color="#ffffff" strokeWidth={2.25} />
         </button>
       )}
       <div>
-        {/* shows text in nav bar based on user location */}
+      {/* shows text in nav bar based on user location */}
         <h1 className="absolute left-1/2 transform -translate-x-1/2 font-sans text-white text-lg font-medium">
-          {pages[location.pathname]}
+          {pages[location.pathname] || "Sivu"}
         </h1>
       </div>
       <div>
@@ -55,13 +59,13 @@ const Navbar = () => {
             color="#ffffff"
             strokeWidth={2.25}
             onClick={() => {
-              navigate("/settings", { state: { from: location.pathname } });
+              navigate("/settings", { state:  { username,  from: location.pathname } });
             }}
           />
         </button>
       </div>
     </nav>
-  );
+    );
 };
 
 export default Navbar;

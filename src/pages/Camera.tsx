@@ -13,6 +13,7 @@ const CameraApp: React.FC = () => {
   const [imageFeedbackMsg, setImageFeedbackMsg] = useState<string>("");
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cameraRef = useRef<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,17 +30,21 @@ const CameraApp: React.FC = () => {
     }
   };
 
+  // sending the photo to the backend for feedback
+  // returns a text-based feedback about the photo quality to the user after analysis
   const imageFeedback = async () => {
+    // show loading component while fetching data
     setLoading(true);
     if (photo) {
 
       const response = await fetch(photo);
       const blob = await response.blob();
   
-      // Create form data
+      // create a formData object and add the photo as a Blob
       const formData = new FormData();
       formData.append("image", blob, "photo.jpg");
 
+      // send the photo to the backend
       fetch(import.meta.env.VITE_BACKEND_URL + "/api/photo", {
         method: "POST",
         headers: {
@@ -58,6 +63,7 @@ const CameraApp: React.FC = () => {
       })
       .then(data => {
           
+        // exit loading component and show the analysis result to the user
         setLoading(false);
         setImageFeedbackMsg(data.message);
         toggleMessage();
@@ -69,15 +75,15 @@ const CameraApp: React.FC = () => {
   
 
 
-  // sends image to backend and navigates to loading page
+  // sends image to backend for evaluation and navigates to loading page
   const handleNext = async () => {
     setLoading(true);
     if (photo) {
         // Convert the data URL to a Blob
         const response = await fetch(photo);
         const blob = await response.blob();
-
-        // Create form data
+  
+        // Create form data and append the image Blob
         const formData = new FormData();
         formData.append("image", blob, "photo.jpg");
         
@@ -100,7 +106,8 @@ const CameraApp: React.FC = () => {
            return response.json();
         })
         .then(data => {
-          
+          // if evaluation ok, return from loading page and navigate to accepted page
+          // also sends the evaluation data, username and endpoint info to the accepted page
           setLoading(false);
           navigate("/accepted", 
             { state: 
@@ -108,9 +115,6 @@ const CameraApp: React.FC = () => {
                 username, 
                 photo,
                 from: location.pathname }});
-
-         
-
         })
         .catch(error => console.error(error));
       }
@@ -127,6 +131,7 @@ const CameraApp: React.FC = () => {
         
        <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
           
+          {/* show feedback message if available */}
           {showMessage && ( 
             <div className="mb-15 text-center">
             <p className="text-md font-semibold text-[#104930]">
@@ -144,6 +149,7 @@ const CameraApp: React.FC = () => {
         }}
         className="relative mb-5"
       >
+        {/* show photo if available */}
         {photo ? (
           <div className="flex flex-col items-center">
           
@@ -170,9 +176,10 @@ const CameraApp: React.FC = () => {
         )}
       </div>
       <div className="flex flex-row gap-2 mt-4 items-center">
+        {/* if no feedback message, show options to either take a photo or upload one */}
         {!showMessage && (
           <>
-         <div>
+         <div className="flex flex-row gap-2">
              <button
               data-testid="capture-button"
               onClick={capturePhoto}
@@ -184,16 +191,16 @@ const CameraApp: React.FC = () => {
                 kuva
               </span>
             </button>
-            {/* references button that allows user to upload a picture */}
+            {/* button that allows user to upload a picture */}
             <UploadButton setPhoto={setPhoto} />
          </div>
+         {/* if photo is taken and available, show it to user */}
           {photo && (
             <button
               onClick={imageFeedback}
-              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
+              className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
             >
               {/* button that submits the photo for the AI feedback analysis */}
-              {/* <ArrowRight color="#0c6a17" strokeWidth={2.5} /> */}
               Tarkista kuva
             </button>
           )}
@@ -201,10 +208,10 @@ const CameraApp: React.FC = () => {
         )}
         
       </div>
+      {/* if feedback message is shown, give the user the option to retake/reupload a photo or to send it to further evaluation*/}
         {showMessage && (
-
-            
-          <div>
+          <div className="flex flex-row gap-2">
+            {/* button that allows the user to retake the photo */}
             <button
               className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
               onClick={() => {
@@ -215,6 +222,7 @@ const CameraApp: React.FC = () => {
             >
               Ota uusi kuva
             </button>
+            {/* button that allows the user to send the image to further evaluation */}
             <button
               className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
               onClick={handleNext}
@@ -225,6 +233,7 @@ const CameraApp: React.FC = () => {
             )}
        </div>
       ) : (
+        // if loading, show loading component
         <Loading />
       )}
     </div>
