@@ -3,12 +3,13 @@ import LoadingProducts from "./LoadingProductList";
 import { Evaluation } from "../types/evaluation";
 import { useLocation } from "react-router-dom";
 
+// list of products reviewed by an expert
 
 const Reviewed = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [isFetched, setIsFetched] = useState<boolean>(false);
-    const [evals, ] = useState([]);
+    const [evals, setEvals] = useState([]);
     const location = useLocation();
     const expertData =location.state?.expertData || null;
 
@@ -20,36 +21,37 @@ const Reviewed = () => {
         fetchEvals();
       }, []);
 
-    const fetchEvals = async () => {
 
+    const fetchEvals = async () => {
         setLoading(true);
-    
-        //  LISÄÄ TÄHÄN FILTERÖINTI
-    //     await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
-    //     method: "GET",
-    //     headers: {
-    //         "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
-    //         "Content-Type": "application/json",
-    //     },
-    // }) 
-//     .then((response) => {
-//         if (!response.ok) {
-//           throw new Error("Failed to fetch evaluations");
-//         }
-//         return response.json();
-//       })
-//       .then((data) => {
-//         // set data to useState
-//         // and exit the loading component
-//         setEvals(data);
+        
+        await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+    }) 
+    .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch evaluations");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // set data to useState
+        // and exit the loading component
+        console.log(data);
+        setEvals(data);
         setIsFetched(true);
         setLoading(false);
-//       })
+      })
+      .catch((error) => console.error(error));
+    };
 
-//       .catch((error) => console.error(error));
-//   };
-
-    }
+    const reviewedProducts = evals.filter((e: Evaluation) => {
+        return e.status === "reviewed";
+    })
 
     return (
         <div>
@@ -67,7 +69,7 @@ const Reviewed = () => {
                     <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
 
                 {/* listing the products */}
-                    {evals.map((e: Evaluation) => {
+                    {reviewedProducts.map((e: Evaluation) => {
                         const evalDate = e.timeStamp ? new Date(e.timeStamp).toLocaleDateString("fi-FI") : "Päivämäärä puuttuu";
                         return (
                         <div key={e.id}>
@@ -76,6 +78,7 @@ const Reviewed = () => {
                             className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
                             onClick={() => {
                             // save the evaluated product's data to sessionStorage for back navigation
+                            
                             sessionStorage.setItem(
                             "evalData",
                             JSON.stringify({ evaluation: e, imageId: e.imageId })
@@ -101,7 +104,7 @@ const Reviewed = () => {
                             </div>
                             {/* display the brand and product addition date to the user */}
                             <div className="ml-4 min-w-1/2 flex flex-col justify-center">
-                            <p className="m-2 ">{e.brand}</p>
+                            <p className="m-2 ">{e.evaluation.brand}</p>
                             
                             <p className="text-sm text-gray-500">{evalDate}</p>
                             </div>
