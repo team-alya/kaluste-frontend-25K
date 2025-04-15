@@ -1,36 +1,9 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
-import { Evaluation } from "../types/evaluation"; 
 import { useNavigate } from "react-router-dom";
-
-
-type EvaluationData = {
-  evaluation: Evaluation;
-  imageId: string;
-  id?: string;
-  timeStamp?: string;
-};
-
-type FormData = {
-  price: string;
-  notes: string;
-  brand: string;
-  model: string;
-  color: string;
-  width: string;
-  height: string;
-  length: string;
-  condition: string;
-  materials: string[];
-  status: string;
-};
-
-type EditingState = {
-  info: boolean;
-  price: boolean;
-  notes: boolean;
-  condition: boolean;
-};
+import { EvaluationData } from "../types/EvaluationData";
+import { FormData } from "../types/formData";
+import { EditingState } from "../types/editingState";
 
 export default function EvalDetails() {
   const location = useLocation();
