@@ -9,6 +9,7 @@ import { Pencil } from "lucide-react";
 export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
+  const role = window.localStorage.getItem("role");
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
@@ -44,6 +45,7 @@ export default function EvalDetails() {
     : "Päivämäärä puuttuu";
 
   useEffect(() => {
+    console.log(role);
     const stateData = location.state?.evaluation;
     if (stateData) {
       setEvaluationData(stateData);
@@ -234,16 +236,21 @@ export default function EvalDetails() {
             </div>
 
             <div>
-              <div
-                onClick={handleEditAllClick}
-                className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
-                style={{ width: "40px", height: "40px" }}
-                aria-label="Muokkaa tietoja"
-              >
-                <Pencil size={20} />
-              </div>
+             
+                
+            
+
               {!isEditing.info ? (
                 <>
+                  <div
+                    onClick={handleEditAllClick}
+                    className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
+                    style={{ width: "40px", height: "40px" }}
+                    aria-label="Muokkaa tietoja"
+                  >
+                    <Pencil size={20} />
+                  </div>
+
                   <div className="flex items-center mb-2">
                     <p className="mr-2">
                       <strong>Merkki:</strong> {formData.brand}
