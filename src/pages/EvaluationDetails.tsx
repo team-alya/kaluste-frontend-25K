@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
+import { Pencil } from "lucide-react";
 
 export default function EvalDetails() {
   const location = useLocation();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const [evaluationData, setEvaluationData] = useState<EvaluationData | undefined>();
+  const [evaluationData, setEvaluationData] = useState<
+    EvaluationData | undefined
+  >();
   const [formData, setFormData] = useState<FormData>({
     price: "",
     notes: "",
@@ -79,8 +82,6 @@ export default function EvalDetails() {
       return () => clearTimeout(timer);
     }
   }, [saveOk]);
-
- 
 
   const handleEditAllClick = () => {
     setIsEditing({
@@ -156,8 +157,7 @@ export default function EvalDetails() {
   };
 
   const SendToExpert = async () => {
-
-      if (!evaluationData?.id) {
+    if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
       return;
     }
@@ -230,16 +230,18 @@ export default function EvalDetails() {
                   alt="Tuotekuvaa ei löytynyt"
                 />
               )}
-               <button
-    onClick={handleEditAllClick}
-    className="mt-3 px-4 py-1 text-sm text-white bg-gray-500 shadow-sm transition rounded"
-    style={{ width: '90%', height: "40px"}}
-  >
-    Muokkaa tietoja
-  </button>
+             
             </div>
 
             <div>
+              <div
+                onClick={handleEditAllClick}
+                className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
+                style={{ width: "40px", height: "40px" }}
+                aria-label="Muokkaa tietoja"
+              >
+                <Pencil size={20} />
+              </div>
               {!isEditing.info ? (
                 <>
                   <div className="flex items-center mb-2">
@@ -254,7 +256,8 @@ export default function EvalDetails() {
                     <strong>Väri:</strong> {formData.color}
                   </p>
                   <p className="mb-2">
-                    <strong>Mitat:</strong> {formData.width} x {formData.height} x {formData.length} cm
+                    <strong>Mitat:</strong> {formData.width} x {formData.height}{" "}
+                    x {formData.length} cm
                   </p>
                 </>
               ) : (
@@ -307,9 +310,7 @@ export default function EvalDetails() {
                 </>
               )}
             </div>
-            
           </div>
-          
 
           <div className="flex flex-row ml-6">
             <div className="flex flex-col">
@@ -330,12 +331,23 @@ export default function EvalDetails() {
                 ) : (
                   <div className="flex flex-col items-start">
                     {(() => {
-                      const conditionMap: { [key: string]: { img: string; text: string } } = {
+                      const conditionMap: {
+                        [key: string]: { img: string; text: string };
+                      } = {
                         Huono: { img: "/assets/cond_poor.png", text: "Huono" },
                         Hyvä: { img: "/assets/cond_good.png", text: "Hyvä" },
-                        Kohtalainen: { img: "/assets/cond_good.png", text: "Kohtalainen" },
-                        Erinomainen: { img: "/assets/cond_excellent.png", text: "Erinomainen" },
-                        Uusi: { img: "/assets/cond_excellent.png", text: "Uusi" },
+                        Kohtalainen: {
+                          img: "/assets/cond_good.png",
+                          text: "Kohtalainen",
+                        },
+                        Erinomainen: {
+                          img: "/assets/cond_excellent.png",
+                          text: "Erinomainen",
+                        },
+                        Uusi: {
+                          img: "/assets/cond_excellent.png",
+                          text: "Uusi",
+                        },
                       };
 
                       const condition = formData.condition;
@@ -412,20 +424,32 @@ export default function EvalDetails() {
           )}
 
           <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-            <button
-              onClick={handleSaveAll}
-              className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
-              style={{ width: "90%", height: "50px" }}
-            >
-              Tallenna kaikki
-            </button>
-            <button
-              className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
-              style={{ width: "90%", height: "50px" }}
-              onClick={SendToExpert}
-            >
-              Lisää expertin listaan
-            </button>
+            {Object.values(isEditing).some((value) => value) ? (
+              <button
+                onClick={handleSaveAll}
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+                style={{ width: "90%", height: "50px" }}
+              >
+                Tallenna tiedot
+              </button>
+            ) : (
+              <>
+                <button
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+                  style={{ width: "90%", height: "50px" }}
+                  onClick={SendToExpert}
+                >
+                  Lähetä expertille
+                </button>
+                <button
+                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+                  style={{ width: "90%", height: "50px" }}
+                  onClick={() => console.log("Arkistoi painettu")}
+                >
+                  Arkistoi
+                </button>
+              </>
+            )}
           </div>
         </div>
       ) : (
@@ -435,6 +459,4 @@ export default function EvalDetails() {
       )}
     </div>
   );
-  
 }
-
