@@ -21,6 +21,7 @@ const Home = () => {
         </div>
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>
+
       <div className="grid grid-cols-2 gap-3">
         <div>
           {/* button that navigates to camera page */}
@@ -36,6 +37,7 @@ const Home = () => {
           <p className="mt-23 text-white">Tunnista tuote</p>
         </button>
       </div>
+
       <div>
         {/* button that navigates to product list */}
         <button
@@ -52,6 +54,7 @@ const Home = () => {
           <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
         </button>
         </div>
+
         <div>
         {/* button that navigates to expert reviewed list */}
         <button
@@ -68,6 +71,7 @@ const Home = () => {
           <p className="mt-23 text-white">Expertin käsittelemät</p>
         </button>
         </div>
+        
         <div>
         {/* button that navigates to archived list */}
         <button

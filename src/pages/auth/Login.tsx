@@ -48,6 +48,7 @@ const Login = () => {
           // save the token and username to localStorage
           window.localStorage.setItem("token", data.token);
           window.localStorage.setItem("username", data.user.username);
+          window.localStorage.setItem("role", data.user.role);
 
           // navigate to the homepage and pass the username and previous route for navigation
           navigate("/home", { state: { username: data.user.username, from: location.pathname } });

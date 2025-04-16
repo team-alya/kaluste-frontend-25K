@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { EvaluationData } from "../types/EvaluationData";
+import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 
@@ -177,7 +177,6 @@ export default function EvalDetails() {
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
- console.log("Lähetettävä data:", expertData);
       const response = await fetch(
         `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
         {
@@ -196,11 +195,8 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      const updatedExpertData = await response.json();
       setSaveOk(true);
-      console.log("Päivitys onnistui:", updatedExpertData);
 
-      console.log("Lähetetään expertille:", expertData);
       navigate("/reviewed", {
         state: { expertData },
       });
@@ -211,8 +207,6 @@ export default function EvalDetails() {
 
   return (
     <div>
-
-
       {evaluation ? (
         <div>
           <div className="flex flex-row items-start m-6 mt-10">
