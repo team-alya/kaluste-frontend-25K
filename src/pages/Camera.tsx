@@ -13,6 +13,7 @@ const CameraApp: React.FC = () => {
   const [imageFeedbackMsg, setImageFeedbackMsg] = useState<string>("");
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cameraRef = useRef<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
