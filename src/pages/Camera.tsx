@@ -181,7 +181,7 @@ const CameraApp: React.FC = () => {
          <div className="flex flex-row gap-2">
              <button
               onClick={capturePhoto}
-              className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition"
+              className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
             >
               {/* button that captures the picture */}
               <span className="inline-flex items-center gap-2">
@@ -196,7 +196,7 @@ const CameraApp: React.FC = () => {
           {photo && (
             <button
               onClick={imageFeedback}
-              className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
+              className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
             >
               {/* button that submits the photo for the AI feedback analysis */}
               Tarkista kuva
@@ -211,7 +211,7 @@ const CameraApp: React.FC = () => {
           <div className="flex flex-row gap-2">
             {/* button that allows the user to retake the photo */}
             <button
-              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
+              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
               onClick={() => {
                 setPhoto(null);
                 setShowMessage(false);
@@ -222,7 +222,7 @@ const CameraApp: React.FC = () => {
             </button>
             {/* button that allows the user to send the image to further evaluation */}
             <button
-              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
+              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
               onClick={handleNext}
             >
               Hyväksy kuva
