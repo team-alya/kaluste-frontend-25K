@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { EvaluationData } from "../types/EvaluationData";
+import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 
@@ -420,7 +420,7 @@ export default function EvalDetails() {
           <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
             <button
               onClick={handleSaveAll}
-              className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+              className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
               style={{ width: "90%", height: "50px" }}
             >
               Tallenna kaikki
