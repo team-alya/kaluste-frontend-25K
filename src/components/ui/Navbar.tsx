@@ -38,7 +38,7 @@ const Navbar = () => {
     <nav className="relative flex items-center justify-between bg-black p-6">
     {/* shows arrow if user is not on home page */}
       {location.pathname !== "/" && (
-        <button className="absolute left-6" onClick={handleNavigate}>
+        <button className="absolute left-6" onClick={handleNavigate} data-testid="back-button">
           <ArrowLeft size={28} color="#ffffff" strokeWidth={2.25} />
         </button>
       )}

@@ -177,7 +177,8 @@ const AcceptedPage: React.FC = () => {
           <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900">{stockMessage}</p>
        
         {/* save button */}
-        <button 
+        <button
+          data-testid="save-button"
           className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
           onClick={() => saveEval()}
         >
@@ -185,7 +186,8 @@ const AcceptedPage: React.FC = () => {
         </button>
 
         {/* reject button */}
-        <button 
+        <button
+          data-testid="reject-button"
           className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm"
           onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
         >

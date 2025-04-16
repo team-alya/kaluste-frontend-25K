@@ -197,6 +197,7 @@ const CameraApp: React.FC = () => {
          {/* if photo is taken and available, show it to user */}
           {photo && (
             <button
+              data-testid="check-image"
               onClick={imageFeedback}
               className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
             >
@@ -224,6 +225,7 @@ const CameraApp: React.FC = () => {
             </button>
             {/* button that allows the user to send the image to further evaluation */}
             <button
+              data-testid="accept-image"
               className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
               onClick={handleNext}
             >
