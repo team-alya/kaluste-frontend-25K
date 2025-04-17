@@ -9,7 +9,6 @@ import { Pencil } from "lucide-react";
 export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = window.localStorage.getItem("role");
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
@@ -45,7 +44,6 @@ export default function EvalDetails() {
     : "Päivämäärä puuttuu";
 
   useEffect(() => {
-    console.log(role);
     const stateData = location.state?.evaluation;
     if (stateData) {
       setEvaluationData(stateData);
@@ -232,14 +230,9 @@ export default function EvalDetails() {
                   alt="Tuotekuvaa ei löytynyt"
                 />
               )}
-             
             </div>
 
             <div>
-             
-                
-            
-
               {!isEditing.info ? (
                 <>
                   <div
