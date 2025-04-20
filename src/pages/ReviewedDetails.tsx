@@ -5,6 +5,7 @@ import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil, Trash2 } from "lucide-react";
 
+
 const ReviewedDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -158,6 +159,55 @@ const ReviewedDetails = () => {
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
+    }
+  };
+
+    const SendToArchive = async () => {
+    if (!evaluationData?.id) {
+      console.error("Ei löytynyt tietoja.");
+      return;
+    }
+    try {
+      const archiveData = {
+        merkki: formData.brand,
+        malli: formData.model,
+        vari: formData.color,
+        mitat: {
+          pituus: formData.length,
+          leveys: formData.width,
+          korkeus: formData.height,
+        },
+        kunto: formData.condition,
+        hinta: formData.price,
+        lisatiedot: formData.notes,
+        materiaalit: formData.materials || [],
+        status: "archived",
+      };
+      const response = await fetch(
+        `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(archiveData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Palvelimen virhe:", errorText);
+        throw new Error("Tietojen lähettäminen epäonnistui");
+      }
+
+      setSaveOk(true);
+
+      navigate("/archive", {
+        state: { archiveData },
+      });
+    } catch (error) {
+      console.error("Virhe lähettäessä:", error);
     }
   };
 
@@ -456,7 +506,7 @@ const ReviewedDetails = () => {
                 <button
                   className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
                   style={{ width: "90%", height: "50px" }}
-                  onClick={() => console.log("Arkistoi painettu")}
+                  onClick={SendToArchive}
                 >
                   
                   Arkistoi
