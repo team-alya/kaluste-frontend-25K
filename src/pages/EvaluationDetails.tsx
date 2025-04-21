@@ -427,7 +427,7 @@ export default function EvalDetails() {
             {Object.values(isEditing).some((value) => value) ? (
               <button
                 onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
                 style={{ width: "90%", height: "50px" }}
               >
                 Tallenna tiedot
@@ -435,7 +435,7 @@ export default function EvalDetails() {
             ) : (
               <>
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
                   style={{ width: "90%", height: "50px" }}
                   onClick={SendToExpert}
                 >
