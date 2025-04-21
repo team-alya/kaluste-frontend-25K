@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import LoadingProducts from "./LoadingProductList";
 import { Evaluation } from "../types/evaluation";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // list of products reviewed by an expert
 
@@ -10,19 +10,16 @@ const Reviewed = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isFetched, setIsFetched] = useState<boolean>(false);
     const [evals, setEvals] = useState([]);
-    const location = useLocation();
-    const expertData =location.state?.expertData || null;
 
-    console.log("Vastaanotetttu", expertData);
-
+    const navigate = useNavigate();
     // fetch all evals and filter "reviewed" evals
 
      useEffect(() => {
-        fetchEvals();
+        fetchAllProducts();
       }, []);
 
 
-    const fetchEvals = async () => {
+    const fetchAllProducts = async () => {
         setLoading(true);
         
         await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
@@ -41,7 +38,6 @@ const Reviewed = () => {
       .then((data) => {
         // set data to useState
         // and exit the loading component
-        console.log(data);
         setEvals(data);
         setIsFetched(true);
         setLoading(false);
@@ -52,6 +48,32 @@ const Reviewed = () => {
     const reviewedProducts = evals.filter((e: Evaluation) => {
         return e.status === "reviewed";
     })
+
+    const fetchOneProduct = async (id: string) => {
+        const url = import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`;
+        await fetch(url, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          })
+    
+       .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch evaluation!");
+        }
+        return response.json();
+       })
+        .then((data) => {
+          // if the fetch is successful, navigate to the product page and pass the product and route information in the state
+          navigate(`/reviewed/${id}`, {state: { evaluation: data, from: location.pathname}});
+             
+        })
+        .catch((error) => console.error(error));
+      }
+    
+
 
     return (
         <div>
@@ -78,7 +100,7 @@ const Reviewed = () => {
                             className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
                             onClick={() => {
                             // save the evaluated product's data to sessionStorage for back navigation
-                            
+                            fetchOneProduct(e.id);
                             sessionStorage.setItem(
                             "evalData",
                             JSON.stringify({ evaluation: e, imageId: e.imageId })

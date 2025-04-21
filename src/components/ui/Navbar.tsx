@@ -17,7 +17,6 @@ const Navbar = () => {
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
-    "/eval": "Tarkista tuotetiedot",
     "/error": "Virhe",
     "/reviewed": "Käsitellyt tuotteet",
     "/archive": "Arkisto",
@@ -45,7 +44,7 @@ const Navbar = () => {
       <div>
       {/* shows text in nav bar based on user location */}
         <h1 className="absolute left-1/2 transform -translate-x-1/2 font-sans text-white text-lg font-medium">
-          {pages[location.pathname] || "Sivu"}
+          {pages[location.pathname]}
         </h1>
       </div>
       <div>
