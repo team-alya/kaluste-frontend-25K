@@ -174,11 +174,11 @@ const AcceptedPage: React.FC = () => {
       <div>
          {/* Show stock info */}
         
-          <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900">{stockMessage}</p>
+          <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">{stockMessage}</p>
        
         {/* save button */}
         <button 
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4 btn-tertiary"
           onClick={() => saveEval()}
         >
           Ota vastaan
@@ -186,7 +186,7 @@ const AcceptedPage: React.FC = () => {
 
         {/* reject button */}
         <button 
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm btn-secondary"
           onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
         >
           Hylkää

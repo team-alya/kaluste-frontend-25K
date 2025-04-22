@@ -17,7 +17,7 @@ const Home = () => {
       <div className="m-8">
         <div className="flex items-center space-x-2">
         <h1 className="text-4xl font-bold">Hei,</h1>
-        <p className="text-4xl font-bold text-emerald-700">{username}</p>
+        <p className="text-4xl font-bold text-emerald-700 text-primary">{username}</p>
         </div>
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>
