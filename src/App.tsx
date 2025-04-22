@@ -14,6 +14,10 @@ import { AuthContext, AuthProvider } from "./context/AuthContext";
 import FetchAllEvals from "./pages/FetchAllEvals";
 import EvalDetails from "./pages/EvaluationDetails";
 import ErrorInfo from "./pages/Error";
+import Reviewed from "./pages/Reviewed";
+import Archive from "./pages/Archive";
+import ReviewedDetails from "./pages/ReviewedDetails";
+import ArchiveDetails from "./pages/ArchiveDetails";
 
 
 // Layout component to render Navbar based on the page
@@ -71,6 +75,11 @@ function App() {
                 <Route path="/evals" element={<FetchAllEvals />} />
                 <Route path="/eval/:id" element={<EvalDetails />} />
                 <Route path="/accepted" element={<AcceptedPage />} />
+                <Route path="/reviewed" element={<Reviewed />} />
+                <Route path="/archive" element={<Archive />} />
+                <Route path="/reviewed/:id" element={<ReviewedDetails />} />
+                <Route path="/archive/:id" element={<ArchiveDetails />} />
+
 
               </Route>
             </Routes>

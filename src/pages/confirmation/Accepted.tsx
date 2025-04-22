@@ -126,6 +126,7 @@ const AcceptedPage: React.FC = () => {
       const data = await stockResponse.json();
       setStockMessage(data.message)
     } catch (error) {
+      console.log(error);
       setStockMessage("virhe varastotilanteen tarkistuksessa.");
     } finally {
       setLoading(false);
@@ -144,7 +145,7 @@ const AcceptedPage: React.FC = () => {
         <img
           src={photo}
           alt="Approved"
-          className="w-[250px] h-[250px] object-cover rounded-lg mb-4 shadow-md"
+          className=" w-[250px] h-[250px] object-cover rounded-lg mb-4 shadow-md"
         />
       ) : (
         // or text if the photo is not available for some reason
@@ -158,16 +159,6 @@ const AcceptedPage: React.FC = () => {
         </p>
         <p className="mb-2">
           <strong>Malli:</strong> {evaluation.model}
-        </p>
-        <p className="mb-2">
-          <strong>Väri:</strong> {evaluation.color}
-        </p>
-        <p className="mb-2">
-          <strong>Mitat:</strong> {evaluation.length || 0} cm x {evaluation.width || 0} cm x{" "}
-          {evaluation.height || 0} cm
-        </p>
-        <p className="mb-2">
-          <strong>Kunto:</strong> {evaluation.condition}
         </p>
       </div>
 
@@ -183,11 +174,11 @@ const AcceptedPage: React.FC = () => {
       <div>
          {/* Show stock info */}
         
-          <p className="text-md text-emerald-700 mt-4">{stockMessage}</p>
+          <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">{stockMessage}</p>
        
         {/* save button */}
         <button 
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4 btn-tertiary"
           onClick={() => saveEval()}
         >
           Ota vastaan
@@ -195,7 +186,7 @@ const AcceptedPage: React.FC = () => {
 
         {/* reject button */}
         <button 
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm btn-secondary"
           onClick={() => navigate("/home", { state: { username, from: location.pathname } })}
         >
           Hylkää
