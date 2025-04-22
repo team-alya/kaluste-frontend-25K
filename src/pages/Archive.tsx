@@ -106,12 +106,10 @@ const Archive = () => {
             ) : (
                 <div>
                     <div className="flex flex-col">
-                        <div className="flex items-center justify-between">
-                            <h1 className="text-4xl font-bold ml-5 mt-4">Arkistoidut</h1>
+                        <div className="flex items-center justify-between mt-1">
+                            <h1 className="text-4xl font-bold ml-5">Arkistoidut</h1>
                             <button
-                                className={`m-5 p-2 flex items-center justify-center ${
-                                    showCheckboxes ? "bg-red-600 text-white rounded" : "text-gray-500"
-                                }`}
+                                className={`m-5 p-2 flex items-center justify-center ${showCheckboxes ? "" : "text-gray-500"}`}
                                 onClick={() => {
                                     if (showCheckboxes && selectedEvals.length > 0) {
                                         deleteSelectedEvals();
@@ -121,12 +119,44 @@ const Archive = () => {
                                 }}
                             >
                                 {showCheckboxes ? (
-                                    "Vahvista poisto"
+                                    ""
                                 ) : (
-                                    <Trash2 className="ml-2" />
+                                    <span
+                                        className="bg-gray-300 text-black px-4 py-2 flex items-center cursor-pointer rounded-lg"
+                                        onClick={() => {
+                                            setShowCheckboxes(!showCheckboxes);
+                                        }}
+                                    >
+                                        Valitse
+                                        <Trash2 className="ml-2" />
+                                    </span>
                                 )}
                             </button>
                         </div>
+
+                        {showCheckboxes && (
+                            <div className="flex justify-start ml-5 mt-4">
+                                <button
+                                    className="bg-gray-300 text-black px-4 py-2 mr-2 rounded-lg"
+                                    onClick={() => {
+                                        setShowCheckboxes(false);
+                                        setSelectedEvals([]);
+                                    }}
+                                >
+                                    Peru poisto
+                                </button>
+                                <button
+                                    className="bg-red-600 text-white rounded-lg px-4 py-2"
+                                    onClick={() => {
+                                        if (selectedEvals.length > 0) {
+                                            deleteSelectedEvals();
+                                        }
+                                    }}
+                                >
+                                    Vahvista poisto
+                                </button>
+                            </div>
+                        )}
 
                         {evals.map((e: Evaluation) => {
                             const evalDate = e.timeStamp
