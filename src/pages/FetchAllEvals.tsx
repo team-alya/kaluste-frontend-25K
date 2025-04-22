@@ -75,9 +75,10 @@ export default function FetchAllEvals() {
     .catch((error) => console.error(error));
   }
 
-  const notReviewedProducts = evals.filter((e: Evaluation) => {
-    return e.status !== "reviewed";
-  })
+// filter the products that are not reviewed or archived
+  const filterProducts = evals.filter((e: Evaluation) => {
+    return e.status !== "reviewed" && e.status !== "archived";
+  });
 
   return (
     <div>
@@ -97,7 +98,7 @@ export default function FetchAllEvals() {
             <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
 
             {/* listing the products */}
-            {notReviewedProducts.map((e: Evaluation) => {
+            {filterProducts.map((e: Evaluation) => {
               const evalDate = e.timeStamp ? new Date(e.timeStamp).toLocaleDateString("fi-FI") : "Päivämäärä puuttuu";
               return (
                 <div key={e.id}>
