@@ -1,19 +1,18 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil, Trash2 } from "lucide-react";
 
-
-const ReviewedDetails = () => {
+export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
   >();
-
   const [formData, setFormData] = useState<FormData>({
     price: "",
     notes: "",
@@ -27,7 +26,6 @@ const ReviewedDetails = () => {
     materials: [],
     status: "",
   });
-
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
     price: false,
@@ -37,11 +35,10 @@ const ReviewedDetails = () => {
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
-  const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
+ const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
   const [warningMsg] = useState<string>(
     "Poistoa ei voi perua. Haluatko varmasti poistaa tuotteen?"
   );
-
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
 
@@ -162,13 +159,13 @@ const ReviewedDetails = () => {
     }
   };
 
-    const SendToArchive = async () => {
+  const SendToExpert = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
       return;
     }
     try {
-      const archiveData = {
+      const expertData = {
         merkki: formData.brand,
         malli: formData.model,
         vari: formData.color,
@@ -181,7 +178,7 @@ const ReviewedDetails = () => {
         hinta: formData.price,
         lisatiedot: formData.notes,
         materiaalit: formData.materials || [],
-        status: "archived",
+        status: "reviewed",
       };
       const response = await fetch(
         import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
@@ -191,7 +188,7 @@ const ReviewedDetails = () => {
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(archiveData),
+          body: JSON.stringify(expertData),
         }
       );
 
@@ -203,14 +200,15 @@ const ReviewedDetails = () => {
 
       setSaveOk(true);
 
-      navigate("/archive", {
-        state: { archiveData },
+      navigate("/reviewed", {
+        state: { expertData },
       });
     } catch (error) {
       console.error("Virhe lähettäessä:", error);
     }
   };
 
+  
   const deleteProduct = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
@@ -487,7 +485,7 @@ const ReviewedDetails = () => {
               <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
               <button
                 onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
                 style={{ width: "90%", height: "50px" }}
               >
                 Tallenna tiedot
@@ -496,20 +494,19 @@ const ReviewedDetails = () => {
             ) : (
               <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary"
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg"
                   style={{ width: "90%", height: "50px" }}
                   onClick={() => setDeleteConfirmation(true)}
                 >
                   <Trash2 size={20} strokeWidth={2} className="mr-2"/>
                   Poista
                 </button>
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+                   <button
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
                   style={{ width: "90%", height: "50px" }}
-                  onClick={SendToArchive}
+                  onClick={SendToExpert}
                 >
-                  
-                  Arkistoi
+                  Lähetä expertille
                 </button>
               </div>
             )}
@@ -522,6 +519,4 @@ const ReviewedDetails = () => {
       )}
     </div>
   );
-};
-
-export default ReviewedDetails;
+}
