@@ -184,7 +184,7 @@ const ReviewedDetails = () => {
         status: "archived",
       };
       const response = await fetch(
-        `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
