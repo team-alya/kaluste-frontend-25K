@@ -27,7 +27,21 @@ test.beforeEach('Open start URL', async ({ page }) => {
  
     const button = page.getByRole('button', { name: 'Kirjaudu ulos' });
     await expect(button).toBeVisible();
+
+    await expect(page.getByText('Värisokeus')).toBeVisible();
+
+    await expect(page.getByTestId('color-blind')).toBeVisible();
  
+  });
+
+  test('color blind function works correctly', async ({ page }) => {
+    await page.click('[data-testid="color-blind"]', { force: true });
+
+    await expect(page.locator('body')).toHaveClass(/colorblind/);
+
+    const button = page.getByRole('button', { name: 'Kirjaudu ulos' });
+    await expect(button).toHaveCSS('background-color', 'rgb(29, 78, 216)');
+
   });
  
   test('logout function works correctly', async ({ page }) => {
@@ -36,3 +50,4 @@ test.beforeEach('Open start URL', async ({ page }) => {
     await expect(page).toHaveURL('http://localhost:5173');
    
   });
+

@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
-import { Pencil } from "lucide-react";
-
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function EvalDetails() {
   const location = useLocation();
@@ -36,7 +35,10 @@ export default function EvalDetails() {
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
-
+ const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
+  const [warningMsg] = useState<string>(
+    "Poistoa ei voi perua. Haluatko varmasti poistaa tuotteen?"
+  );
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
 
@@ -178,7 +180,8 @@ export default function EvalDetails() {
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/${evaluationData.id}/status`,
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -204,55 +207,38 @@ export default function EvalDetails() {
       console.error("Virhe lähettäessä:", error);
     }
   };
-  const SendToArchive = async () => {
+
+  
+  const deleteProduct = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
       return;
     }
+
     try {
-      const archiveData = {
-        merkki: formData.brand,
-        malli: formData.model,
-        vari: formData.color,
-        mitat: {
-          pituus: formData.length,
-          leveys: formData.width,
-          korkeus: formData.height,
-        },
-        kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.notes,
-        materiaalit: formData.materials || [],
-        status: "archived",
-      };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL +`${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +
+          `/api/evaluation/${evaluationData.id}`,
         {
-          method: "PATCH",
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
           },
-          body: JSON.stringify(archiveData),
         }
       );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Palvelimen virhe:", errorText);
-        throw new Error("Tietojen lähettäminen epäonnistui");
+        console.error(errorText);
+        throw new Error("Poisto epäonnistui");
       }
 
-      setSaveOk(true);
-
-      navigate("/archive", {
-        state: { archiveData },
-      });
+      console.log("Tuote poistettu onnistuneesti");
+      navigate("/reviewed");
     } catch (error) {
-      console.error("Virhe lähettäessä:", error);
+      console.error("Virhe poistettaessa:", error);
     }
   };
-
 
   return (
     <div>
@@ -312,7 +298,6 @@ export default function EvalDetails() {
               ) : (
                 <>
                   <input
-                    data-testid="brand-test"
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
                     value={formData.brand}
@@ -321,7 +306,6 @@ export default function EvalDetails() {
                     autoFocus
                   />
                   <input
-                    data-testid="model-test"
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
                     value={formData.model}
@@ -329,7 +313,6 @@ export default function EvalDetails() {
                     placeholder="Malli"
                   />
                   <input
-                    data-testid="color-test"
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
                     value={formData.color}
@@ -338,7 +321,6 @@ export default function EvalDetails() {
                   />
                   <div className="flex gap-2">
                     <input
-                      data-testid="width-test"
                       type="text"
                       className="border border-black p-1 rounded w-12"
                       value={formData.width}
@@ -346,7 +328,6 @@ export default function EvalDetails() {
                       placeholder="Leveys"
                     />
                     <input
-                      data-testid="height-test"
                       type="text"
                       className="border border-black p-1 rounded w-12"
                       value={formData.height}
@@ -354,7 +335,6 @@ export default function EvalDetails() {
                       placeholder="Korkeus"
                     />
                     <input
-                      data-testid="length-test"
                       type="text"
                       className="border border-black p-1 rounded w-12"
                       value={formData.length}
@@ -478,32 +458,57 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-            {Object.values(isEditing).some((value) => value) ? (
+          <div >
+            {deleteConfirmation ? (
+              <div className="flex flex-col justify-center items-center">
+                <p className="text-red-600 font-semibold text-lg border-2 my-6 rounded-md border-red-700 mb-4 text-center mx-4 ">{warningMsg}</p>
+                <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
+                
+                  <button
+                    onClick={deleteProduct}
+                    style={{ width: "90%", height: "50px" }}
+                    className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg"
+                  >
+                    <Trash2 size={20} strokeWidth={2} className="mr-2"/>
+                    Poista
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirmation(false)}
+                    style={{ width: "90%", height: "50px" }}
+                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+                  >
+                    Peru
+                  </button>
+                </div>
+              </div>
+            ) : Object.values(isEditing).some((value) => value) ? (
+              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
               <button
                 onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
                 style={{ width: "90%", height: "50px" }}
               >
                 Tallenna tiedot
               </button>
+              </div>
             ) : (
-              <>
+              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg"
+                  style={{ width: "90%", height: "50px" }}
+                  onClick={() => setDeleteConfirmation(true)}
+                >
+                  <Trash2 size={20} strokeWidth={2} className="mr-2"/>
+                  Poista
+                </button>
+                   <button
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
                   style={{ width: "90%", height: "50px" }}
                   onClick={SendToExpert}
                 >
                   Lähetä expertille
                 </button>
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
-                  style={{ width: "90%", height: "50px" }}
-                  onClick={SendToArchive}
-                >
-                  Arkistoi
-                </button>
-              </>
+              </div>
             )}
           </div>
         </div>
