@@ -175,11 +175,11 @@ const CameraApp: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-row gap-2 mt-4 items-center">
+      <div className="flex flex-row gap-2 fixed bottom-2 left-1/2 transform -translate-x-1/2 h-16 items-center px-7 pb-6">
         {/* if no feedback message, show options to either take a photo or upload one */}
         {!showMessage && (
           <>
-         <div className="flex flex-row gap-2 fixed bottom-2 inset-x-5 h-16 items-center px-7 pb-6">
+         <div className="flex flex-row gap-2">
              <button
               onClick={capturePhoto}
               className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
