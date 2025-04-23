@@ -255,10 +255,10 @@ export default function EvalDetails() {
 
 
   return (
-    <div>
+    <div className="flex md:justify-center">
       {evaluation ? (
         <div>
-          <div className="flex flex-row items-start m-6 mt-10">
+          <div className="flex flex-row items-start m-6">
             <div>
               <p className="text-gray-500 text-sm mb-2">
                 <strong>Lisätty:</strong> {evalDate}
@@ -472,24 +472,24 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+          <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
             {Object.values(isEditing).some((value) => value) ? (
               <button
                 onClick={handleSaveAll}
-                className="flex items-center justify-center text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/5"
+                className="flex items-center justify-center text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
               >
                 Tallenna tiedot
               </button>
             ) : (
               <>
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/6"
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
                   onClick={SendToExpert}
                 >
                   Lähetä expertille
                 </button>
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/6"
+                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
                   onClick={SendToArchive}
                 >
                   Arkistoi
