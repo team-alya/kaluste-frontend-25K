@@ -105,7 +105,7 @@ const Archive = () => {
                 </div>
             ) : (
                 <div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col items-center">
                         <div className="flex items-center justify-between mt-1">
                             <h1 className="text-4xl font-bold ml-5">Arkistoidut</h1>
                             <button
@@ -173,7 +173,9 @@ const Archive = () => {
                                         />
                                     )}
                                     <button
-                                        className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
+                                        className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs
+                                        md:p-5 md:w-md md:text-lg
+                                        lg:p-6 lg:w-lg lg:text-xl"
                                         onClick={() => {
                                             navigate(`/archive/${e.id}`, {
                                                 state: { evaluation: e, from: location.pathname },

@@ -94,7 +94,7 @@ export default function FetchAllEvals() {
       ) : (
         // if products are fetched and the list is not empty
         <div>
-          <div className="flex flex-col">
+          <div className="flex flex-col items-center">
             <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
 
             {/* listing the products */}
@@ -104,7 +104,9 @@ export default function FetchAllEvals() {
                 <div key={e.id}>
                   {/* create a clickable button for the product card */}
                   <button
-                      className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
+                      className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs
+                      md:p-5 md:w-md md:text-lg
+                      lg:p-6 lg:w-lg lg:text-xl"
                       onClick={() => {
                       // save the evaluated product's data to sessionStorage for back navigation
                       sessionStorage.setItem(

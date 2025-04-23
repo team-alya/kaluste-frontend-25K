@@ -494,7 +494,7 @@ export default function EvalDetails() {
             ) : (
               <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg"
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary"
                   style={{ width: "90%", height: "50px" }}
                   onClick={() => setDeleteConfirmation(true)}
                 >
@@ -502,7 +502,7 @@ export default function EvalDetails() {
                   Poista
                 </button>
                    <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
                   style={{ width: "90%", height: "50px" }}
                   onClick={SendToExpert}
                 >

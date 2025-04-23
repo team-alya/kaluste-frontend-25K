@@ -129,7 +129,7 @@ const CameraApp: React.FC = () => {
       {/* camera function styling */}
       {!loading ? (
         
-       <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+       <div className="flex flex-col items-center justify-center min-h-screen p-4 mt-[-50px]">
           
           {/* show feedback message if available */}
           {showMessage && ( 
@@ -179,7 +179,7 @@ const CameraApp: React.FC = () => {
         {/* if no feedback message, show options to either take a photo or upload one */}
         {!showMessage && (
           <>
-         <div className="flex flex-row gap-2">
+         <div className="flex flex-row gap-2 fixed bottom-2 inset-x-5 h-16 items-center px-7 pb-6">
              <button
               onClick={capturePhoto}
               className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
