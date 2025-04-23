@@ -9,10 +9,11 @@ import archive from "/assets/archive.png";
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const username = location.state?.username || null;
+  const username = window.localStorage.getItem("username") || null;
   const role = window.localStorage.getItem("role") || null;
 
   return (
+
     <div>
       <div className="m-8">
         <div className="flex items-center space-x-2">
@@ -23,12 +24,12 @@ const Home = () => {
       </div>
 
       { role?.toLowerCase() !== "user" ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 md:justify-items-center gap-2 md:gap-5 md:ml-0 ml-8">
 
         <div>
           {/* button that navigates to camera page */}
         <button
-          className="ml-8"
+          className=""
           style={{
             backgroundImage: `url(${cam})`,
             height: "150px",
@@ -60,7 +61,7 @@ const Home = () => {
       <div>
         {/* button that navigates to expert reviewed list */}
         <button
-          className="ml-8"
+          className=""
           style={{
             backgroundImage: `url(${thumb})`,
             height: "150px",
@@ -96,7 +97,7 @@ const Home = () => {
         <div>
           {/* button that navigates to camera page */}
           <button
-            className="ml-8"
+            className=""
             style={{
               backgroundImage: `url(${cam})`,
               height: "150px",

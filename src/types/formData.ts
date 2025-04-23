@@ -1,6 +1,6 @@
 export type FormData = {
     price: string;
-    notes: string;
+    description: string;
     brand: string;
     model: string;
     color: string;
