@@ -15,7 +15,7 @@ export default function EvalDetails() {
   >();
   const [formData, setFormData] = useState<FormData>({
     price: "",
-    notes: "",
+    description: "",
     brand: "",
     model: "",
     color: "",
@@ -29,15 +29,15 @@ export default function EvalDetails() {
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
     price: false,
-    notes: false,
+    description: false,
     condition: false,
   });
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
- const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
   const [warningMsg] = useState<string>(
-    "Poistoa ei voi perua. Haluatko varmasti poistaa tuotteen?"
+    "Tuote poistetaan lopullisesti. Haluatko varmasti poistaa tuotteen?"
   );
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
@@ -63,7 +63,7 @@ export default function EvalDetails() {
     if (evaluation) {
       setFormData({
         price: evaluation.price || "",
-        notes: evaluation.notes || "",
+        description: evaluation.description || "",
         brand: evaluation.brand || "",
         model: evaluation.model || "",
         color: evaluation.color || "",
@@ -89,7 +89,7 @@ export default function EvalDetails() {
   const handleEditAllClick = () => {
     setIsEditing({
       info: true,
-      notes: true,
+      description: true,
       price: true,
       condition: true,
     });
@@ -105,7 +105,7 @@ export default function EvalDetails() {
   const handleSaveAll = async () => {
     setIsEditing({
       info: false,
-      notes: false,
+      description: false,
       price: false,
       condition: false,
     });
@@ -127,7 +127,7 @@ export default function EvalDetails() {
         },
         kunto: formData.condition,
         hinta: formData.price,
-        lisatiedot: formData.notes,
+        lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: formData.status,
       };
@@ -176,7 +176,7 @@ export default function EvalDetails() {
         },
         kunto: formData.condition,
         hinta: formData.price,
-        lisatiedot: formData.notes,
+        lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
@@ -208,7 +208,6 @@ export default function EvalDetails() {
     }
   };
 
-  
   const deleteProduct = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
@@ -296,7 +295,7 @@ export default function EvalDetails() {
                   </p>
                 </>
               ) : (
-                <>
+                <div className="md:flex flex-col">
                   <input
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
@@ -342,7 +341,7 @@ export default function EvalDetails() {
                       placeholder="Pituus"
                     />
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -435,16 +434,16 @@ export default function EvalDetails() {
               </p>
             </div>
             <div className="mt-1 break-words">
-              {!isEditing.notes ? (
+              {!isEditing.description ? (
                 <p className="whitespace-pre-line break-words">
-                  {formData.notes || "Ei tiedossa"}
+                  {formData.description || "Ei tiedossa"}
                 </p>
               ) : (
                 <textarea
                   className="border border-black p-1 rounded mt-1 w-full max-w-md resize-y"
-                  value={formData.notes}
+                  value={formData.description}
                   rows={3}
-                  onChange={(e) => handleInputChange(e, "notes")}
+                  onChange={(e) => handleInputChange(e, "description")}
                 />
               )}
             </div>
@@ -458,52 +457,49 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div >
+          <div>
             {deleteConfirmation ? (
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-red-600 font-semibold text-lg border-2 my-6 rounded-md border-red-700 mb-4 text-center mx-4 ">{warningMsg}</p>
-                <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-                
+              <div className="flex flex-col justify-center">
+                <p className="text-red-600 font-semibold text-lg border-2 my-6 rounded-md border-red-700 mb-4 text-center mx-4 md:text-bold md:px-8 md:py-3 md:w-1/3">
+                  {warningMsg}
+                </p>
+
+                <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
                   <button
                     onClick={deleteProduct}
-                    style={{ width: "90%", height: "50px" }}
-                    className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg"
+                    className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg w-9/10 h-12 md:w-1/5"
                   >
-                    <Trash2 size={20} strokeWidth={2} className="mr-2"/>
+                    <Trash2 size={20} strokeWidth={2} className="mr-2" />
                     Poista
                   </button>
                   <button
                     onClick={() => setDeleteConfirmation(false)}
-                    style={{ width: "90%", height: "50px" }}
-                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/5" 
                   >
                     Peru
                   </button>
                 </div>
               </div>
             ) : Object.values(isEditing).some((value) => value) ? (
-              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-              <button
-                onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
-                style={{ width: "90%", height: "50px" }}
-              >
-                Tallenna tiedot
-              </button>
+              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                <button
+                  onClick={handleSaveAll}
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/5"
+                >
+                  Tallenna tiedot
+                </button>
               </div>
             ) : (
-              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
+              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary"
-                  style={{ width: "90%", height: "50px" }}
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/5"
                   onClick={() => setDeleteConfirmation(true)}
                 >
-                  <Trash2 size={20} strokeWidth={2} className="mr-2"/>
+                  <Trash2 size={20} strokeWidth={2} className="mr-2" />
                   Poista
                 </button>
-                   <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary"
-                  style={{ width: "90%", height: "50px" }}
+                <button
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/5"
                   onClick={SendToExpert}
                 >
                   Lähetä expertille
