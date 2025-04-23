@@ -1,6 +1,8 @@
 import { Dimensions } from './dimensions';
 
 export interface Evaluation {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    evaluation: any;
     brand: string;
     model: string;
     color: string;
