@@ -1,6 +1,7 @@
 import { Dimensions } from './dimensions';
 
 export interface Evaluation {
+    //priceEstimation: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     evaluation: any;
     brand: string;
@@ -9,7 +10,7 @@ export interface Evaluation {
     dimensions: Dimensions;
     condition: string;
     materials: string[]; 
-    price: string;
+    suositus_hinta: number;
     description: string;
     status: string;
     timeStamp: string;
