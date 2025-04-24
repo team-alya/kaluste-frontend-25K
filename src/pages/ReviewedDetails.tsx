@@ -15,8 +15,8 @@ const ReviewedDetails = () => {
   >();
 
   const [formData, setFormData] = useState<FormData>({
-    price: "",
-    notes: "",
+    suositus_hinta: 0,
+    description: "",
     brand: "",
     model: "",
     color: "",
@@ -30,8 +30,8 @@ const ReviewedDetails = () => {
 
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
-    price: false,
-    notes: false,
+    suositus_hinta: false,
+    description: false,
     condition: false,
   });
 
@@ -62,21 +62,24 @@ const ReviewedDetails = () => {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    if (evaluation) {
+useEffect(() => {
+    if (evaluationData) {
+      console.log("Päivitetään formData:", evaluationData);
       setFormData({
-        price: evaluation.price || "",
-        notes: evaluation.notes || "",
-        brand: evaluation.brand || "",
-        model: evaluation.model || "",
-        color: evaluation.color || "",
-        width: evaluation.dimensions?.width || "",
-        height: evaluation.dimensions?.height || "",
-        length: evaluation.dimensions?.length || "",
-        condition: evaluation.condition || "Ei tiedossa",
-        materials: evaluation.materials || [],
-        status: evaluation.status || "Ei tiedossa",
+        suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
+        description: evaluation?.description || "",
+        brand: evaluation?.brand || "",
+        model: evaluation?.model || "",
+        color: evaluation?.color || "",
+        width: evaluation?.dimensions?.width || "",
+        height: evaluation?.dimensions?.height || "",
+        length:evaluation?.dimensions?.length || "",
+        condition: evaluation?.condition || "Ei tiedossa",
+        materials: evaluation?.materials || [],
+        status: evaluation?.status || "Ei tiedossa",
       });
+    } else {
+      console.log("evaluationData ei ole valmis:", evaluationData);
     }
   }, [evaluationData]);
 
@@ -92,8 +95,8 @@ const ReviewedDetails = () => {
   const handleEditAllClick = () => {
     setIsEditing({
       info: true,
-      notes: true,
-      price: true,
+      description: true,
+      suositus_hinta: true,
       condition: true,
     });
   };
@@ -108,8 +111,8 @@ const ReviewedDetails = () => {
   const handleSaveAll = async () => {
     setIsEditing({
       info: false,
-      notes: false,
-      price: false,
+      description: false,
+      suositus_hinta: false,
       condition: false,
     });
 
@@ -129,8 +132,8 @@ const ReviewedDetails = () => {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.notes,
+        suositus_hinta: formData.suositus_hinta,
+        lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: formData.status,
       };
@@ -178,8 +181,8 @@ const ReviewedDetails = () => {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.notes,
+        suositus_hinta: formData.suositus_hinta,
+        lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
       };
@@ -411,20 +414,20 @@ const ReviewedDetails = () => {
             <div className="flex flex-col ml-8">
               <div className="flex items-center">
                 <p className="mr-2">
-                  <strong>Hinta:</strong>
+                  <strong>Suositushinta:</strong>
                 </p>
               </div>
               <div className="mt-1">
-                {isEditing.price ? (
+                {isEditing.suositus_hinta ? (
                   <input
                     type="text"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.price}
-                    onChange={(e) => handleInputChange(e, "price")}
+                    value={formData.suositus_hinta}
+                    onChange={(e) => handleInputChange(e, "suositus_hinta")}
                     autoFocus
                   />
                 ) : (
-                  <p>{formData.price || "Ei tiedossa"}</p>
+                  <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
                 )}
               </div>
             </div>
@@ -437,16 +440,16 @@ const ReviewedDetails = () => {
               </p>
             </div>
             <div className="mt-1 break-words">
-              {!isEditing.notes ? (
+              {!isEditing.description ? (
                 <p className="whitespace-pre-line break-words">
-                  {formData.notes || "Ei tiedossa"}
+                  {formData.description || "Ei tiedossa"}
                 </p>
               ) : (
                 <textarea
                   className="border border-black p-1 rounded mt-1 w-full max-w-md resize-y"
-                  value={formData.notes}
+                  value={formData.description}
                   rows={3}
-                  onChange={(e) => handleInputChange(e, "notes")}
+                  onChange={(e) => handleInputChange(e, "description")}
                 />
               )}
             </div>
