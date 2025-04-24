@@ -1,7 +1,7 @@
 import { Dimensions } from './dimensions';
 
 export interface Evaluation {
-    priceEstimation: any;
+    //priceEstimation: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     evaluation: any;
     brand: string;
