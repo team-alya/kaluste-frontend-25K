@@ -414,7 +414,7 @@ useEffect(() => {
             <div className="flex flex-col ml-8">
               <div className="flex items-center">
                 <p className="mr-2">
-                  <strong>Suositushinta:</strong>
+                  <strong>Hinta-arvio:</strong>
                 </p>
               </div>
               <div className="mt-1">
