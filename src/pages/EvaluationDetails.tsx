@@ -15,7 +15,7 @@ export default function EvalDetails() {
     EvaluationData | undefined
   >();
   const [formData, setFormData] = useState<FormData>({
-    price: "",
+    suositus_hinta: 0,
     description: "",
     brand: "",
     model: "",
@@ -29,7 +29,7 @@ export default function EvalDetails() {
   });
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
-    price: false,
+    suositus_hinta: false,
     description: false,
     condition: false,
   });
@@ -58,20 +58,23 @@ export default function EvalDetails() {
   }, [location.state]);
 
   useEffect(() => {
-    if (evaluation) {
+    if (evaluationData) {
+      console.log("Päivitetään formData:", evaluationData);
       setFormData({
-        price: evaluation.price || "",
-        description: evaluation.description || "",
-        brand: evaluation.brand || "",
-        model: evaluation.model || "",
-        color: evaluation.color || "",
-        width: evaluation.dimensions?.width || "",
-        height: evaluation.dimensions?.height || "",
-        length: evaluation.dimensions?.length || "",
-        condition: evaluation.condition || "Ei tiedossa",
-        materials: evaluation.materials || [],
-        status: evaluation.status || "Ei tiedossa",
+        suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
+        description: evaluation?.description || "",
+        brand: evaluation?.brand || "",
+        model: evaluation?.model || "",
+        color: evaluation?.color || "",
+        width: evaluation?.dimensions?.width || "",
+        height: evaluation?.dimensions?.height || "",
+        length:evaluation?.dimensions?.length || "",
+        condition: evaluation?.condition || "Ei tiedossa",
+        materials: evaluation?.materials || [],
+        status: evaluation?.status || "Ei tiedossa",
       });
+    } else {
+      console.log("evaluationData ei ole valmis:", evaluationData);
     }
   }, [evaluationData]);
 
@@ -88,7 +91,7 @@ export default function EvalDetails() {
     setIsEditing({
       info: true,
       description: true,
-      price: true,
+      suositus_hinta: true,
       condition: true,
     });
   };
@@ -104,7 +107,7 @@ export default function EvalDetails() {
     setIsEditing({
       info: false,
       description: false,
-      price: false,
+      suositus_hinta: false,
       condition: false,
     });
 
@@ -124,8 +127,8 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.description,
+        suositus_hinta: formData.suositus_hinta, 
+        description: formData.description,
         materiaalit: formData.materials || [],
         status: formData.status,
       };
@@ -150,8 +153,11 @@ export default function EvalDetails() {
       }
 
       const updatedEvaluation = await response.json();
-      setSaveOk(true);
-      console.log("Päivitys onnistui:", updatedEvaluation);
+setEvaluationData(updatedEvaluation); 
+localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation)); 
+setSaveOk(true);
+console.log("Päivitys onnistui:", updatedEvaluation);
+
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -173,8 +179,8 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.description,
+        suositus_hinta: formData.suositus_hinta,
+        description: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
@@ -220,8 +226,8 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.description,
+        suositus_hinta: formData.suositus_hinta, 
+        description: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
       };
@@ -253,6 +259,8 @@ export default function EvalDetails() {
     }
   };
 
+  console.log("EvaluationData:", evaluationData);
+  console.log("FormData:", formData);
 
   return (
     <div className="flex md:justify-center">
@@ -420,23 +428,26 @@ export default function EvalDetails() {
               </div>
             </div>
 
+        
+
             <div className="flex flex-col ml-8">
               <div className="flex items-center">
                 <p className="mr-2">
-                  <strong>Hinta:</strong>
+                  <strong>Hinta-arvio:</strong>
                 </p>
               </div>
               <div className="mt-1">
-                {isEditing.price ? (
+                {isEditing.suositus_hinta ? (
                   <input
                     type="text"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.price}
-                    onChange={(e) => handleInputChange(e, "price")}
+                    value={formData.suositus_hinta} 
+                    onChange={(e) => handleInputChange(e, "suositus_hinta")}
                     autoFocus
+                    
                   />
                 ) : (
-                  <p>{formData.price || "Ei tiedossa"}</p>
+                  <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
                 )}
               </div>
             </div>
