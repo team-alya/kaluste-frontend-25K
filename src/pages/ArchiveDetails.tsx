@@ -465,6 +465,7 @@ export default function EvalDetails() {
                 <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
                 
                   <button
+                    data-testid="delete-button"
                     onClick={deleteProduct}
                     style={{ width: "90%", height: "50px" }}
                     className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg"

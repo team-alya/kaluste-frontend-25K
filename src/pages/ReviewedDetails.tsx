@@ -504,6 +504,7 @@ const ReviewedDetails = () => {
                   Poista
                 </button>
                 <button
+                  data-testid="archive-button"
                   className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
                   style={{ width: "90%", height: "50px" }}
                   onClick={SendToArchive}
