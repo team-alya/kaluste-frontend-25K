@@ -7,4 +7,5 @@ export type EvaluationData = {
     imageId: string;
     id?: string;
     timeStamp?: string;
+    description?: string;
   };

@@ -243,10 +243,10 @@ export default function EvalDetails() {
   };
 
   return (
-    <div>
+    <div className="flex md:justify-center">
       {evaluation ? (
         <div>
-          <div className="flex flex-row items-start m-6 mt-10">
+          <div className="flex flex-row items-start m-6">
             <div>
               <p className="text-gray-500 text-sm mb-2">
                 <strong>Lisätty:</strong> {evalDate}
@@ -298,7 +298,7 @@ export default function EvalDetails() {
                   </p>
                 </>
               ) : (
-                <div className="md:flex flex-col">
+                <div className="flex flex-col">
                   <input
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
@@ -461,48 +461,46 @@ export default function EvalDetails() {
           )}
 
           <div>
-            {deleteConfirmation ? (
-              <div className="flex flex-col justify-center">
-                <p className="text-red-600 font-semibold text-lg border-2 my-6 rounded-md border-red-700 mb-4 text-center mx-4 md:text-bold md:px-8 md:py-3 md:w-1/3">
-                  {warningMsg}
-                </p>
+          {deleteConfirmation ? (
+              <div className="flex flex-col justify-center items-center mb-3">
+                <p className="text-red-600 font-semibold text-lg border-2 my-3 rounded-md border-red-700 text-center md:text-bold md:px-4 md:py-3 p-1 w-3/4">{warningMsg}</p>
 
-                <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                <div className="flex flex-row justify-evenly md:justify-start items-center h-10 w-4/5 gap-6 mt-3 md:mt-10 mx-3">
                   <button
                     onClick={deleteProduct}
-                    className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg w-9/10 h-12 md:w-1/5"
+                    className="flex items-center justify-center text-white bg-red-600 rounded-lg h-12 w-1/2 btn-secondary"
                   >
                     <Trash2 size={20} strokeWidth={2} className="mr-2" />
                     Poista
                   </button>
                   <button
                     onClick={() => setDeleteConfirmation(false)}
-                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/5" 
+                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg h-12 w-1/2"
                   >
                     Peru
                   </button>
                 </div>
               </div>
             ) : Object.values(isEditing).some((value) => value) ? (
-              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
-                <button
-                  onClick={handleSaveAll}
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/5"
-                >
-                  Tallenna tiedot
-                </button>
+              <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
+                 <button
+                onClick={handleSaveAll}
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+              >
+                Tallenna tiedot
+              </button>
               </div>
             ) : (
               <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/5"
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
                   onClick={() => setDeleteConfirmation(true)}
                 >
-                  <Trash2 size={20} strokeWidth={2} className="mr-2" />
+                  <Trash2 size={20} strokeWidth={2} className="mr-2"/>
                   Poista
                 </button>
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/5"
+                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
                   onClick={SendToExpert}
                 >
                   Lähetä expertille

@@ -6,7 +6,6 @@ import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil } from "lucide-react";
 
-
 export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -27,6 +26,7 @@ export default function EvalDetails() {
     materials: [],
     status: "",
   });
+
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
     suositus_hinta: false,
@@ -62,13 +62,13 @@ export default function EvalDetails() {
       console.log("Päivitetään formData:", evaluationData);
       setFormData({
         suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
-        description: evaluation?.description || "",
+        description: evaluationData?.description || "",
         brand: evaluation?.brand || "",
         model: evaluation?.model || "",
         color: evaluation?.color || "",
         width: evaluation?.dimensions?.width || "",
         height: evaluation?.dimensions?.height || "",
-        length:evaluation?.dimensions?.length || "",
+        length: evaluation?.dimensions?.length || "",
         condition: evaluation?.condition || "Ei tiedossa",
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
@@ -127,7 +127,7 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta, 
+        suositus_hinta: formData.suositus_hinta,
         description: formData.description,
         materiaalit: formData.materials || [],
         status: formData.status,
@@ -153,11 +153,10 @@ export default function EvalDetails() {
       }
 
       const updatedEvaluation = await response.json();
-setEvaluationData(updatedEvaluation); 
-localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation)); 
-setSaveOk(true);
-console.log("Päivitys onnistui:", updatedEvaluation);
-
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      setSaveOk(true);
+      console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -184,7 +183,8 @@ console.log("Päivitys onnistui:", updatedEvaluation);
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/${evaluationData.id}/status`,
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + `/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -226,13 +226,13 @@ console.log("Päivitys onnistui:", updatedEvaluation);
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta, 
+        suositus_hinta: formData.suositus_hinta,
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL +`${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -318,7 +318,7 @@ console.log("Päivitys onnistui:", updatedEvaluation);
                   </p>
                 </>
               ) : (
-                <div className="md:flex flex-col">
+                <div className="flex flex-col">
                   <input
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
@@ -428,8 +428,6 @@ console.log("Päivitys onnistui:", updatedEvaluation);
               </div>
             </div>
 
-        
-
             <div className="flex flex-col ml-8">
               <div className="flex items-center">
                 <p className="mr-2">
@@ -441,10 +439,9 @@ console.log("Päivitys onnistui:", updatedEvaluation);
                   <input
                     type="text"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.suositus_hinta} 
+                    value={formData.suositus_hinta}
                     onChange={(e) => handleInputChange(e, "suositus_hinta")}
                     autoFocus
-                    
                   />
                 ) : (
                   <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>

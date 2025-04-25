@@ -114,6 +114,7 @@ export default function FetchAllEvals() {
                       JSON.stringify({ evaluation: e, imageId: e.imageId })
                       );
                       fetchEval(e.id);
+                      console.log(e.description);
                       }}
                     >
                     {/* display the image if available */}
