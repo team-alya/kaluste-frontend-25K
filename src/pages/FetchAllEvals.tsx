@@ -41,6 +41,8 @@ export default function FetchAllEvals() {
       .then((data) => {
         // set data to useState
         // and exit the loading component
+        console.log("Fetched evaluations:", data);
+        console.log("Fetched evaluation data:", data);
         setEvals(data);
         setIsFetched(true);
         setLoading(false);
@@ -55,25 +57,22 @@ export default function FetchAllEvals() {
     await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
-      })
-
-   .then((response) => {
-    if (!response.ok) {
-      throw new Error("Failed to fetch evaluation!");
-    }
-    return response.json();
-   })
-    .then((data) => {
-      // if the fetch is successful, navigate to the product page and pass the product and route information in the state
-      console.log(data);
-      navigate (`/eval/${id}`, {state: { evaluation: data, from: location.pathname}});
-         
     })
-    .catch((error) => console.error(error));
-  }
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch evaluation!");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched evaluation data:", data);
+        navigate(`/eval/${id}`, { state: { evaluation: data, from: location.pathname } });
+      })
+      .catch((error) => console.error(error));
+  };
 
 // filter the products that are not reviewed or archived
   const filterProducts = evals.filter((e: Evaluation) => {
@@ -110,8 +109,8 @@ export default function FetchAllEvals() {
                       onClick={() => {
                       // save the evaluated product's data to sessionStorage for back navigation
                       sessionStorage.setItem(
-                      "evalData",
-                      JSON.stringify({ evaluation: e, imageId: e.imageId })
+                        "evalData",
+                        JSON.stringify({ evaluation: e, imageId: e.imageId })
                       );
                       fetchEval(e.id);
                       console.log(e.description);

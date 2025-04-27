@@ -36,6 +36,7 @@ export default function EvalDetails() {
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
+ 
 
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
@@ -53,6 +54,32 @@ export default function EvalDetails() {
       const storedData = localStorage.getItem("evaluationData");
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
+      } else {
+        
+        const fetchEvaluation = async () => {
+          try {
+            const response = await fetch(
+              //import.meta.env.VITE_BACKEND_URL +
+              `http://localhost:3000/api/evaluation/${evaluationData?.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                },
+              }
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setEvaluationData(data);
+              localStorage.setItem("evaluationData", JSON.stringify(data));
+            } else {
+              console.error("Virhe haettaessa tietoja palvelimelta");
+            }
+          } catch (error) {
+            console.error("Virhe palvelimen pyynnössä:", error);
+          }
+        };
+
+        fetchEvaluation();
       }
     }
   }, [location.state]);
@@ -73,8 +100,6 @@ export default function EvalDetails() {
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
       });
-    } else {
-      console.log("evaluationData ei ole valmis:", evaluationData);
     }
   }, [evaluationData]);
 
@@ -130,12 +155,12 @@ export default function EvalDetails() {
         suositus_hinta: formData.suositus_hinta,
         description: formData.description,
         materiaalit: formData.materials || [],
-        status: formData.status,
+        status: "not reviewed",
       };
 
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL +
-          `/api/evaluation/${evaluationData.id}`,
+        //import.meta.env.VITE_BACKEND_URL +
+          `http://localhost:3000/api/evaluation/${evaluationData.id}`,
         {
           method: "PUT",
           headers: {
@@ -184,7 +209,8 @@ export default function EvalDetails() {
         status: "reviewed",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + `/${evaluationData.id}/status`,
+       // import.meta.env.VITE_BACKEND_URL +
+        `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -201,6 +227,9 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
+      const updatedEvaluation = await response.json();
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
 
       navigate("/reviewed", {
@@ -232,7 +261,9 @@ export default function EvalDetails() {
         status: "archived",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
+
+        //import.meta.env.VITE_BACKEND_URL +
+         `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -249,6 +280,9 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
+      const updatedEvaluation = await response.json();
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
 
       navigate("/archive", {

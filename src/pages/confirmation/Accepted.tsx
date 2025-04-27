@@ -56,6 +56,9 @@ const AcceptedPage: React.FC = () => {
     formData.append("korkeus", evaluation.dimensions.height);
     formData.append("materiaalit", evaluation.materials);
     formData.append("kunto", evaluation.condition);
+    formData.append("suositus_hinta", evaluation.suositus_hinta);
+    formData.append("description", evaluation.description);
+    formData.append("status", evaluation.status);
 
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
