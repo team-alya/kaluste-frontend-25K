@@ -1,0 +1,19 @@
+services:
+  app:
+    image: kaluste-frontend
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5173:5173
+    container_name: kaluste-frontend-dev
+    environment:
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+
+## Tällä saa sovelluksen käynnistymään dev moodissa kontin sisällä.
+## Käynnistä komento: docker-compose -f docker-compose.dev.yml up
+## Pysäytä komento: docker-compose -f docker-compose.dev.yml down
+## Jos dev.Dockerfile on muuttunut, niin buildaa se uudestaan: docker-compose -f docker-compose.dev.yml --build

@@ -9,6 +9,13 @@ export default defineConfig({
       typescript: true
     })
   ],
+  // for docker development:
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 100
+    }
+  }
   // for ngrok:
   // server: {
   //   allowedHosts: true
