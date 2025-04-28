@@ -55,6 +55,31 @@ export default function EvalDetails() {
       const storedData = localStorage.getItem("evaluationData");
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
+      } else {
+        
+        const fetchEvaluation = async () => {
+          try {
+            const response = await fetch(
+              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                },
+              }
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setEvaluationData(data);
+              localStorage.setItem("evaluationData", JSON.stringify(data));
+            } else {
+              console.error("Virhe haettaessa tietoja palvelimelta");
+            }
+          } catch (error) {
+            console.error("Virhe palvelimen pyynnössä:", error);
+          }
+        };
+
+        fetchEvaluation();
       }
     }
   }, [location.state]);
@@ -64,7 +89,7 @@ export default function EvalDetails() {
       console.log("Päivitetään formData:", evaluationData);
       setFormData({
         suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
-        description: evaluation?.description || "",
+        description: evaluationData?.description || "",
         brand: evaluation?.brand || "",
         model: evaluation?.model || "",
         color: evaluation?.color || "",
@@ -75,9 +100,7 @@ export default function EvalDetails() {
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
       });
-    } else {
-      console.log("evaluationData ei ole valmis:", evaluationData);
-    }
+    } 
   }, [evaluationData]);
 
   useEffect(() => {
@@ -130,9 +153,9 @@ export default function EvalDetails() {
         },
         kunto: formData.condition,
         suositus_hinta: formData.suositus_hinta,
-        lisatiedot: formData.description,
+        description: formData.description,
         materiaalit: formData.materials || [],
-        status: formData.status,
+        status: "archived",
       };
 
       const response = await fetch(
@@ -154,7 +177,9 @@ export default function EvalDetails() {
         throw new Error("Tietojen päivittäminen epäonnistui");
       }
 
-      const updatedEvaluation = await response.json();
+    const updatedEvaluation = await response.json();
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
@@ -184,7 +209,7 @@ export default function EvalDetails() {
         status: "reviewed",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + `${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {

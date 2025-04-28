@@ -105,6 +105,7 @@ const AcceptedPage: React.FC = () => {
       const requestData = {
         malli: evaluation.model,
         merkki: evaluation.brand,
+      
       };
   
       //

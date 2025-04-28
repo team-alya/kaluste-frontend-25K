@@ -59,8 +59,7 @@ export default function EvalDetails() {
         const fetchEvaluation = async () => {
           try {
             const response = await fetch(
-              //import.meta.env.VITE_BACKEND_URL +
-              `http://localhost:3000/api/evaluation/${evaluationData?.id}`,
+              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
               {
                 headers: {
                   Authorization: `Bearer ${window.localStorage.getItem("token")}`,
@@ -159,8 +158,7 @@ export default function EvalDetails() {
       };
 
       const response = await fetch(
-        //import.meta.env.VITE_BACKEND_URL +
-          `http://localhost:3000/api/evaluation/${evaluationData.id}`,
+import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
         {
           method: "PUT",
           headers: {
@@ -209,8 +207,7 @@ export default function EvalDetails() {
         status: "reviewed",
       };
       const response = await fetch(
-       // import.meta.env.VITE_BACKEND_URL +
-        `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
+      import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -262,8 +259,7 @@ export default function EvalDetails() {
       };
       const response = await fetch(
 
-        //import.meta.env.VITE_BACKEND_URL +
-         `http://localhost:3000/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {

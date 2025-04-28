@@ -58,6 +58,31 @@ const ReviewedDetails = () => {
       const storedData = localStorage.getItem("evaluationData");
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
+      } else {
+        
+        const fetchEvaluation = async () => {
+          try {
+            const response = await fetch(
+              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                },
+              }
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setEvaluationData(data);
+              localStorage.setItem("evaluationData", JSON.stringify(data));
+            } else {
+              console.error("Virhe haettaessa tietoja palvelimelta");
+            }
+          } catch (error) {
+            console.error("Virhe palvelimen pyynnössä:", error);
+          }
+        };
+
+        fetchEvaluation();
       }
     }
   }, [location.state]);
@@ -67,7 +92,7 @@ useEffect(() => {
       console.log("Päivitetään formData:", evaluationData);
       setFormData({
         suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
-        description: evaluation?.description || "",
+        description: evaluationData?.description || "",
         brand: evaluation?.brand || "",
         model: evaluation?.model || "",
         color: evaluation?.color || "",
@@ -135,7 +160,7 @@ useEffect(() => {
         suositus_hinta: formData.suositus_hinta,
         lisatiedot: formData.description,
         materiaalit: formData.materials || [],
-        status: formData.status,
+        status: "reviewed",
       };
 
       const response = await fetch(
@@ -157,7 +182,9 @@ useEffect(() => {
         throw new Error("Tietojen päivittäminen epäonnistui");
       }
 
-      const updatedEvaluation = await response.json();
+    const updatedEvaluation = await response.json();
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
