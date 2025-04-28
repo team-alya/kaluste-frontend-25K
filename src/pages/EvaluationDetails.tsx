@@ -85,7 +85,6 @@ export default function EvalDetails() {
 
   useEffect(() => {
     if (evaluationData) {
-      console.log("Päivitetään formData:", evaluationData);
       setFormData({
         suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
         description: evaluationData?.description || "",
@@ -289,8 +288,7 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
     }
   };
 
-  console.log("EvaluationData:", evaluationData);
-  console.log("FormData:", formData);
+  
 
   return (
     <div className="flex md:justify-center">

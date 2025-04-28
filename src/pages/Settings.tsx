@@ -26,7 +26,7 @@ export default function Settings() {
     };
 
     return(
-        <div className="mt-20 flex flex-col items-center ">
+        <div className="mt-20 flex flex-col items-center space-y-6 ">
 
             <div className="flex items-center justify-between mb-6">
                 <span className="text-lg font-medium text-gray-800 mr-4">Värisokeus</span>
@@ -41,14 +41,25 @@ export default function Settings() {
                     <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
                 </label>
             </div>
+              <button 
+            className="w-50 px-12 py-3 h-12 text-white bg-gray-500 shadow-md hover:bg-gray-400 transition rounded-sm btn-primary"
+            onClick={() => navigate("/home", { state: { from: location.pathname } })}
+        >
+            Etusivulle
+        </button>
 
-            <button className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm btn-primary"
+
+        <button 
+            className="w-50 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm btn-primary"
             onClick={() => {
                 Logout();
                 navigate("/", { state: { from: location.pathname } });
-            }}>
-                Kirjaudu ulos
-            </button>
+            }}
+        >
+            Kirjaudu ulos
+        </button>
+
+            
         </div>
     )
 }

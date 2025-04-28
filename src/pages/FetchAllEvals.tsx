@@ -41,8 +41,7 @@ export default function FetchAllEvals() {
       .then((data) => {
         // set data to useState
         // and exit the loading component
-        console.log("Fetched evaluations:", data);
-        console.log("Fetched evaluation data:", data);
+       
         setEvals(data);
         setIsFetched(true);
         setLoading(false);
@@ -113,7 +112,7 @@ export default function FetchAllEvals() {
                         JSON.stringify({ evaluation: e, imageId: e.imageId })
                       );
                       fetchEval(e.id);
-                      console.log(e.description);
+                      
                       }}
                     >
                     {/* display the image if available */}
