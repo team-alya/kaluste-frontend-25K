@@ -261,7 +261,7 @@ export default function EvalDetails() {
       }
 
       console.log("Tuote poistettu onnistuneesti");
-      navigate("/reviewed");
+      navigate("/archive");
     } catch (error) {
       console.error("Virhe poistettaessa:", error);
     }
