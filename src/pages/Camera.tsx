@@ -109,6 +109,7 @@ const CameraApp: React.FC = () => {
           // if evaluation ok, return from loading page and navigate to accepted page
           // also sends the evaluation data, username and endpoint info to the accepted page
           setLoading(false);
+          console.log(data.evaluation);
           navigate("/accepted", 
             { state: 
               { evaluation: data.evaluation, 
