@@ -68,9 +68,9 @@ export default function EvalDetails() {
             );
             if (response.ok) {
               const data = await response.json();
-              console.log("Fetched evaluation data:", evaluationData);
-console.log("Price Estimation:", evaluationData?.priceEstimation);
-console.log("Recommended Price:", evaluationData?.priceEstimation?.recommended_price);
+             // console.log("Fetched evaluation data:", evaluationData);
+//console.log("Price Estimation:", evaluationData?.priceEstimation);
+//console.log("Recommended Price:", evaluationData?.priceEstimation?.recommended_price);
               setEvaluationData(data);
               localStorage.setItem("evaluationData", JSON.stringify(data));
             } else {
@@ -89,7 +89,7 @@ console.log("Recommended Price:", evaluationData?.priceEstimation?.recommended_p
   useEffect(() => {
     if (evaluationData) {
       console.log("Evaluation Data:", evaluationData);
-      console.log("Recommended Price:", evaluationData.priceEstimation?.recommended_price);
+      //console.log("Recommended Price:", evaluationData.priceEstimation?.recommended_price);
       setFormData({
         recommended_price: evaluationData.priceEstimation?.recommended_price || 0,
         description: evaluationData?.description || "",

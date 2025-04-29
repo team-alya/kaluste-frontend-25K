@@ -39,11 +39,9 @@ export default function FetchAllEvals() {
         return response.json();
       })
       .then((data) => {
-        console.log("Fetched Evaluations:", data); // Tulostaa kaikki haetut arvioinnit
-        data.forEach((evaluation) => {
-          console.log("Recommended Price:", evaluation.priceEstimation?.suositus_hinta); // Tarkistaa, onko suositus_hinta mukana
-        });
-
+        // set data to useState
+        // and exit the loading component
+       
         setEvals(data);
         setIsFetched(true);
         setLoading(false);
