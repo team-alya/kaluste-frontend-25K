@@ -109,6 +109,7 @@ const CameraApp: React.FC = () => {
           // if evaluation ok, return from loading page and navigate to accepted page
           // also sends the evaluation data, username and endpoint info to the accepted page
           setLoading(false);
+          console.log(data.evaluation);
           navigate("/accepted", 
             { state: 
               { evaluation: data.evaluation, 
@@ -129,7 +130,7 @@ const CameraApp: React.FC = () => {
       {/* camera function styling */}
       {!loading ? (
         
-       <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+       <div className="flex flex-col items-center justify-center min-h-screen p-4 mt-[-50px]">
           
           {/* show feedback message if available */}
           {showMessage && ( 
@@ -175,7 +176,7 @@ const CameraApp: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-row gap-2 mt-4 items-center">
+      <div className="flex flex-row gap-2 fixed bottom-2 left-1/2 transform -translate-x-1/2 h-16 items-center px-7 pb-6">
         {/* if no feedback message, show options to either take a photo or upload one */}
         {!showMessage && (
           <>

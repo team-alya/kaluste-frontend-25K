@@ -1,6 +1,6 @@
 export type EditingState = {
     info: boolean;
-    price: boolean;
-    notes: boolean;
+    suositus_hinta: boolean;
+    description: boolean;
     condition: boolean;
   };

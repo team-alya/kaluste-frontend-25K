@@ -14,8 +14,8 @@ export default function EvalDetails() {
     EvaluationData | undefined
   >();
   const [formData, setFormData] = useState<FormData>({
-    price: "",
-    notes: "",
+    suositus_hinta: 0,
+    description: "",
     brand: "",
     model: "",
     color: "",
@@ -28,16 +28,16 @@ export default function EvalDetails() {
   });
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
-    price: false,
-    notes: false,
+    suositus_hinta: false,
+    description: false,
     condition: false,
   });
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
- const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
   const [warningMsg] = useState<string>(
-    "Poistoa ei voi perua. Haluatko varmasti poistaa tuotteen?"
+    "Tuote poistetaan lopullisesti. Haluatko varmasti poistaa tuotteen?"
   );
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
@@ -55,26 +55,52 @@ export default function EvalDetails() {
       const storedData = localStorage.getItem("evaluationData");
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
+      } else {
+        
+        const fetchEvaluation = async () => {
+          try {
+            const response = await fetch(
+              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                },
+              }
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setEvaluationData(data);
+              localStorage.setItem("evaluationData", JSON.stringify(data));
+            } else {
+              console.error("Virhe haettaessa tietoja palvelimelta");
+            }
+          } catch (error) {
+            console.error("Virhe palvelimen pyynnössä:", error);
+          }
+        };
+
+        fetchEvaluation();
       }
     }
   }, [location.state]);
 
   useEffect(() => {
-    if (evaluation) {
+    if (evaluationData) {
+      console.log("Päivitetään formData:", evaluationData);
       setFormData({
-        price: evaluation.price || "",
-        notes: evaluation.notes || "",
-        brand: evaluation.brand || "",
-        model: evaluation.model || "",
-        color: evaluation.color || "",
-        width: evaluation.dimensions?.width || "",
-        height: evaluation.dimensions?.height || "",
-        length: evaluation.dimensions?.length || "",
-        condition: evaluation.condition || "Ei tiedossa",
-        materials: evaluation.materials || [],
-        status: evaluation.status || "Ei tiedossa",
+        suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
+        description: evaluationData?.description || "",
+        brand: evaluation?.brand || "",
+        model: evaluation?.model || "",
+        color: evaluation?.color || "",
+        width: evaluation?.dimensions?.width || "",
+        height: evaluation?.dimensions?.height || "",
+        length:evaluation?.dimensions?.length || "",
+        condition: evaluation?.condition || "Ei tiedossa",
+        materials: evaluation?.materials || [],
+        status: evaluation?.status || "Ei tiedossa",
       });
-    }
+    } 
   }, [evaluationData]);
 
   useEffect(() => {
@@ -89,8 +115,8 @@ export default function EvalDetails() {
   const handleEditAllClick = () => {
     setIsEditing({
       info: true,
-      notes: true,
-      price: true,
+      description: true,
+      suositus_hinta: true,
       condition: true,
     });
   };
@@ -105,8 +131,8 @@ export default function EvalDetails() {
   const handleSaveAll = async () => {
     setIsEditing({
       info: false,
-      notes: false,
-      price: false,
+      description: false,
+      suositus_hinta: false,
       condition: false,
     });
 
@@ -126,10 +152,10 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.notes,
+        suositus_hinta: formData.suositus_hinta,
+        description: formData.description,
         materiaalit: formData.materials || [],
-        status: formData.status,
+        status: "archived",
       };
 
       const response = await fetch(
@@ -151,7 +177,9 @@ export default function EvalDetails() {
         throw new Error("Tietojen päivittäminen epäonnistui");
       }
 
-      const updatedEvaluation = await response.json();
+    const updatedEvaluation = await response.json();
+      setEvaluationData(updatedEvaluation);
+      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
@@ -175,8 +203,8 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        hinta: formData.price,
-        lisatiedot: formData.notes,
+        suositus_hinta: formData.suositus_hinta,
+        lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
@@ -208,7 +236,6 @@ export default function EvalDetails() {
     }
   };
 
-  
   const deleteProduct = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
@@ -241,10 +268,10 @@ export default function EvalDetails() {
   };
 
   return (
-    <div>
+    <div className="flex md:justify-center">
       {evaluation ? (
         <div>
-          <div className="flex flex-row items-start m-6 mt-10">
+          <div className="flex flex-row items-start m-6">
             <div>
               <p className="text-gray-500 text-sm mb-2">
                 <strong>Lisätty:</strong> {evalDate}
@@ -296,7 +323,7 @@ export default function EvalDetails() {
                   </p>
                 </>
               ) : (
-                <>
+                <div className="flex flex-col">
                   <input
                     type="text"
                     className="border border-black p-1 rounded w-40 mb-2"
@@ -342,7 +369,7 @@ export default function EvalDetails() {
                       placeholder="Pituus"
                     />
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -409,20 +436,20 @@ export default function EvalDetails() {
             <div className="flex flex-col ml-8">
               <div className="flex items-center">
                 <p className="mr-2">
-                  <strong>Hinta:</strong>
+                  <strong>Hinta-arvio:</strong>
                 </p>
               </div>
               <div className="mt-1">
-                {isEditing.price ? (
+                {isEditing.suositus_hinta ? (
                   <input
                     type="text"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.price}
-                    onChange={(e) => handleInputChange(e, "price")}
+                    value={formData.suositus_hinta}
+                    onChange={(e) => handleInputChange(e, "suositus_hinta")}
                     autoFocus
-                  />
+                   />
                 ) : (
-                  <p>{formData.price || "Ei tiedossa"}</p>
+                  <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
                 )}
               </div>
             </div>
@@ -435,16 +462,16 @@ export default function EvalDetails() {
               </p>
             </div>
             <div className="mt-1 break-words">
-              {!isEditing.notes ? (
+              {!isEditing.description ? (
                 <p className="whitespace-pre-line break-words">
-                  {formData.notes || "Ei tiedossa"}
+                  {formData.description || "Ei tiedossa"}
                 </p>
               ) : (
                 <textarea
                   className="border border-black p-1 rounded mt-1 w-full max-w-md resize-y"
-                  value={formData.notes}
+                  value={formData.description}
                   rows={3}
-                  onChange={(e) => handleInputChange(e, "notes")}
+                  onChange={(e) => handleInputChange(e, "description")}
                 />
               )}
             </div>
@@ -458,52 +485,47 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div >
-            {deleteConfirmation ? (
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-red-600 font-semibold text-lg border-2 my-6 rounded-md border-red-700 mb-4 text-center mx-4 ">{warningMsg}</p>
-                <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-                
+          <div>
+          {deleteConfirmation ? (
+              <div className="flex flex-col justify-center items-center mb-3">
+                <p className="text-red-600 font-semibold text-lg border-2 my-3 rounded-md border-red-700 text-center md:text-bold md:px-4 md:py-3 p-1 w-3/4">{warningMsg}</p>
+
+                <div className="flex flex-row justify-evenly md:justify-start items-center h-10 w-4/5 gap-6 mt-3 md:mt-10 mx-3">
                   <button
                     onClick={deleteProduct}
-                    style={{ width: "90%", height: "50px" }}
-                    className="flex items-center justify-center px-1 py-3 text-white bg-red-600 rounded-lg"
+                    className="flex items-center justify-center text-white bg-red-600 rounded-lg h-12 w-1/2 btn-secondary"
                   >
-                    <Trash2 size={20} strokeWidth={2} className="mr-2"/>
+                    <Trash2 size={20} strokeWidth={2} className="mr-2" />
                     Poista
                   </button>
                   <button
                     onClick={() => setDeleteConfirmation(false)}
-                    style={{ width: "90%", height: "50px" }}
-                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg"
+                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg h-12 w-1/2"
                   >
                     Peru
                   </button>
                 </div>
               </div>
             ) : Object.values(isEditing).some((value) => value) ? (
-              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
-              <button
+              <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
+                 <button
                 onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
-                style={{ width: "90%", height: "50px" }}
+                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
               >
                 Tallenna tiedot
               </button>
               </div>
             ) : (
-              <div className="flex justify-center items-center fixed bottom-2 inset-x-5 h-16 gap-6">
+              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg"
-                  style={{ width: "90%", height: "50px" }}
+                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
                   onClick={() => setDeleteConfirmation(true)}
                 >
                   <Trash2 size={20} strokeWidth={2} className="mr-2"/>
                   Poista
                 </button>
-                   <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg"
-                  style={{ width: "90%", height: "50px" }}
+                <button
+                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
                   onClick={SendToExpert}
                 >
                   Lähetä expertille
