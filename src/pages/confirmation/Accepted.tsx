@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
-
 // show the user a successful evaluation and the option to save or reject it
 
 const AcceptedPage: React.FC = () => {
@@ -33,8 +32,11 @@ const AcceptedPage: React.FC = () => {
 
   // check stock availability when the component is mounted
   useEffect(() => {
-    checkStock();
-  }, []);
+    if (evaluation) {
+      console.log(evaluation);
+      checkStock();
+    }
+  }, [evaluation]);
 
   // saving the evaluation to the backend if the user accepts the evaluation
   const saveEval = async () => {
@@ -48,14 +50,14 @@ const AcceptedPage: React.FC = () => {
     const blob = await response.blob();
 
     // add evaluation details to formData
-    formData.append("merkki", evaluation.brand);
-    formData.append("malli", evaluation.model);
-    formData.append("vari", evaluation.color);
-    formData.append("pituus", evaluation.dimensions.length);
-    formData.append("leveys", evaluation.dimensions.width);
-    formData.append("korkeus", evaluation.dimensions.height);
-    formData.append("materiaalit", evaluation.materials);
-    formData.append("kunto", evaluation.condition);
+    formData.append("merkki", evaluation.merkki);
+    formData.append("malli", evaluation.malli);
+    formData.append("vari", evaluation.vari);
+    formData.append("pituus", evaluation.mitat.pituus);
+    formData.append("leveys", evaluation.mitat.leveys);
+    formData.append("korkeus", evaluation.mitat.korkeus);
+    formData.append("materiaalit", evaluation.materiaalit);
+    formData.append("kunto", evaluation.kunto);
     formData.append("suositus_hinta", evaluation.suositus_hinta);
     formData.append("description", evaluation.description);
     formData.append("status", evaluation.status);
@@ -94,30 +96,36 @@ const AcceptedPage: React.FC = () => {
   // Function to check stock availability
   const checkStock = async () => {
     setLoading(true);
-    if (!evaluation) {
-      setStockMessage("Arviointitietoja ei ole saatavilla.");
+    if (!evaluation || !photo) {
+      setStockMessage("Arviointitietoja tai kuvaa ei ole saatavilla.");
+      setLoading(false);
+      return;
+    }
+
+    if (!evaluation.merkki || !evaluation.malli) {
+      setStockMessage("Merkki ja malli puuttuvat.");
       setLoading(false);
       return;
     }
   
     try {
-      // create a requestData object with the evaluation details
-      const requestData = {
-        malli: evaluation.model,
-        merkki: evaluation.brand,
       
-      };
+      const formData = new FormData();
+      const response = await fetch(photo);
+      const blob = await response.blob();
+
+      formData.append("model", evaluation.malli);
+      formData.append("brand", evaluation.merkki);
+      formData.append("image", blob, "photo.jpg");
   
-      //
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(requestData),
+          body: formData,
         }
       );
   
@@ -159,10 +167,10 @@ const AcceptedPage: React.FC = () => {
       {/* show the evaluation details to the user */}
       <div className="flex flex-col text-left mt-2">
         <p className="mb-2">
-          <strong>Merkki:</strong> {evaluation.brand}
+          <strong>Merkki:</strong> {evaluation.merkki}
         </p>
         <p className="mb-2">
-          <strong>Malli:</strong> {evaluation.model}
+          <strong>Malli:</strong> {evaluation.malli}
         </p>
       </div>
 

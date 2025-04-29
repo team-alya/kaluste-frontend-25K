@@ -98,6 +98,8 @@ export default function EvalDetails() {
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
       });
+      console.log(formData);
+
     }
   }, [evaluationData]);
 
