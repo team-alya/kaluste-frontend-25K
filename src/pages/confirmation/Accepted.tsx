@@ -57,7 +57,7 @@ const AcceptedPage: React.FC = () => {
     formData.append("mitat", evaluation.mitat);
     formData.append("materiaalit", evaluation.materiaalit);
     formData.append("kunto", evaluation.kunto);
-    formData.append("priceEstimation", evaluation.suositus_hinta);
+    formData.append("recommended_price", evaluation.recommended_price);
     formData.append("description", evaluation.description);
     formData.append("status", evaluation.status);
 
@@ -79,6 +79,8 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
+      const responseData = await response.json();
+console.log("Saved Evaluation Response:", responseData);
 
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
@@ -118,6 +120,7 @@ const AcceptedPage: React.FC = () => {
       formData.append("materials", evaluation.materiaalit);
       formData.append("condition", evaluation.kunto);
       formData.append("image", blob, "photo.jpg");
+      formData.append("recommended_price", evaluation.recommended_price);
 
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
@@ -149,6 +152,9 @@ const AcceptedPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  console.log("Evaluation Data in Accepted:", evaluation);
+  console.log("Recommended Price in Accepted:", evaluation?.recommended_price);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">

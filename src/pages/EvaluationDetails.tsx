@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EvaluationData } from "../types/evaluationData";
-import { FormData } from "../types/formData";
+import type { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil } from "lucide-react";
 
@@ -14,7 +14,7 @@ export default function EvalDetails() {
     EvaluationData | undefined
   >();
   const [formData, setFormData] = useState<FormData>({
-    suositus_hinta: 0,
+    recommended_price: 0,
     description: "",
     brand: "",
     model: "",
@@ -29,7 +29,7 @@ export default function EvalDetails() {
 
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
-    suositus_hinta: false,
+   recommended_price: false,
     description: false,
     condition: false,
   });
@@ -68,6 +68,9 @@ export default function EvalDetails() {
             );
             if (response.ok) {
               const data = await response.json();
+              console.log("Fetched evaluation data:", evaluationData);
+console.log("Price Estimation:", evaluationData?.priceEstimation);
+console.log("Recommended Price:", evaluationData?.priceEstimation?.recommended_price);
               setEvaluationData(data);
               localStorage.setItem("evaluationData", JSON.stringify(data));
             } else {
@@ -85,8 +88,10 @@ export default function EvalDetails() {
 
   useEffect(() => {
     if (evaluationData) {
+      console.log("Evaluation Data:", evaluationData);
+      console.log("Recommended Price:", evaluationData.priceEstimation?.recommended_price);
       setFormData({
-        suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
+        recommended_price: evaluationData.priceEstimation?.recommended_price || 0,
         description: evaluationData?.description || "",
         brand: evaluation?.brand || "",
         model: evaluation?.model || "",
@@ -98,8 +103,6 @@ export default function EvalDetails() {
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
       });
-      console.log(formData);
-
     }
   }, [evaluationData]);
 
@@ -116,7 +119,7 @@ export default function EvalDetails() {
     setIsEditing({
       info: true,
       description: true,
-      suositus_hinta: true,
+      recommended_price: true,
       condition: true,
     });
   };
@@ -132,7 +135,7 @@ export default function EvalDetails() {
     setIsEditing({
       info: false,
       description: false,
-      suositus_hinta: false,
+      recommended_price: false,
       condition: false,
     });
 
@@ -152,7 +155,7 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta,
+        recommended_price: formData.recommended_price,
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "not reviewed",
@@ -202,7 +205,7 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta,
+        recommended_price: formData.recommended_price,
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
@@ -253,7 +256,7 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta,
+        recommended_price: formData.recommended_price,
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
@@ -290,7 +293,7 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
     }
   };
 
-  
+ 
 
   return (
     <div className="flex md:justify-center">
@@ -465,16 +468,16 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
                 </p>
               </div>
               <div className="mt-1">
-                {isEditing.suositus_hinta ? (
+                {isEditing.recommended_price ? (
                   <input
-                    type="text"
+                    type="number"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.suositus_hinta}
-                    onChange={(e) => handleInputChange(e, "suositus_hinta")}
+                    value={formData.recommended_price}
+                    onChange={(e) => handleInputChange(e, "recommended_price")}
                     autoFocus
                   />
                 ) : (
-                  <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
+                  <p>{evaluationData?.priceEstimation?.recommended_price ?? "Ei tiedossa"} €</p>
                 )}
               </div>
             </div>
