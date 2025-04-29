@@ -47,19 +47,16 @@ const AcceptedPage: React.FC = () => {
     const response = await fetch(photo);
     const blob = await response.blob();
 
-    // add evaluation details to formData
+    // add evaluation details to formData -->
+    // changed the keys to match the backend requirements (in dimensions))
     formData.append("merkki", evaluation.merkki);
     formData.append("malli", evaluation.malli);
     formData.append("vari", evaluation.vari);
-    // formData.append("pituus", JSON.stringify(evaluation.mitat.pituus));
-    // formData.append("leveys", JSON.stringify(evaluation.mitat.leveys));
-    // formData.append("korkeus", JSON.stringify(evaluation.mitat.korkeus));
-    formData.append("mitat", evaluation.mitat);
-    formData.append("materiaalit", evaluation.materiaalit);
+    formData.append("mitat[pituus]", evaluation.mitat.pituus);
+    formData.append("mitat[leveys]", evaluation.mitat.leveys);
+    formData.append("mitat[korkeus]", evaluation.mitat.korkeus);
+    formData.append("materiaalit", evaluation.materiaalit.join(", "));
     formData.append("kunto", evaluation.kunto);
-    formData.append("recommended_price", evaluation.recommended_price);
-    formData.append("description", evaluation.description);
-    formData.append("status", evaluation.status);
 
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
@@ -67,7 +64,7 @@ const AcceptedPage: React.FC = () => {
     try {
       // send to the backend
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ",
+        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save",
         {
           method: "POST",
           headers: {
@@ -109,19 +106,23 @@ console.log("Saved Evaluation Response:", responseData);
     }
 
     try {
+      // haetaan blobiksi
+      const resp = await fetch(photo);
+      const blob = await resp.blob();
+  
+      // pakkaa FormDataan
       const formData = new FormData();
-      const response = await fetch(photo);
-      const blob = await response.blob();
-
-      formData.append("brand", evaluation.merkki);
-      formData.append("model", evaluation.malli);
-      formData.append("color", evaluation.vari);
-      formData.append("dimensions", JSON.stringify(evaluation.mitat));
-      formData.append("materials", evaluation.materiaalit);
-      formData.append("condition", evaluation.kunto);
+      formData.append("merkki", evaluation.merkki);
+      formData.append("malli", evaluation.malli);
+      formData.append("vari", evaluation.vari);
+      formData.append("mitat[pituus]", evaluation.mitat.pituus.toString());
+      formData.append("mitat[leveys]", evaluation.mitat.leveys.toString());
+      formData.append("mitat[korkeus]", evaluation.mitat.korkeus.toString());
+      formData.append("materiaalit", evaluation.materiaalit.join(", "));
+      formData.append("kunto", evaluation.kunto);
       formData.append("image", blob, "photo.jpg");
-      formData.append("recommended_price", evaluation.recommended_price);
-
+  
+      // lähetä ilman Content-Type-headeria, selaimesi asettaa boundaryn
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
         {
@@ -136,18 +137,15 @@ console.log("Saved Evaluation Response:", responseData);
       if (!stockResponse.ok) {
         const errorData = await stockResponse.json();
         setStockMessage(
-          `Virhe: ${
-            errorData.error || "Varastotilanteen tarkistus epäonnistui."
-          }`
+          `Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`
         );
-        return;
+      } else {
+        const data = await stockResponse.json();
+        setStockMessage(data.message);
       }
-
-      const data = await stockResponse.json();
-      setStockMessage(data.message);
-    } catch (error) {
-      console.log(error);
-      setStockMessage("virhe varastotilanteen tarkistuksessa.");
+    } catch (err) {
+      console.error(err);
+      setStockMessage("Virhe varastotilanteen tarkistuksessa.");
     } finally {
       setLoading(false);
     }

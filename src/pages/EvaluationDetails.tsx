@@ -262,8 +262,7 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
         status: "archived",
       };
       const response = await fetch(
-
-        import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +`/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
