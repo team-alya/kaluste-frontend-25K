@@ -68,9 +68,9 @@ export default function EvalDetails() {
         width: evaluation.dimensions?.width || "",
         height: evaluation.dimensions?.height || "",
         length: evaluation.dimensions?.length || "",
-        condition: evaluation.condition || "Ei tiedossa",
+        condition: evaluation.condition || "",
         materials: evaluation.materials || [],
-        status: evaluation.status || "Ei tiedossa",
+        status: evaluation.status || "",
       });
     }
   }, [evaluationData]);
@@ -178,7 +178,7 @@ export default function EvalDetails() {
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/${evaluationData.id}/status`,
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -226,7 +226,7 @@ export default function EvalDetails() {
         status: "archived",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL +`${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +`/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {

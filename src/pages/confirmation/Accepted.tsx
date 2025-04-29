@@ -47,15 +47,16 @@ const AcceptedPage: React.FC = () => {
     const response = await fetch(photo);
     const blob = await response.blob();
 
-    // add evaluation details to formData
-    formData.append("merkki", evaluation.brand);
-    formData.append("malli", evaluation.model);
-    formData.append("vari", evaluation.color);
-    formData.append("pituus", evaluation.dimensions.length);
-    formData.append("leveys", evaluation.dimensions.width);
-    formData.append("korkeus", evaluation.dimensions.height);
-    formData.append("materiaalit", evaluation.materials);
-    formData.append("kunto", evaluation.condition);
+    // add evaluation details to formData -->
+    // changed the keys to match the backend requirements (in dimensions))
+    formData.append("merkki", evaluation.merkki);
+    formData.append("malli", evaluation.malli);
+    formData.append("vari", evaluation.vari);
+    formData.append("mitat[pituus]", evaluation.mitat.pituus);
+    formData.append("mitat[leveys]", evaluation.mitat.leveys);
+    formData.append("mitat[korkeus]", evaluation.mitat.korkeus);
+    formData.append("materiaalit", evaluation.materiaalit.join(", "));
+    formData.append("kunto", evaluation.kunto);
 
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
@@ -64,7 +65,7 @@ const AcceptedPage: React.FC = () => {
 
       // send to the backend
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ",
+        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save",
         {
           method: "POST",
           headers: {
@@ -98,40 +99,51 @@ const AcceptedPage: React.FC = () => {
     }
   
     try {
-      // create a requestData object with the evaluation details
-      const requestData = {
-        malli: evaluation.model,
-        merkki: evaluation.brand,
-      };
+      // haetaan blobiksi
+      const resp = await fetch(photo);
+      const blob = await resp.blob();
   
-      //
+      // pakkaa FormDataan
+      const formData = new FormData();
+      formData.append("merkki", evaluation.merkki);
+      formData.append("malli", evaluation.malli);
+      formData.append("vari", evaluation.vari);
+      formData.append("mitat[pituus]", evaluation.mitat.pituus.toString());
+      formData.append("mitat[leveys]", evaluation.mitat.leveys.toString());
+      formData.append("mitat[korkeus]", evaluation.mitat.korkeus.toString());
+      formData.append("materiaalit", evaluation.materiaalit.join(", "));
+      formData.append("kunto", evaluation.kunto);
+      formData.append("image", blob, "photo.jpg");
+  
+      // lähetä ilman Content-Type-headeria, selaimesi asettaa boundaryn
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(requestData),
+          body: formData,
         }
       );
   
       if (!stockResponse.ok) {
         const errorData = await stockResponse.json();
-        setStockMessage(`Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`);
-        return;
+        setStockMessage(
+          `Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`
+        );
+      } else {
+        const data = await stockResponse.json();
+        setStockMessage(data.message);
       }
-  
-      const data = await stockResponse.json();
-      setStockMessage(data.message)
-    } catch (error) {
-      console.log(error);
-      setStockMessage("virhe varastotilanteen tarkistuksessa.");
+    } catch (err) {
+      console.error(err);
+      setStockMessage("Virhe varastotilanteen tarkistuksessa.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -155,10 +167,10 @@ const AcceptedPage: React.FC = () => {
       {/* show the evaluation details to the user */}
       <div className="flex flex-col text-left mt-2">
         <p className="mb-2">
-          <strong>Merkki:</strong> {evaluation.brand}
+          <strong>Merkki:</strong> {evaluation.merkki}
         </p>
         <p className="mb-2">
-          <strong>Malli:</strong> {evaluation.model}
+          <strong>Malli:</strong> {evaluation.malli}
         </p>
       </div>
 
