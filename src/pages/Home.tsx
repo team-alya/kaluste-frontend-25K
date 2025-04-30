@@ -23,7 +23,7 @@ const Home = () => {
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>
 
-      { role?.toLowerCase() !== "user" ? (
+      
         <div className="grid grid-cols-2 md:grid-cols-4 md:justify-items-center gap-2 md:gap-5 md:ml-0 ml-8">
 
         <div>
@@ -93,22 +93,7 @@ const Home = () => {
       </div>
     </div>
 
-      ) : (
-        <div>
-          {/* button that navigates to camera page */}
-          <button
-            className=""
-            style={{
-              backgroundImage: `url(${cam})`,
-              height: "150px",
-              width: "150px",
-            }}
-            onClick={() => navigate("/camera", { state: { username, from: location.pathname } })}
-          >
-            <p className="mt-23 text-white">Tunnista tuote</p>
-        </button>
-      </div>
-    )}
+     
 
       </div>
 

@@ -9,6 +9,7 @@ import { Pencil } from "lucide-react";
 export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
+  const role = window.localStorage.getItem("role");
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
@@ -36,7 +37,6 @@ export default function EvalDetails() {
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
- 
 
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
@@ -55,14 +55,16 @@ export default function EvalDetails() {
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
       } else {
-        
         const fetchEvaluation = async () => {
           try {
             const response = await fetch(
-              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
+              import.meta.env.VITE_BACKEND_URL +
+                `/api/evaluation/${evaluationData?.id}`,
               {
                 headers: {
-                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                  Authorization: `Bearer ${window.localStorage.getItem(
+                    "token"
+                  )}`,
                 },
               }
             );
@@ -99,7 +101,6 @@ export default function EvalDetails() {
         status: evaluation?.status || "Ei tiedossa",
       });
       console.log(formData);
-
     }
   }, [evaluationData]);
 
@@ -159,7 +160,8 @@ export default function EvalDetails() {
       };
 
       const response = await fetch(
-import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
+        import.meta.env.VITE_BACKEND_URL +
+          `/api/evaluation/${evaluationData.id}`,
         {
           method: "PUT",
           headers: {
@@ -208,7 +210,8 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
         status: "reviewed",
       };
       const response = await fetch(
-      import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +
+          `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -259,7 +262,8 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
         status: "archived",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL +`/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +
+          `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -288,8 +292,6 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
       console.error("Virhe lähettäessä:", error);
     }
   };
-
-  
 
   return (
     <div className="flex md:justify-center">
@@ -321,16 +323,18 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
             <div>
               {!isEditing.info ? (
                 <>
-                  <div
-                    onClick={handleEditAllClick}
-                    className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
-                    style={{ width: "40px", height: "40px" }}
-                    aria-label="Muokkaa tietoja"
-                  >
-                    <Pencil size={20} />
-                  </div>
+                  {role !== "user" && (
+                    <div
+                      onClick={handleEditAllClick}
+                      className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
+                      style={{ width: "40px", height: "40px" }}
+                      aria-label="Muokkaa tietoja"
+                    >
+                      <Pencil size={20} />
+                    </div>
+                  )}
 
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-2 mt-3">
                     <p className="mr-2">
                       <strong>Merkki:</strong> {formData.brand}
                     </p>
@@ -509,31 +513,33 @@ import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}`,
             </div>
           )}
 
-          <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
-            {Object.values(isEditing).some((value) => value) ? (
-              <button
-                onClick={handleSaveAll}
-                className="flex items-center justify-center text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
-              >
-                Tallenna tiedot
-              </button>
-            ) : (
-              <>
+          {role !== "user" && (
+            <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
+              {Object.values(isEditing).some((value) => value) ? (
                 <button
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
-                  onClick={SendToExpert}
+                  onClick={handleSaveAll}
+                  className="flex items-center justify-center text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
                 >
-                  Lähetä expertille
+                  Tallenna tiedot
                 </button>
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
-                  onClick={SendToArchive}
-                >
-                  Arkistoi
-                </button>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <button
+                    className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
+                    onClick={SendToExpert}
+                  >
+                    Lähetä expertille
+                  </button>
+                  <button
+                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
+                    onClick={SendToArchive}
+                  >
+                    Arkistoi
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div>
