@@ -13,7 +13,7 @@ const AcceptedPage: React.FC = () => {
   const [okMessage] = useState<string>(
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
-  const [stockMessage, setStockMessage] = useState<string | null>(null);
+  const [, setStockMessage] = useState<string | null>(null);
   const [, setLoading] = useState<boolean>(false);
 
   useEffect(() => {

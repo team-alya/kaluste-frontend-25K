@@ -11,6 +11,16 @@ export default function EvalDetails() {
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
+  const [movedToExpertMsg, ] = useState<string>(
+    "Tuote lähetetty onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
+  );
+  const [movedToArchiveMsg, ] = useState<string>(
+    "Tuote arkistoitu onnistuneesti. Sinut ohjataan takaisin listaukseen."
+  );
+
+  const [moveToExpertOk, setMoveToExpertOk] = useState<boolean>(false);
+  const [moveToArchiveOk, setMoveToArchiveOk] = useState<boolean>(false);
+
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
   >();
@@ -27,6 +37,7 @@ export default function EvalDetails() {
     materials: [],
     status: "",
   });
+
 
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
@@ -228,14 +239,16 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      const updatedEvaluation = await response.json();
-      setEvaluationData(updatedEvaluation);
-      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
-      setSaveOk(true);
+      // const updatedEvaluation = await response.json();
+      // setEvaluationData(updatedEvaluation);
+      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      setMoveToExpertOk(true);
 
-      navigate("/reviewed", {
-        state: { expertData },
-      });
+      setTimeout(() => {
+        navigate("/evals", {
+          state: { expertData },
+        });
+      }, 4000);
     } catch (error) {
       console.error("Virhe lähettäessä:", error);
     }
@@ -280,14 +293,16 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      const updatedEvaluation = await response.json();
-      setEvaluationData(updatedEvaluation);
-      localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
-      setSaveOk(true);
+      // const updatedEvaluation = await response.json();
+      // setEvaluationData(updatedEvaluation);
+      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      setMoveToArchiveOk(true);
 
-      navigate("/archive", {
-        state: { archiveData },
-      });
+      setTimeout(() => {
+        navigate("/reviewed", {
+          state: { archiveData },
+        });
+      }, 4000);
     } catch (error) {
       console.error("Virhe lähettäessä:", error);
     }
@@ -523,20 +538,30 @@ export default function EvalDetails() {
                   Tallenna tiedot
                 </button>
               ) : (
-                <>
-                  <button
-                    className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
-                    onClick={SendToExpert}
-                  >
-                    Lähetä expertille
-                  </button>
-                  <button
-                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
-                    onClick={SendToArchive}
-                  >
-                    Arkistoi
-                  </button>
-                </>
+                <div className="flex flex-col w-1/1">
+                  {moveToExpertOk && (
+                    <div className="m-3 text-lg text-center font-semibold text-[#104930]">{movedToExpertMsg}</div>
+                  )}
+                  {moveToArchiveOk && <div className="m-3 text-center  text-lg font-semibold text-[#104930]">{movedToArchiveMsg}</div>}
+
+                    {(!moveToExpertOk && !moveToArchiveOk) && (
+                      <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-8 mx-3">
+                        <button
+                          className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
+                          onClick={SendToExpert}
+                        >
+                          Lähetä expertille
+                        </button>
+                        <button
+                          className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
+                          onClick={SendToArchive}
+                        >
+                          Arkistoi
+                        </button>
+                      </div>
+                    )}
+                  </div>
+              
               )}
             </div>
           )}

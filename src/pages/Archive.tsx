@@ -108,7 +108,7 @@ const Archive = () => {
                 <div>
                     <div className="flex flex-col items-center">
                         <div className="flex items-center justify-between mt-1">
-                            <h1 className="text-4xl font-bold ml-5">Arkistoidut</h1>
+                            <h1 className="text-xl font-bold ml-5">Arkistoidut</h1>
                             <button
                                 className={`m-5 p-2 flex items-center justify-center ${showCheckboxes ? "" : "text-gray-500"}`}
                                 onClick={() => {

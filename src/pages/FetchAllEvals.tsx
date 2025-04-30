@@ -93,7 +93,7 @@ export default function FetchAllEvals() {
         // if products are fetched and the list is not empty
         <div>
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl font-bold ml-5 mt-4">Käsitellyt</h1>
+            <h1 className="text-xl font-bold ml-5 mt-4">Tekoälyn arvioimat tuotteet</h1>
 
             {/* listing the products */}
             {filterProducts.map((e: Evaluation) => {

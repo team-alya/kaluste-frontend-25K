@@ -11,6 +11,11 @@ export default function EvalDetails() {
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
+  const [movedToExpertMsg] = useState<string>(
+    "Tuote palautettu onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
+  );
+  const [moveToExpertOk, setMoveToExpertOk] = useState<boolean>(false);
+
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
   >();
@@ -230,11 +235,13 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      setSaveOk(true);
+      setMoveToExpertOk(true);
 
-      navigate("/reviewed", {
-        state: { expertData },
-      });
+      setTimeout(() => {
+        navigate("/archive", {
+          state: { expertData },
+        });
+      }, 4000);
     } catch (error) {
       console.error("Virhe lähettäessä:", error);
     }
@@ -525,22 +532,33 @@ export default function EvalDetails() {
               </div>
             ) : (
               role !== "user" && (
-              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
-                  onClick={() => setDeleteConfirmation(true)}
-                >
-                  <Trash2 size={20} strokeWidth={2} className="mr-2" />
-                  Poista
-                </button>
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
-                  onClick={SendToExpert}
-                >
-                  Lähetä expertille
-                </button>
-              </div>
-            ))}
+                <>
+                  {moveToExpertOk && (
+                    <div className="m-3 text-lg font-semibold text-[#104930] text-center">
+                      {movedToExpertMsg}
+                    </div>
+                  )}
+
+                  {!moveToExpertOk && (
+                    <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
+                        onClick={() => setDeleteConfirmation(true)}
+                      >
+                        <Trash2 size={20} strokeWidth={2} className="mr-2" />
+                        Poista
+                      </button>
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                        onClick={SendToExpert}
+                      >
+                        Palauta expertille
+                      </button>
+                    </div>
+                  )}
+                </>
+              )
+            )}
           </div>
         </div>
       ) : (
