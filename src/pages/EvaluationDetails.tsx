@@ -1,13 +1,16 @@
-import { useLocation } from "react-router-dom";
+
 import { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EvaluationData } from "../types/evaluationData";
 import type { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil } from "lucide-react";
+import { useParams } from "react-router-dom";
+
+
 
 export default function EvalDetails() {
-  const location = useLocation();
+
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
@@ -55,70 +58,56 @@ export default function EvalDetails() {
   const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
     : "Päivämäärä puuttuu";
+     const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    const stateData = location.state?.evaluation;
-    if (stateData) {
-      setEvaluationData(stateData);
-      localStorage.setItem("evaluationData", JSON.stringify(stateData));
-    } else {
-      const storedData = localStorage.getItem("evaluationData");
-      if (storedData) {
-        setEvaluationData(JSON.parse(storedData));
+  const fetchEvaluation = async () => {
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setEvaluationData(data);
+        localStorage.setItem("evaluationData", JSON.stringify(data));
       } else {
-        const fetchEvaluation = async () => {
-          try {
-            const response = await fetch(
-              import.meta.env.VITE_BACKEND_URL +
-                `/api/evaluation/${evaluationData?.id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${window.localStorage.getItem(
-                    "token"
-                  )}`,
-                },
-              }
-            );
-            if (response.ok) {
-              const data = await response.json();
-             // console.log("Fetched evaluation data:", evaluationData);
-//console.log("Price Estimation:", evaluationData?.priceEstimation);
-//console.log("Recommended Price:", evaluationData?.priceEstimation?.recommended_price);
-              setEvaluationData(data);
-              localStorage.setItem("evaluationData", JSON.stringify(data));
-            } else {
-              console.error("Virhe haettaessa tietoja palvelimelta");
-            }
-          } catch (error) {
-            console.error("Virhe palvelimen pyynnössä:", error);
-          }
-        };
-
-        fetchEvaluation();
+        console.error("Virhe haettaessa tietoja palvelimelta");
       }
+    } catch (error) {
+      console.error("Virhe palvelimen pyynnössä:", error);
     }
-  }, [location.state]);
+  };
+  if (id) {
+    fetchEvaluation();
+  }
+}, [id]);
+
+  
 
   useEffect(() => {
-    if (evaluationData) {
-      console.log("Evaluation Data:", evaluationData);
-      //console.log("Recommended Price:", evaluationData.priceEstimation?.recommended_price);
-      setFormData({
-        recommended_price: evaluationData.priceEstimation?.recommended_price || 0,
-        description: evaluationData?.description || "",
-        brand: evaluation?.brand || "",
-        model: evaluation?.model || "",
-        color: evaluation?.color || "",
-        width: evaluation?.dimensions?.width || "",
-        height: evaluation?.dimensions?.height || "",
-        length: evaluation?.dimensions?.length || "",
-        condition: evaluation?.condition || "Ei tiedossa",
-        materials: evaluation?.materials || [],
-        status: evaluation?.status || "Ei tiedossa",
-      });
-      console.log(formData);
-    }
-  }, [evaluationData]);
+  if (!evaluationData) return;
+
+  const evaluation = evaluationData.evaluation;
+  setFormData({
+    recommended_price: evaluationData.priceEstimation?.recommended_price || 0,
+    description: evaluationData?.description || "",
+    brand: evaluation?.brand || "",
+    model: evaluation?.model || "",
+    color: evaluation?.color || "",
+    width: evaluation?.dimensions?.width || "",
+    height: evaluation?.dimensions?.height || "",
+    length: evaluation?.dimensions?.length || "",
+    condition: evaluation?.condition || "Ei tiedossa",
+    materials: evaluation?.materials || [],
+    status: evaluation?.status || "Ei tiedossa",
+  });
+}, [evaluationData]);
+
 
   useEffect(() => {
     if (saveOk) {
@@ -195,8 +184,27 @@ export default function EvalDetails() {
       }
 
       const updatedEvaluation = await response.json();
+
+     
       setEvaluationData(updatedEvaluation);
+      setFormData({
+        recommended_price: updatedEvaluation.priceEstimation?.recommended_price || 0,
+        description: updatedEvaluation?.description || "",
+        brand: updatedEvaluation?.brand || "",
+        model: updatedEvaluation?.model || "",
+        color: updatedEvaluation?.color || "",
+        width: updatedEvaluation?.dimensions?.width || "",
+        height: updatedEvaluation?.dimensions?.height || "",
+        length: updatedEvaluation?.dimensions?.length || "",
+        condition: updatedEvaluation?.condition || "Ei tiedossa",
+        materials: updatedEvaluation?.materials || [],
+        status: updatedEvaluation?.status || "Ei tiedossa",
+      });
+
+     
       localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      console.log("Tallennettu localStorageen:", JSON.parse(localStorage.getItem("evaluationData") || "{}"));
+
       setSaveOk(true);
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {

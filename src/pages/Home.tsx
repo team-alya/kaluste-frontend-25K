@@ -10,7 +10,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = window.localStorage.getItem("username") || null;
-  const role = window.localStorage.getItem("role") || null;
+  //const role = window.localStorage.getItem("role") || null;
 
   return (
 
