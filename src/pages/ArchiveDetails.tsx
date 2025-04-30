@@ -9,6 +9,12 @@ import { Pencil, Trash2 } from "lucide-react";
 export default function EvalDetails() {
   const location = useLocation();
   const navigate = useNavigate();
+  const role = window.localStorage.getItem("role");
+
+  const [movedToExpertMsg] = useState<string>(
+    "Tuote palautettu onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
+  );
+  const [moveToExpertOk, setMoveToExpertOk] = useState<boolean>(false);
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
@@ -56,14 +62,16 @@ export default function EvalDetails() {
       if (storedData) {
         setEvaluationData(JSON.parse(storedData));
       } else {
-        
         const fetchEvaluation = async () => {
           try {
             const response = await fetch(
-              import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData?.id}`,
+              import.meta.env.VITE_BACKEND_URL +
+                `/api/evaluation/${evaluationData?.id}`,
               {
                 headers: {
-                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                  Authorization: `Bearer ${window.localStorage.getItem(
+                    "token"
+                  )}`,
                 },
               }
             );
@@ -95,12 +103,12 @@ export default function EvalDetails() {
         color: evaluation?.color || "",
         width: evaluation?.dimensions?.width || "",
         height: evaluation?.dimensions?.height || "",
-        length:evaluation?.dimensions?.length || "",
+        length: evaluation?.dimensions?.length || "",
         condition: evaluation?.condition || "Ei tiedossa",
         materials: evaluation?.materials || [],
         status: evaluation?.status || "Ei tiedossa",
       });
-    } 
+    }
   }, [evaluationData]);
 
   useEffect(() => {
@@ -177,7 +185,7 @@ export default function EvalDetails() {
         throw new Error("Tietojen päivittäminen epäonnistui");
       }
 
-    const updatedEvaluation = await response.json();
+      const updatedEvaluation = await response.json();
       setEvaluationData(updatedEvaluation);
       localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setSaveOk(true);
@@ -209,7 +217,8 @@ export default function EvalDetails() {
         status: "reviewed",
       };
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${evaluationData.id}/status`,
+        import.meta.env.VITE_BACKEND_URL +
+          `/api/evaluation/${evaluationData.id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -226,11 +235,13 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      setSaveOk(true);
+      setMoveToExpertOk(true);
 
-      navigate("/reviewed", {
-        state: { expertData },
-      });
+      setTimeout(() => {
+        navigate("/archive", {
+          state: { expertData },
+        });
+      }, 4000);
     } catch (error) {
       console.error("Virhe lähettäessä:", error);
     }
@@ -297,16 +308,18 @@ export default function EvalDetails() {
             <div>
               {!isEditing.info ? (
                 <>
-                  <div
-                    onClick={handleEditAllClick}
-                    className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
-                    style={{ width: "40px", height: "40px" }}
-                    aria-label="Muokkaa tietoja"
-                  >
-                    <Pencil size={20} />
-                  </div>
+                  {role !== "user" && (
+                    <div
+                      onClick={handleEditAllClick}
+                      className="mt-3 text-white bg-gray-500 shadow-sm transition rounded-full flex items-center justify-center cursor-pointer ml-auto"
+                      style={{ width: "40px", height: "40px" }}
+                      aria-label="Muokkaa tietoja"
+                    >
+                      <Pencil size={20} />
+                    </div>
+                  )}
 
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-2 mt-3">
                     <p className="mr-2">
                       <strong>Merkki:</strong> {formData.brand}
                     </p>
@@ -447,7 +460,7 @@ export default function EvalDetails() {
                     value={formData.suositus_hinta}
                     onChange={(e) => handleInputChange(e, "suositus_hinta")}
                     autoFocus
-                   />
+                  />
                 ) : (
                   <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
                 )}
@@ -486,9 +499,11 @@ export default function EvalDetails() {
           )}
 
           <div>
-          {deleteConfirmation ? (
+            {deleteConfirmation ? (
               <div className="flex flex-col justify-center items-center mb-3">
-                <p className="text-red-600 font-semibold text-lg border-2 my-3 rounded-md border-red-700 text-center md:text-bold md:px-4 md:py-3 p-1 w-3/4">{warningMsg}</p>
+                <p className="text-red-600 font-semibold text-lg border-2 my-3 rounded-md border-red-700 text-center md:text-bold md:px-4 md:py-3 p-1 w-3/4">
+                  {warningMsg}
+                </p>
 
                 <div className="flex flex-row justify-evenly md:justify-start items-center h-10 w-4/5 gap-6 mt-3 md:mt-10 mx-3">
                   <button
@@ -508,29 +523,41 @@ export default function EvalDetails() {
               </div>
             ) : Object.values(isEditing).some((value) => value) ? (
               <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
-                 <button
-                onClick={handleSaveAll}
-                className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
-              >
-                Tallenna tiedot
-              </button>
+                <button
+                  onClick={handleSaveAll}
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                >
+                  Tallenna tiedot
+                </button>
               </div>
             ) : (
-              <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
-                  onClick={() => setDeleteConfirmation(true)}
-                >
-                  <Trash2 size={20} strokeWidth={2} className="mr-2"/>
-                  Poista
-                </button>
-                <button
-                  className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
-                  onClick={SendToExpert}
-                >
-                  Lähetä expertille
-                </button>
-              </div>
+              role !== "user" && (
+                <>
+                  {moveToExpertOk && (
+                    <div className="m-3 text-lg font-semibold text-[#104930] text-center">
+                      {movedToExpertMsg}
+                    </div>
+                  )}
+
+                  {!moveToExpertOk && (
+                    <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
+                        onClick={() => setDeleteConfirmation(true)}
+                      >
+                        <Trash2 size={20} strokeWidth={2} className="mr-2" />
+                        Poista
+                      </button>
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                        onClick={SendToExpert}
+                      >
+                        Palauta expertille
+                      </button>
+                    </div>
+                  )}
+                </>
+              )
             )}
           </div>
         </div>

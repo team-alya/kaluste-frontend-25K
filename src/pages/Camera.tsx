@@ -139,8 +139,8 @@ const CameraApp: React.FC = () => {
           
           {/* show feedback message if available */}
           {showMessage && ( 
-            <div className="mb-15 text-center">
-            <p className="text-md font-semibold text-[#104930]">
+            <div className="mb-3 mt-3 text-center">
+            <p className="text-sm font-semibold text-[#104930]">
               {imageFeedbackMsg}
             </p>
           </div>
@@ -162,7 +162,7 @@ const CameraApp: React.FC = () => {
           <img
             src={photo}
             alt="Captured"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-sm"
           />
         </div>
         ) : (

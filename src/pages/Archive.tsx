@@ -12,6 +12,7 @@ const Archive = () => {
     const [showCheckboxes, setShowCheckboxes] = useState<boolean>(false);
     const [notification, setNotification] = useState<string | null>(null);
     const navigate = useNavigate();
+    const role = window.localStorage.getItem("role");
 
     useEffect(() => {
         fetchEvals();
@@ -107,7 +108,7 @@ const Archive = () => {
                 <div>
                     <div className="flex flex-col items-center">
                         <div className="flex items-center justify-between mt-1">
-                            <h1 className="text-4xl font-bold ml-5">Arkistoidut</h1>
+                            <h1 className="text-xl font-bold ml-5">Arkistoidut</h1>
                             <button
                                 className={`m-5 p-2 flex items-center justify-center ${showCheckboxes ? "" : "text-gray-500"}`}
                                 onClick={() => {
@@ -121,6 +122,7 @@ const Archive = () => {
                                 {showCheckboxes ? (
                                     ""
                                 ) : (
+                                    role !== "user" && (
                                     <span
                                         className="bg-gray-300 text-black px-4 py-2 flex items-center cursor-pointer rounded-lg"
                                         onClick={() => {
@@ -130,7 +132,7 @@ const Archive = () => {
                                         Valitse
                                         <Trash2 className="ml-2" />
                                     </span>
-                                )}
+                                ))}
                             </button>
                         </div>
 

@@ -13,7 +13,7 @@ const AcceptedPage: React.FC = () => {
   const [okMessage] = useState<string>(
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
-  const [stockMessage, setStockMessage] = useState<string | null>(null);
+  const [, setStockMessage] = useState<string | null>(null);
   const [, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -197,11 +197,6 @@ console.log("Saved Evaluation Response:", responseData);
       </div>
 
       <div>
-        {/* Show stock info */}
-
-        <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">
-          {stockMessage}
-        </p>
 
         {/* save button */}
         <button
