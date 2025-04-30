@@ -193,11 +193,6 @@ const AcceptedPage: React.FC = () => {
       </div>
 
       <div>
-        {/* Show stock info */}
-
-        <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">
-          {stockMessage}
-        </p>
 
         {/* save button */}
         <button
