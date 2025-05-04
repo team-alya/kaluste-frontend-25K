@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import LoadingProducts from "./LoadingProductList";
+import LoadingProducts from "../../components/LoadingProductList";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Evaluation } from "../types/evaluation";
+import { Evaluation } from "../../types/evaluation";
 
 // fetching all evaluated products and displaying them in a list view
 

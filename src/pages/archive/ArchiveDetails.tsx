@@ -1,24 +1,22 @@
-import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
-import { EvaluationData } from "../types/evaluationData";
-import { FormData } from "../types/formData";
-import { EditingState } from "../types/editingState";
+import { useNavigate, useParams } from "react-router-dom";
+import { EvaluationData } from "../../types/evaluationData";
+import { FormData } from "../../types/formData";
+import { EditingState } from "../../types/editingState";
 import { Pencil, Trash2 } from "lucide-react";
-import { useParams } from "react-router-dom";
 
-const ReviewedDetails = () => {
+export default function EvalDetails() {
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
-  const [movedToArchiveMsg] = useState<string>(
-    "Tuote arkistoitu onnistuneesti. Sinut ohjataan takaisin listaukseen."
+  const [movedToExpertMsg] = useState<string>(
+    "Tuote palautettu onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
   );
+  const [moveToExpertOk, setMoveToExpertOk] = useState<boolean>(false);
 
-  const [moveToArchiveOk, setMoveToArchiveOk] = useState<boolean>(false);
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
   >();
-
   const [formData, setFormData] = useState<FormData>({
     recommended_price: 0,
     description: "",
@@ -32,7 +30,6 @@ const ReviewedDetails = () => {
     materials: [],
     status: "",
   });
-
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
     recommended_price: false,
@@ -46,13 +43,13 @@ const ReviewedDetails = () => {
   const [warningMsg] = useState<string>(
     "Tuote poistetaan lopullisesti. Haluatko varmasti poistaa tuotteen?"
   );
-
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
 
   const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
     : "Päivämäärä puuttuu";
+
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -150,10 +147,10 @@ const ReviewedDetails = () => {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        recommeded_price: formData.recommended_price,
+        recommended_price: formData.recommended_price,
         description: formData.description,
         materiaalit: formData.materials || [],
-        status: "reviewed",
+        status: "archived",
       };
 
       const response = await fetch(
@@ -206,13 +203,13 @@ const ReviewedDetails = () => {
     }
   };
 
-  const SendToArchive = async () => {
+  const SendToExpert = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
       return;
     }
     try {
-      const archiveData = {
+      const expertData = {
         merkki: formData.brand,
         malli: formData.model,
         vari: formData.color,
@@ -223,9 +220,9 @@ const ReviewedDetails = () => {
         },
         kunto: formData.condition,
         recommended_price: formData.recommended_price,
-        lisatiedot: formData.description,
+        description: formData.description,
         materiaalit: formData.materials || [],
-        status: "archived",
+        status: "reviewed",
       };
       const response = await fetch(
         import.meta.env.VITE_BACKEND_URL +
@@ -236,7 +233,7 @@ const ReviewedDetails = () => {
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(archiveData),
+          body: JSON.stringify(expertData),
         }
       );
 
@@ -246,11 +243,11 @@ const ReviewedDetails = () => {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      setMoveToArchiveOk(true);
+      setMoveToExpertOk(true);
 
       setTimeout(() => {
-        navigate("/reviewed", {
-          state: { archiveData },
+        navigate("/archive", {
+          state: { expertData },
         });
       }, 4000);
     } catch (error) {
@@ -283,7 +280,7 @@ const ReviewedDetails = () => {
       }
 
       console.log("Tuote poistettu onnistuneesti");
-      navigate("/reviewed");
+      navigate("/archive");
     } catch (error) {
       console.error("Virhe poistettaessa:", error);
     }
@@ -330,7 +327,7 @@ const ReviewedDetails = () => {
                     </div>
                   )}
 
-                  <div className="flex items-center mt-3 mb-2">
+                  <div className="flex items-center mb-2 mt-3">
                     <p className="mr-2">
                       <strong>Merkki:</strong> {formData.brand}
                     </p>
@@ -519,7 +516,7 @@ const ReviewedDetails = () => {
                 <div className="flex flex-row justify-evenly md:justify-start items-center h-10 w-4/5 gap-6 mt-3 md:mt-10 mx-3">
                   <button
                     onClick={deleteProduct}
-                    className="flex items-center justify-center text-white bg-red-600 rounded-lg h-12 w-1/2"
+                    className="flex items-center justify-center text-white bg-red-600 rounded-lg h-12 w-1/2 btn-secondary"
                   >
                     <Trash2 size={20} strokeWidth={2} className="mr-2" />
                     Poista
@@ -536,7 +533,7 @@ const ReviewedDetails = () => {
               <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
                 <button
                   onClick={handleSaveAll}
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
+                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
                 >
                   Tallenna tiedot
                 </button>
@@ -544,12 +541,13 @@ const ReviewedDetails = () => {
             ) : (
               role !== "user" && (
                 <>
-                  {moveToArchiveOk && (
+                  {moveToExpertOk && (
                     <div className="m-3 text-lg font-semibold text-[#104930] text-center">
-                      {movedToArchiveMsg}
+                      {movedToExpertMsg}
                     </div>
                   )}
-                  {!moveToArchiveOk && (
+
+                  {!moveToExpertOk && (
                     <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
                       <button
                         className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
@@ -558,12 +556,11 @@ const ReviewedDetails = () => {
                         <Trash2 size={20} strokeWidth={2} className="mr-2" />
                         Poista
                       </button>
-
                       <button
-                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
-                        onClick={SendToArchive}
+                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                        onClick={SendToExpert}
                       >
-                        Arkistoi
+                        Palauta expertille
                       </button>
                     </div>
                   )}
@@ -579,6 +576,4 @@ const ReviewedDetails = () => {
       )}
     </div>
   );
-};
-
-export default ReviewedDetails;
+}

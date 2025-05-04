@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import LoadingProducts from "./LoadingProductList";
-import { Evaluation } from "../types/evaluation";
+import LoadingProducts from "../../components/LoadingProductList";
+import { Evaluation } from "../../types/evaluation";
 import { useNavigate } from "react-router-dom";
 
 // list of products reviewed by an expert

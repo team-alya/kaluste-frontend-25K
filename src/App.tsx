@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
-import CameraApp from "./pages/Camera";
+import CameraApp from "./pages/camera/Camera";
 import LoadingPage from "./pages/confirmation/Loading";
 import AcceptedPage from "./pages/confirmation/Accepted";
 import RejectedPage from "./pages/confirmation/Rejected";
@@ -11,17 +11,17 @@ import AuthNavbar from "./components/ui/LoginNavbar";
 import Settings from "./pages/Settings";
 import { useContext, useEffect } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
-import FetchAllEvals from "./pages/FetchAllEvals";
-import EvalDetails from "./pages/EvaluationDetails";
-import ErrorInfo from "./pages/Error";
-import Reviewed from "./pages/Reviewed";
-import Archive from "./pages/Archive";
-import ReviewedDetails from "./pages/ReviewedDetails";
-import ArchiveDetails from "./pages/ArchiveDetails";
-import AdminPage from "./pages/Admin";
+import FetchAllEvals from "./pages/evaluation/FetchAllEvals";
+import EvalDetails from "./pages/evaluation/EvaluationDetails";
+import ErrorInfo from "./components/Error";
+import Reviewed from "./pages/reviewed/Reviewed";
+import Archive from "./pages/archive/Archive";
+import ReviewedDetails from "./pages/reviewed/ReviewedDetails";
+import ArchiveDetails from "./pages/archive/ArchiveDetails";
+import AdminPage from "./pages/admin/Admin";
 import Register from "./pages/auth/Register";
-import UsersList from "./pages/UsersList";
-import UserEdit from "./pages/UserEdit";
+import UsersList from "./pages/admin/UsersList";
+import UserEdit from "./pages/admin/UserEdit";
 import ForbiddenPage from "./pages/confirmation/ForbiddenPage";
 
 

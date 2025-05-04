@@ -1,18 +1,24 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { EvaluationData } from "../types/evaluationData";
-import { FormData } from "../types/formData";
-import { EditingState } from "../types/editingState";
-import { Pencil, Trash2 } from "lucide-react";
+import { EvaluationData } from "../../types/evaluationData";
+import type { FormData } from "../../types/formData";
+import { EditingState } from "../../types/editingState";
+import { Pencil } from "lucide-react";
+
 
 export default function EvalDetails() {
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
   const [movedToExpertMsg] = useState<string>(
-    "Tuote palautettu onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
+    "Tuote lähetetty onnistuneesti asiantuntijalle. Sinut ohjataan takaisin listaukseen."
   );
+  const [movedToArchiveMsg] = useState<string>(
+    "Tuote arkistoitu onnistuneesti. Sinut ohjataan takaisin listaukseen."
+  );
+
   const [moveToExpertOk, setMoveToExpertOk] = useState<boolean>(false);
+  const [moveToArchiveOk, setMoveToArchiveOk] = useState<boolean>(false);
 
   const [evaluationData, setEvaluationData] = useState<
     EvaluationData | undefined
@@ -30,6 +36,7 @@ export default function EvalDetails() {
     materials: [],
     status: "",
   });
+
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
     recommended_price: false,
@@ -39,21 +46,17 @@ export default function EvalDetails() {
 
   const [saveOk, setSaveOk] = useState<boolean>(false);
   const [okMessage] = useState<string>("Tiedot päivitetty onnistuneesti.");
-  const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
-  const [warningMsg] = useState<string>(
-    "Tuote poistetaan lopullisesti. Haluatko varmasti poistaa tuotteen?"
-  );
+
   const evaluation = evaluationData?.evaluation ?? null;
   const image = evaluationData?.imageId || null;
 
   const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
     : "Päivämäärä puuttuu";
-
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    const fetchEvaluation = async () => {
+    const loadEvaluation = async () => {
       try {
         const response = await fetch(
           import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`,
@@ -75,11 +78,12 @@ export default function EvalDetails() {
       }
     };
     if (id) {
-      fetchEvaluation();
+      loadEvaluation();
     }
   }, [id]);
 
   useEffect(() => {
+
     if (!evaluationData) return;
 
     const evaluation = evaluationData.evaluation;
@@ -96,6 +100,7 @@ export default function EvalDetails() {
       materials: evaluation?.materials || [],
       status: evaluation?.status || "Ei tiedossa",
     });
+    
   }, [evaluationData]);
 
   useEffect(() => {
@@ -150,7 +155,7 @@ export default function EvalDetails() {
         recommended_price: formData.recommended_price,
         description: formData.description,
         materiaalit: formData.materials || [],
-        status: "archived",
+        status: "not reviewed",
       };
 
       const response = await fetch(
@@ -243,10 +248,13 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
+      // const updatedEvaluation = await response.json();
+      // setEvaluationData(updatedEvaluation);
+      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setMoveToExpertOk(true);
 
       setTimeout(() => {
-        navigate("/archive", {
+        navigate("/evals", {
           state: { expertData },
         });
       }, 4000);
@@ -254,35 +262,58 @@ export default function EvalDetails() {
       console.error("Virhe lähettäessä:", error);
     }
   };
-
-  const deleteProduct = async () => {
+  const SendToArchive = async () => {
     if (!evaluationData?.id) {
       console.error("Ei löytynyt tietoja.");
       return;
     }
-
     try {
+      const archiveData = {
+        merkki: formData.brand,
+        malli: formData.model,
+        vari: formData.color,
+        mitat: {
+          pituus: formData.length,
+          leveys: formData.width,
+          korkeus: formData.height,
+        },
+        kunto: formData.condition,
+        recommended_price: formData.recommended_price,
+        description: formData.description,
+        materiaalit: formData.materials || [],
+        status: "archived",
+      };
       const response = await fetch(
         import.meta.env.VITE_BACKEND_URL +
-          `/api/evaluation/${evaluationData.id}`,
+          `/api/evaluation/${evaluationData.id}/status`,
         {
-          method: "DELETE",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify(archiveData),
         }
       );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(errorText);
-        throw new Error("Poisto epäonnistui");
+        console.error("Palvelimen virhe:", errorText);
+        throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      console.log("Tuote poistettu onnistuneesti");
-      navigate("/archive");
+      // const updatedEvaluation = await response.json();
+      // setEvaluationData(updatedEvaluation);
+      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      setMoveToArchiveOk(true);
+
+      setTimeout(() => {
+        navigate("/reviewed", {
+          state: { archiveData },
+        });
+      }, 4000);
     } catch (error) {
-      console.error("Virhe poistettaessa:", error);
+      console.error("Virhe lähettäessä:", error);
     }
   };
 
@@ -463,14 +494,18 @@ export default function EvalDetails() {
               <div className="mt-1">
                 {isEditing.recommended_price ? (
                   <input
-                    type="text"
+                    type="number"
                     className="border border-black p-1 rounded mt-1 w-24"
                     value={formData.recommended_price}
                     onChange={(e) => handleInputChange(e, "recommended_price")}
                     autoFocus
                   />
                 ) : (
-                  <p>{formData.recommended_price || "Ei tiedossa"} €</p>
+                  <p>
+                    {evaluationData?.priceEstimation?.recommended_price ??
+                      "Ei tiedossa"}{" "}
+                    €
+                  </p>
                 )}
               </div>
             </div>
@@ -506,68 +541,48 @@ export default function EvalDetails() {
             </div>
           )}
 
-          <div>
-            {deleteConfirmation ? (
-              <div className="flex flex-col justify-center items-center mb-3">
-                <p className="text-red-600 font-semibold text-lg border-2 my-3 rounded-md border-red-700 text-center md:text-bold md:px-4 md:py-3 p-1 w-3/4">
-                  {warningMsg}
-                </p>
-
-                <div className="flex flex-row justify-evenly md:justify-start items-center h-10 w-4/5 gap-6 mt-3 md:mt-10 mx-3">
-                  <button
-                    onClick={deleteProduct}
-                    className="flex items-center justify-center text-white bg-red-600 rounded-lg h-12 w-1/2 btn-secondary"
-                  >
-                    <Trash2 size={20} strokeWidth={2} className="mr-2" />
-                    Poista
-                  </button>
-                  <button
-                    onClick={() => setDeleteConfirmation(false)}
-                    className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg h-12 w-1/2"
-                  >
-                    Peru
-                  </button>
-                </div>
-              </div>
-            ) : Object.values(isEditing).some((value) => value) ? (
-              <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
+          {role !== "user" && (
+            <div className="flex flex-row justify-evenly items-center h-20 gap-6 mt-10 mx-3">
+              {Object.values(isEditing).some((value) => value) ? (
                 <button
                   onClick={handleSaveAll}
-                  className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                  className="flex items-center justify-center text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
                 >
                   Tallenna tiedot
                 </button>
-              </div>
-            ) : (
-              role !== "user" && (
-                <>
+              ) : (
+                <div className="flex flex-col w-1/1">
                   {moveToExpertOk && (
-                    <div className="m-3 text-lg font-semibold text-[#104930] text-center">
+                    <div className="m-3 text-lg text-center font-semibold text-[#104930]">
                       {movedToExpertMsg}
                     </div>
                   )}
+                  {moveToArchiveOk && (
+                    <div className="m-3 text-center  text-lg font-semibold text-[#104930]">
+                      {movedToArchiveMsg}
+                    </div>
+                  )}
 
-                  {!moveToExpertOk && (
-                    <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                  {!moveToExpertOk && !moveToArchiveOk && (
+                    <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-8 mx-3">
                       <button
-                        className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
-                        onClick={() => setDeleteConfirmation(true)}
-                      >
-                        <Trash2 size={20} strokeWidth={2} className="mr-2" />
-                        Poista
-                      </button>
-                      <button
-                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2 btn-primary"
+                        className="flex items-center justify-center px-1 text-white bg-emerald-700 rounded-lg btn-primary w-9/10 h-12 md:w-1/2"
                         onClick={SendToExpert}
                       >
-                        Palauta expertille
+                        Lähetä expertille
+                      </button>
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
+                        onClick={SendToArchive}
+                      >
+                        Arkistoi
                       </button>
                     </div>
                   )}
-                </>
-              )
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div>

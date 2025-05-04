@@ -3,7 +3,7 @@ import { Camera } from "react-camera-pro";
 import { Focus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
-import Loading from "./confirmation/Loading";
+import Loading from "../confirmation/Loading";
 
 
 const CameraApp: React.FC = () => {
