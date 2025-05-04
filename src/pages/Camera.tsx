@@ -79,47 +79,52 @@ const CameraApp: React.FC = () => {
   const handleNext = async () => {
     setLoading(true);
     if (photo) {
-        // Convert the data URL to a Blob
-        const response = await fetch(photo);
-        const blob = await response.blob();
-  
-        // Create form data and append the image Blob
-        const formData = new FormData();
-        formData.append("image", blob, "photo.jpg");
-        
-        // Send the POST request
-        fetch(import.meta.env.VITE_BACKEND_URL + "/api/image", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
-          },
-          body: formData,
-        })
-  
-        .then (response => {
-          if (!response.ok) {
+      // Convert the data URL to a Blob
+      const response = await fetch(photo);
+      const blob = await response.blob();
 
+      // Create form data and append the image Blob
+      const formData = new FormData();
+      formData.append("image", blob, "photo.jpg");
+
+      // Send the POST request
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/image", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        },
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
             setLoading(false);
-            navigate("/error", { state: { username, from: location.pathname }});
-            throw new Error ("Error fetching");
+            navigate("/error", { state: { username, from: location.pathname } });
+            throw new Error("Error fetching");
           }
-           return response.json();
+          return response.json();
         })
-        .then(data => {
+        .then((data) => {
+          // Log the recommended price to check if it's present
+          console.log("Recommended Price:", data.priceEstimation?.recommended_price);
+
           // if evaluation ok, return from loading page and navigate to accepted page
-          // also sends the evaluation data, username and endpoint info to the accepted page
           setLoading(false);
           console.log(data.evaluation);
-          navigate("/accepted", 
-            { state: 
-              { evaluation: data.evaluation, 
-                username, 
-                photo,
-                from: location.pathname }});
+          navigate("/accepted", {
+            state: {
+              evaluation: {
+                ...data.evaluation, // Sisältää muut analysoidut tiedot
+                recommended_price: data.priceEstimation?.recommended_price || 0, // Lisää recommended_price
+              },
+              username,
+              photo,
+              from: location.pathname,
+            },
+          });
         })
-        .catch(error => console.error(error));
-      }
+        .catch((error) => console.error(error));
     }
+  }
 
     const toggleMessage = () => {
       setShowMessage(!showMessage);

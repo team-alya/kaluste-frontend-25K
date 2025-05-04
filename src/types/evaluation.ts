@@ -10,7 +10,7 @@ export interface Evaluation {
     dimensions: Dimensions;
     condition: string;
     materials: string[]; 
-    suositus_hinta: number;
+    recommended_price: number;
     description: string;
     status: string;
     timeStamp: string;

@@ -1,12 +1,12 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useState, useEffect } from "react";
 import { EvaluationData } from "../types/evaluationData";
 import { FormData } from "../types/formData";
 import { EditingState } from "../types/editingState";
 import { Pencil, Trash2 } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const ReviewedDetails = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
 
@@ -20,7 +20,7 @@ const ReviewedDetails = () => {
   >();
 
   const [formData, setFormData] = useState<FormData>({
-    suositus_hinta: 0,
+    recommended_price: 0,
     description: "",
     brand: "",
     model: "",
@@ -35,7 +35,7 @@ const ReviewedDetails = () => {
 
   const [isEditing, setIsEditing] = useState<EditingState>({
     info: false,
-    suositus_hinta: false,
+    recommended_price: false,
     description: false,
     condition: false,
   });
@@ -53,66 +53,52 @@ const ReviewedDetails = () => {
   const evalDate = evaluationData?.timeStamp
     ? new Date(evaluationData.timeStamp).toLocaleDateString("fi-FI")
     : "Päivämäärä puuttuu";
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    const stateData = location.state?.evaluation;
-    if (stateData) {
-      setEvaluationData(stateData);
-      localStorage.setItem("evaluationData", JSON.stringify(stateData));
-    } else {
-      const storedData = localStorage.getItem("evaluationData");
-      if (storedData) {
-        setEvaluationData(JSON.parse(storedData));
-      } else {
-        const fetchEvaluation = async () => {
-          try {
-            const response = await fetch(
-              import.meta.env.VITE_BACKEND_URL +
-                `/api/evaluation/${evaluationData?.id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${window.localStorage.getItem(
-                    "token"
-                  )}`,
-                },
-              }
-            );
-            if (response.ok) {
-              const data = await response.json();
-              setEvaluationData(data);
-              localStorage.setItem("evaluationData", JSON.stringify(data));
-            } else {
-              console.error("Virhe haettaessa tietoja palvelimelta");
-            }
-          } catch (error) {
-            console.error("Virhe palvelimen pyynnössä:", error);
+    const fetchEvaluation = async () => {
+      try {
+        const response = await fetch(
+          import.meta.env.VITE_BACKEND_URL + `/api/evaluation/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            },
           }
-        };
-
-        fetchEvaluation();
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setEvaluationData(data);
+          localStorage.setItem("evaluationData", JSON.stringify(data));
+        } else {
+          console.error("Virhe haettaessa tietoja palvelimelta");
+        }
+      } catch (error) {
+        console.error("Virhe palvelimen pyynnössä:", error);
       }
+    };
+    if (id) {
+      fetchEvaluation();
     }
-  }, [location.state]);
+  }, [id]);
 
   useEffect(() => {
-    if (evaluationData) {
-      console.log("Päivitetään formData:", evaluationData);
-      setFormData({
-        suositus_hinta: evaluationData.priceEstimation?.suositus_hinta || 0,
-        description: evaluationData?.description || "",
-        brand: evaluation?.brand || "",
-        model: evaluation?.model || "",
-        color: evaluation?.color || "",
-        width: evaluation?.dimensions?.width || "",
-        height: evaluation?.dimensions?.height || "",
-        length: evaluation?.dimensions?.length || "",
-        condition: evaluation?.condition || "Ei tiedossa",
-        materials: evaluation?.materials || [],
-        status: evaluation?.status || "Ei tiedossa",
-      });
-    } else {
-      console.log("evaluationData ei ole valmis:", evaluationData);
-    }
+    if (!evaluationData) return;
+
+    const evaluation = evaluationData.evaluation;
+    setFormData({
+      recommended_price: evaluationData.priceEstimation?.recommended_price || 0,
+      description: evaluationData?.description || "",
+      brand: evaluation?.brand || "",
+      model: evaluation?.model || "",
+      color: evaluation?.color || "",
+      width: evaluation?.dimensions?.width || "",
+      height: evaluation?.dimensions?.height || "",
+      length: evaluation?.dimensions?.length || "",
+      condition: evaluation?.condition || "Ei tiedossa",
+      materials: evaluation?.materials || [],
+      status: evaluation?.status || "Ei tiedossa",
+    });
   }, [evaluationData]);
 
   useEffect(() => {
@@ -128,7 +114,7 @@ const ReviewedDetails = () => {
     setIsEditing({
       info: true,
       description: true,
-      suositus_hinta: true,
+      recommended_price: true,
       condition: true,
     });
   };
@@ -144,7 +130,7 @@ const ReviewedDetails = () => {
     setIsEditing({
       info: false,
       description: false,
-      suositus_hinta: false,
+      recommended_price: false,
       condition: false,
     });
 
@@ -164,8 +150,8 @@ const ReviewedDetails = () => {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta,
-        lisatiedot: formData.description,
+        recommeded_price: formData.recommended_price,
+        description: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
       };
@@ -190,8 +176,29 @@ const ReviewedDetails = () => {
       }
 
       const updatedEvaluation = await response.json();
+
       setEvaluationData(updatedEvaluation);
+      setFormData({
+        recommended_price:
+          updatedEvaluation.priceEstimation?.recommended_price || 0,
+        description: updatedEvaluation?.description || "",
+        brand: updatedEvaluation?.brand || "",
+        model: updatedEvaluation?.model || "",
+        color: updatedEvaluation?.color || "",
+        width: updatedEvaluation?.dimensions?.width || "",
+        height: updatedEvaluation?.dimensions?.height || "",
+        length: updatedEvaluation?.dimensions?.length || "",
+        condition: updatedEvaluation?.condition || "Ei tiedossa",
+        materials: updatedEvaluation?.materials || [],
+        status: updatedEvaluation?.status || "Ei tiedossa",
+      });
+
       localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+      console.log(
+        "Tallennettu localStorageen:",
+        JSON.parse(localStorage.getItem("evaluationData") || "{}")
+      );
+
       setSaveOk(true);
       console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
@@ -215,7 +222,7 @@ const ReviewedDetails = () => {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        suositus_hinta: formData.suositus_hinta,
+        recommended_price: formData.recommended_price,
         lisatiedot: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
@@ -457,16 +464,16 @@ const ReviewedDetails = () => {
                 </p>
               </div>
               <div className="mt-1">
-                {isEditing.suositus_hinta ? (
+                {isEditing.recommended_price ? (
                   <input
                     type="text"
                     className="border border-black p-1 rounded mt-1 w-24"
-                    value={formData.suositus_hinta}
-                    onChange={(e) => handleInputChange(e, "suositus_hinta")}
+                    value={formData.recommended_price}
+                    onChange={(e) => handleInputChange(e, "recommended_price")}
                     autoFocus
                   />
                 ) : (
-                  <p>{formData.suositus_hinta || "Ei tiedossa"} €</p>
+                  <p>{formData.recommended_price || "Ei tiedossa"} €</p>
                 )}
               </div>
             </div>
@@ -537,25 +544,28 @@ const ReviewedDetails = () => {
             ) : (
               role !== "user" && (
                 <>
-                
-                  {moveToArchiveOk && <div className="m-3 text-lg font-semibold text-[#104930] text-center">{movedToArchiveMsg}</div>}
+                  {moveToArchiveOk && (
+                    <div className="m-3 text-lg font-semibold text-[#104930] text-center">
+                      {movedToArchiveMsg}
+                    </div>
+                  )}
                   {!moveToArchiveOk && (
-                  <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
-                    <button
-                      className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
-                      onClick={() => setDeleteConfirmation(true)}
-                    >
-                      <Trash2 size={20} strokeWidth={2} className="mr-2" />
-                      Poista
-                    </button>
-                    
+                    <div className="flex flex-row justify-evenly md:justify-start items-center h-20 gap-6 mt-10 mx-3">
+                      <button
+                        className="flex items-center justify-center px-1 text-white bg-red-600 rounded-lg btn-secondary w-9/10 h-12 md:w-1/2"
+                        onClick={() => setDeleteConfirmation(true)}
+                      >
+                        <Trash2 size={20} strokeWidth={2} className="mr-2" />
+                        Poista
+                      </button>
+
                       <button
                         className="flex items-center justify-center px-1 text-white bg-gray-500 rounded-lg w-9/10 h-12 md:w-1/2"
                         onClick={SendToArchive}
                       >
                         Arkistoi
                       </button>
-                  </div>
+                    </div>
                   )}
                 </>
               )

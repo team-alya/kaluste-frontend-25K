@@ -76,6 +76,8 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
+      const responseData = await response.json();
+console.log("Saved Evaluation Response:", responseData);
 
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
@@ -148,7 +150,9 @@ const AcceptedPage: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
+  console.log("Evaluation Data in Accepted:", evaluation);
+  console.log("Recommended Price in Accepted:", evaluation?.recommended_price);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
