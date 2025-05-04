@@ -115,6 +115,7 @@ const CameraApp: React.FC = () => {
               evaluation: {
                 ...data.evaluation, // Sisältää muut analysoidut tiedot
                 recommended_price: data.priceEstimation?.recommended_price || 0, // Lisää recommended_price
+                price_reason: data.priceEstimation?.price_reason || "", // Lisää price_reason
               },
               username,
               photo,
