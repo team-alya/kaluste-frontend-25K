@@ -18,6 +18,11 @@ import Reviewed from "./pages/Reviewed";
 import Archive from "./pages/Archive";
 import ReviewedDetails from "./pages/ReviewedDetails";
 import ArchiveDetails from "./pages/ArchiveDetails";
+import AdminPage from "./pages/Admin";
+import Register from "./pages/auth/Register";
+import UsersList from "./pages/UsersList";
+import UserEdit from "./pages/UserEdit";
+import ForbiddenPage from "./pages/confirmation/ForbiddenPage";
 
 
 // Layout component to render Navbar based on the page
@@ -51,9 +56,16 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-function App() {
+const AdminRoute = () => {
+  const role = localStorage.getItem("role");
 
-  
+  if (role !== "admin") {
+    return <Navigate to="/forbidden" replace />;
+  }
+  return <Outlet />;
+};
+
+function App() {
 
   return (
     <div className="overflow-hidden">
@@ -79,10 +91,18 @@ function App() {
                 <Route path="/archive" element={<Archive />} />
                 <Route path="/reviewed/:id" element={<ReviewedDetails />} />
                 <Route path="/archive/:id" element={<ArchiveDetails />} />
-
-
               </Route>
-            </Routes>
+
+              <Route element ={<AdminRoute />}>
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/users" element={<UsersList />} />
+                <Route path="/users/edit/:id" element={<UserEdit />} />
+              </Route>
+
+              <Route path="forbidden" element={<ForbiddenPage />} />
+              
+              </Routes>
           </Layout>
         </AuthProvider>
       </BrowserRouter>

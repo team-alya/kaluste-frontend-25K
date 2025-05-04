@@ -82,6 +82,7 @@ export default function EvalDetails() {
   }, [id]);
 
   useEffect(() => {
+
     if (!evaluationData) return;
 
     const evaluation = evaluationData.evaluation;
@@ -98,6 +99,7 @@ export default function EvalDetails() {
       materials: evaluation?.materials || [],
       status: evaluation?.status || "Ei tiedossa",
     });
+    
   }, [evaluationData]);
 
   useEffect(() => {
