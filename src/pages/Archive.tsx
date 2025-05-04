@@ -59,8 +59,10 @@ const Archive = () => {
    const handleSelect = (id: string) => {
         setSelectedEvals((prev) =>
             prev.includes(id) ? prev.filter((evalId) => evalId !== id) : [...prev, id]
+        );
+    };
 
-  const deleteSelectedEvals = async () => {
+    const deleteSelectedEvals = async () => {
     if (selectedEvals.length === 0) {
       setNotification("Valitse vähintään yksi tuote poistettavaksi.");
       return;
