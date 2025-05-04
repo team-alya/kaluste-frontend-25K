@@ -3,6 +3,7 @@ import cam from "/assets/camera.png";
 import check from "/assets/check.png";  
 import thumb from "/assets/ok.png";
 import archive from "/assets/archive.png";
+import admin from "/assets/admin.png";
 
 // homepage component that is displayed after the user has logged in
 
@@ -10,7 +11,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = window.localStorage.getItem("username") || null;
-  const role = window.localStorage.getItem("role") || null;
+  const role = window.localStorage.getItem("role");
 
   return (
 
@@ -90,6 +91,26 @@ const Home = () => {
         >
           <p className="mt-23 text-white">Arkisto</p>
         </button>
+      </div>
+
+      <div>
+        {/* button that navigates to admin */}
+        {role === "admin" && (
+          <button
+            className=""
+            style={{
+              backgroundImage: `url(${admin})`,
+              height: "150px",
+              width: "150px",
+            }}
+            onClick={() => {
+              navigate("/admin", { state: { username, from: location.pathname } });
+            }}
+          >
+            <p className="mt-23 text-white">Admin</p>
+          </button>
+        )}
+
       </div>
     </div>
 

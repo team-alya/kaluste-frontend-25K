@@ -39,15 +39,22 @@ export default function FetchAllEvals() {
         return response.json();
       })
       .then((data) => {
-        // set data to useState
-        // and exit the loading component
-       
-        setEvals(data);
+        const sortedData = sortEvaluationsByDate(data);
+        setEvals(sortedData);
         setIsFetched(true);
         setLoading(false);
       })
 
       .catch((error) => console.error(error));
+  };
+
+  // Function to sort evaluations by date (newest first)
+  const sortEvaluationsByDate = (evaluations: Evaluation[]) => {
+    return evaluations.sort((a, b) => {
+      const dateA = new Date(a.timeStamp || 0).getTime();
+      const dateB = new Date(b.timeStamp || 0).getTime();
+      return dateB - dateA; // Sort descending
+    });
   };
 
   // fetch a single product before navigating to the product page

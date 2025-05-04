@@ -13,4 +13,11 @@ export default defineConfig({
   // server: {
   //   allowedHosts: true
   // }
+  // for local development:
+  /*
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+  },
+  */
 })

@@ -36,8 +36,8 @@ const Archive = () => {
 
             const data = await response.json();
             const archivedEvals = data.filter((e: Evaluation) => e.status === "archived");
-
-            setEvals(archivedEvals);
+            const sortedData = sortEvaluationsByDate(archivedEvals);
+            setEvals(sortedData);
             setIsFetched(true);
         } catch (error) {
             console.error(error);
@@ -45,6 +45,16 @@ const Archive = () => {
             setLoading(false);
         }
     };
+
+
+  // Function to sort evaluations by date (newest first)
+  const sortEvaluationsByDate = (evaluations: Evaluation[]) => {
+    return evaluations.sort((a, b) => {
+      const dateA = new Date(a.timeStamp || 0).getTime();
+      const dateB = new Date(b.timeStamp || 0).getTime();
+      return dateB - dateA; // Sort descending
+    });
+  };
 
     const handleSelect = (id: string) => {
         setSelectedEvals((prev) =>
