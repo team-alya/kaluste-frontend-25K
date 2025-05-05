@@ -147,7 +147,9 @@ export default function EvalDetails() {
           korkeus: formData.height,
         },
         kunto: formData.condition,
-        recommended_price: formData.recommended_price,
+        priceEstimation: {
+          recommended_price: formData.recommended_price,
+        },              
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
