@@ -162,7 +162,7 @@ const Archive = () => {
                   Peru poisto
                 </button>
                 <button
-                  className="bg-red-600 text-white rounded-lg px-4 py-2"
+                  className="bg-red-600 text-white rounded-lg px-4 py-2 btn-secondary"
                   onClick={() => {
                     if (selectedEvals.length > 0) {
                       deleteSelectedEvals();

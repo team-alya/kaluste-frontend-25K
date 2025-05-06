@@ -18,7 +18,7 @@ const AdminPage = () => {
           <h2 className="text-2xl font-bold mb-4">Käyttäjät</h2>
           <p className="mb-4">Hallinnoi käyttäjiä ja tarkastele heidän tietojaan.</p>
           <button
-            className="px-6 py-3 text-white bg-yellow-600 rounded-lg shadow-md hover:bg-yellow-500 transition"
+            className="px-6 py-3 text-white bg-yellow-600 rounded-lg shadow-md hover:bg-yellow-500 transition btn-tertiary"
             onClick={() => navigate("/users")}
           >
             Näytä käyttäjät
@@ -29,7 +29,7 @@ const AdminPage = () => {
           <h2 className="text-2xl font-bold mb-4">Rekisteröinti</h2>
           <p className="mb-4">Rekisteröi uusia käyttäjiä järjestelmään.</p>
           <button
-            className="px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-500 transition"
+            className="px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-500 transition btn-primary"
             onClick={() => navigate("/register")}
           >
             Rekisteröi uusi käyttäjä

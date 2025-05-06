@@ -147,7 +147,7 @@ export default function Register() {
 
         <div className="flex justify-center">
           <button
-            className="gap-2 mt-4 px-15 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm"
+            className="gap-2 mt-4 px-15 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm btn-primary"
             type="submit"
           >
             Rekisteröidy
