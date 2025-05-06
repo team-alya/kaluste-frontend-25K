@@ -18,6 +18,7 @@ import Reviewed from "./pages/Reviewed";
 import Archive from "./pages/Archive";
 import ReviewedDetails from "./pages/ReviewedDetails";
 import ArchiveDetails from "./pages/ArchiveDetails";
+import Menu from "./pages/Menu";
 
 
 // Layout component to render Navbar based on the page
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/archive" element={<Archive />} />
                 <Route path="/reviewed/:id" element={<ReviewedDetails />} />
                 <Route path="/archive/:id" element={<ArchiveDetails />} />
+                <Route path="/menu" element={<Menu />} />
 
 
               </Route>
