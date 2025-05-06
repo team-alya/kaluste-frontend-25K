@@ -20,6 +20,8 @@ const Navbar = () => {
     "/error": "Virhe",
     "/reviewed": "Käsitellyt tuotteet",
     "/archive": "Arkisto",
+    "/admin": "Admin",
+    "/users": "Käyttäjät"
   };
 
   const previousPage = location.state?.from || "/home";
@@ -66,6 +68,7 @@ const Navbar = () => {
             }}
           />
         </button>
+  
       </div>
     </nav>
   );

@@ -5,59 +5,64 @@ import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 
 const Archive = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isFetched, setIsFetched] = useState<boolean>(false);
-  const [evals, setEvals] = useState<Evaluation[]>([]);
-  const [selectedEvals, setSelectedEvals] = useState<string[]>([]);
-  const [showCheckboxes, setShowCheckboxes] = useState<boolean>(false);
-  const [notification, setNotification] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const role = window.localStorage.getItem("role");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [isFetched, setIsFetched] = useState<boolean>(false);
+    const [evals, setEvals] = useState<Evaluation[]>([]);
+    const [selectedEvals, setSelectedEvals] = useState<string[]>([]);
+    const [showCheckboxes, setShowCheckboxes] = useState<boolean>(false);
+    const [notification, setNotification] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const role = window.localStorage.getItem("role");
 
-  useEffect(() => {
-    fetchEvals();
-  }, []);
+    useEffect(() => {
+        fetchEvals();
+    }, []);
 
-  const fetchEvals = async () => {
-    setLoading(true);
+    const fetchEvals = async () => {
+        setLoading(true);
 
-    try {
-      const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
+        try {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/evaluation/all", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch evaluations");
+            }
+
+            const data = await response.json();
+            const archivedEvals = data.filter((e: Evaluation) => e.status === "archived");
+            const sortedData = sortEvaluationsByDate(archivedEvals);
+            setEvals(sortedData);
+            setIsFetched(true);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-      );
+    };
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch evaluations");
-      }
 
-      const data = await response.json();
-      const archivedEvals = data.filter(
-        (e: Evaluation) => e.status === "archived"
-      );
-
-      setEvals(archivedEvals);
-      setIsFetched(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  // Function to sort evaluations by date (newest first)
+  const sortEvaluationsByDate = (evaluations: Evaluation[]) => {
+    return evaluations.sort((a, b) => {
+      const dateA = new Date(a.timeStamp || 0).getTime();
+      const dateB = new Date(b.timeStamp || 0).getTime();
+      return dateB - dateA; // Sort descending
+    });
   };
 
-  const handleSelect = (id: string) => {
-    setSelectedEvals((prev) =>
-      prev.includes(id) ? prev.filter((evalId) => evalId !== id) : [...prev, id]
-    );
-  };
+   const handleSelect = (id: string) => {
+        setSelectedEvals((prev) =>
+            prev.includes(id) ? prev.filter((evalId) => evalId !== id) : [...prev, id]
+        );
+    };
 
-  const deleteSelectedEvals = async () => {
+    const deleteSelectedEvals = async () => {
     if (selectedEvals.length === 0) {
       setNotification("Valitse vähintään yksi tuote poistettavaksi.");
       return;
