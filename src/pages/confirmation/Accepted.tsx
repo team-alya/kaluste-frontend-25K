@@ -58,10 +58,13 @@ const AcceptedPage: React.FC = () => {
     formData.append("materiaalit", evaluation.materiaalit.join(", "));
     formData.append("kunto", evaluation.kunto);
 
-    formData.append("priceEstimation", JSON.stringify({
-      recommended_price: evaluation.recommended_price,
-      price_reason: evaluation.price_reason,
-    }));
+    formData.append(
+      "priceEstimation",
+      JSON.stringify({
+        recommended_price: evaluation.recommended_price,
+        price_reason: evaluation.price_reason,
+      })
+    );
 
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
@@ -82,7 +85,7 @@ const AcceptedPage: React.FC = () => {
         throw new Error("Error saving evaluation");
       }
       const responseData = await response.json();
-console.log("Saved Evaluation Response:", responseData);
+      console.log("Saved Evaluation Response:", responseData);
 
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
@@ -114,7 +117,7 @@ console.log("Saved Evaluation Response:", responseData);
       // haetaan blobiksi
       const resp = await fetch(photo);
       const blob = await resp.blob();
-  
+
       // pakkaa FormDataan
       const formData = new FormData();
       formData.append("merkki", evaluation.merkki);
@@ -126,7 +129,7 @@ console.log("Saved Evaluation Response:", responseData);
       formData.append("materiaalit", evaluation.materiaalit.join(", "));
       formData.append("kunto", evaluation.kunto);
       formData.append("image", blob, "photo.jpg");
-  
+
       // lähetä ilman Content-Type-headeria, selaimesi asettaa boundaryn
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
@@ -142,7 +145,9 @@ console.log("Saved Evaluation Response:", responseData);
       if (!stockResponse.ok) {
         const errorData = await stockResponse.json();
         setStockMessage(
-          `Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`
+          `Virhe: ${
+            errorData.error || "Varastotilanteen tarkistus epäonnistui."
+          }`
         );
       } else {
         const data = await stockResponse.json();
@@ -155,9 +160,6 @@ console.log("Saved Evaluation Response:", responseData);
       setLoading(false);
     }
   };
-
-  console.log("Evaluation Data in Accepted:", evaluation);
-  console.log("Recommended Price in Accepted:", evaluation?.recommended_price);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -202,7 +204,6 @@ console.log("Saved Evaluation Response:", responseData);
       </div>
 
       <div>
-
         {/* save button */}
         <button
           className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4 btn-tertiary"

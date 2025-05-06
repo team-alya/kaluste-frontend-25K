@@ -3,7 +3,7 @@ import Login from "./pages/auth/Login";
 import CameraApp from "./pages/camera/Camera";
 import LoadingPage from "./pages/confirmation/Loading";
 import AcceptedPage from "./pages/confirmation/Accepted";
-import RejectedPage from "./pages/confirmation/Rejected";
+//import RejectedPage from "./pages/confirmation/Rejected";
 import "./index.css";
 import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
@@ -82,7 +82,7 @@ function App() {
                 <Route path="home" element={<Home />} />
                 <Route path="/camera" element={<CameraApp />} />
                 <Route path="/loading" element={<LoadingPage />} />
-                <Route path="/rejected" element={<RejectedPage />} />
+                {/*<Route path="/rejected" element={<RejectedPage />} />*/}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/error" element={<ErrorInfo />} />
                 <Route path="/evals" element={<FetchAllEvals />} />

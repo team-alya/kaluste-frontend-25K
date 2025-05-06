@@ -149,7 +149,7 @@ export default function EvalDetails() {
         kunto: formData.condition,
         priceEstimation: {
           recommended_price: formData.recommended_price,
-        },              
+        },
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "archived",
@@ -199,7 +199,6 @@ export default function EvalDetails() {
       );
 
       setSaveOk(true);
-      console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -281,7 +280,6 @@ export default function EvalDetails() {
         throw new Error("Poisto epäonnistui");
       }
 
-      console.log("Tuote poistettu onnistuneesti");
       navigate("/archive");
     } catch (error) {
       console.error("Virhe poistettaessa:", error);

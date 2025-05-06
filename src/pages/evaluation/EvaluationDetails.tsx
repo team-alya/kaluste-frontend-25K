@@ -5,7 +5,6 @@ import type { FormData } from "../../types/formData";
 import { EditingState } from "../../types/editingState";
 import { Pencil } from "lucide-react";
 
-
 export default function EvalDetails() {
   const navigate = useNavigate();
   const role = window.localStorage.getItem("role");
@@ -83,7 +82,6 @@ export default function EvalDetails() {
   }, [id]);
 
   useEffect(() => {
-
     if (!evaluationData) return;
 
     const evaluation = evaluationData.evaluation;
@@ -100,7 +98,6 @@ export default function EvalDetails() {
       materials: evaluation?.materials || [],
       status: evaluation?.status || "Ei tiedossa",
     });
-    
   }, [evaluationData]);
 
   useEffect(() => {
@@ -154,7 +151,7 @@ export default function EvalDetails() {
         kunto: formData.condition,
         priceEstimation: {
           recommended_price: formData.recommended_price,
-        },        
+        },
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "not reviewed",
@@ -204,7 +201,6 @@ export default function EvalDetails() {
       );
 
       setSaveOk(true);
-      console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -250,9 +246,7 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      // const updatedEvaluation = await response.json();
-      // setEvaluationData(updatedEvaluation);
-      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
+
       setMoveToExpertOk(true);
 
       setTimeout(() => {
@@ -304,13 +298,10 @@ export default function EvalDetails() {
         throw new Error("Tietojen lähettäminen epäonnistui");
       }
 
-      // const updatedEvaluation = await response.json();
-      // setEvaluationData(updatedEvaluation);
-      // localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
       setMoveToArchiveOk(true);
 
       setTimeout(() => {
-        navigate("/reviewed", {
+        navigate("/evals", {
           state: { archiveData },
         });
       }, 4000);

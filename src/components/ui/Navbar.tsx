@@ -13,7 +13,7 @@ const Navbar = () => {
     "/camera": "Ota kuva",
     "/loading": "Odota hetki",
     "/accepted": "Tuote tunnistettu",
-    "/rejected": "Tuotetta ei tunnistettu",
+   // "/rejected": "Tuotetta ei tunnistettu",
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
@@ -25,7 +25,7 @@ const Navbar = () => {
   };
 
   const previousPage = location.state?.from || "/home";
-  const restrictedPages = ["/", "/accepted", "/rejected", "/loading", "/error"];
+  const restrictedPages = ["/", "/accepted", "/loading", "/error"];
 
   const handleNavigate = () => {
     if (!restrictedPages.includes(previousPage)) {

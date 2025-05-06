@@ -5,9 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
 import Loading from "../confirmation/Loading";
 
-
 const CameraApp: React.FC = () => {
-
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageFeedbackMsg, setImageFeedbackMsg] = useState<string>("");
@@ -18,15 +16,11 @@ const CameraApp: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state?.username || null;
-;
-
   // handles capturing the photo
   const capturePhoto = () => {
     if (cameraRef.current) {
       const imageDataUrl = cameraRef.current.takePhoto();
       setPhoto(imageDataUrl);
-      console.log(imageDataUrl);
-      console.log("Kuva otettu ja tallennettu");
     }
   };
 
@@ -36,10 +30,9 @@ const CameraApp: React.FC = () => {
     // show loading component while fetching data
     setLoading(true);
     if (photo) {
-
       const response = await fetch(photo);
       const blob = await response.blob();
-  
+
       // create a formData object and add the photo as a Blob
       const formData = new FormData();
       formData.append("image", blob, "photo.jpg");
@@ -48,32 +41,29 @@ const CameraApp: React.FC = () => {
       fetch(import.meta.env.VITE_BACKEND_URL + "/api/photo", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         },
         body: formData,
       })
-      .then (response => {
-        if (!response.ok) {
-
+        .then((response) => {
+          if (!response.ok) {
+            setLoading(false);
+            navigate("/error", {
+              state: { username, from: location.pathname },
+            });
+            throw new Error("Error fetching");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // exit loading component and show the analysis result to the user
           setLoading(false);
-          navigate("/error", { state: { username, from: location.pathname }});
-          throw new Error ("Error fetching");
-        }
-         return response.json();
-      })
-      .then(data => {
-          
-        // exit loading component and show the analysis result to the user
-        setLoading(false);
-        setImageFeedbackMsg(data.message);
-        toggleMessage();
-
-      })
-      .catch(error => console.error(error));
+          setImageFeedbackMsg(data.message);
+          toggleMessage();
+        })
+        .catch((error) => console.error(error));
     }
-    }
-  
-
+  };
 
   // sends image to backend for evaluation and navigates to loading page
   const handleNext = async () => {
@@ -98,18 +88,16 @@ const CameraApp: React.FC = () => {
         .then((response) => {
           if (!response.ok) {
             setLoading(false);
-            navigate("/error", { state: { username, from: location.pathname } });
+            navigate("/error", {
+              state: { username, from: location.pathname },
+            });
             throw new Error("Error fetching");
           }
           return response.json();
         })
         .then((data) => {
-          // Log the recommended price to check if it's present
-          console.log("Recommended Price:", data.priceEstimation?.recommended_price);
-
           // if evaluation ok, return from loading page and navigate to accepted page
           setLoading(false);
-          console.log(data.evaluation);
           navigate("/accepted", {
             state: {
               evaluation: {
@@ -125,119 +113,119 @@ const CameraApp: React.FC = () => {
         })
         .catch((error) => console.error(error));
     }
-  }
+  };
 
-    const toggleMessage = () => {
-      setShowMessage(!showMessage);
-    };
-  
+  const toggleMessage = () => {
+    setShowMessage(!showMessage);
+  };
+
   return (
     <div>
       {/* camera function styling */}
       {!loading ? (
-        
-       <div className="flex flex-col items-center justify-center min-h-screen p-4 mt-[-50px]">
-          
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 mt-[-50px]">
           {/* show feedback message if available */}
-          {showMessage && ( 
+          {showMessage && (
             <div className="mb-3 mt-3 text-center">
-            <p className="text-sm font-semibold text-[#104930]">
-              {imageFeedbackMsg}
-            </p>
-          </div>
+              <p className="text-sm font-semibold text-[#104930]">
+                {imageFeedbackMsg}
+              </p>
+            </div>
           )}
-          
-         <div
-        style={{
-          width: "361px",
-          height: "476px",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}
-        className="relative mb-5"
-      >
-        {/* show photo if available */}
-        {photo ? (
-          <div className="flex flex-col items-center">
-          
-          <img
-            src={photo}
-            alt="Captured"
-            className="w-full h-full object-cover rounded-sm"
-          />
-        </div>
-        ) : (
-          <div className="w-full h-full object-cover">
-            {/* app opens back camera if available and if not shows error messages */}
-            <Camera
-              ref={cameraRef}
-              facingMode="environment"
-              errorMessages={{
-                noCameraAccessible: "Kameraan ei saada yhteyttä",
-                permissionDenied: "Kameran käyttöoikeus evätty",
-                switchCamera: "Kameran vaihtaminen epäonnistui",
-                canvas: "Canvas-elementtiä ei tueta",
-              }}
-            />
-          </div>
-        )}
-      </div>
-      <div className="flex flex-row gap-2 fixed bottom-2 left-1/2 transform -translate-x-1/2 h-16 items-center px-7 pb-6">
-        {/* if no feedback message, show options to either take a photo or upload one */}
-        {!showMessage && (
-          <>
-         <div className="flex flex-row gap-2">
-             <button
-              onClick={capturePhoto}
-              className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
-            >
-              {/* button that captures the picture */}
-              <span className="inline-flex items-center gap-2">
-                <Focus color="#ffffff" strokeWidth={2.5} className="w-5 h-5" /> Ota
-                kuva
-              </span>
-            </button>
-            {/* button that allows user to upload a picture */}
-            <UploadButton setPhoto={setPhoto} />
-         </div>
-         {/* if photo is taken and available, show it to user */}
-          {photo && (
-            <button
-              onClick={imageFeedback}
-              className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
-            >
-              {/* button that submits the photo for the AI feedback analysis */}
-              Tarkista kuva
-            </button>
-          )}
-          </>
-        )}
-        
-      </div>
-      {/* if feedback message is shown, give the user the option to retake/reupload a photo or to send it to further evaluation*/}
-        {showMessage && (
-          <div className="flex flex-row gap-2">
-            {/* button that allows the user to retake the photo */}
-            <button
-              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
-              onClick={() => {
-                setPhoto(null);
-                setShowMessage(false);
-                setImageFeedbackMsg("");
-              }}
-            >
-              Ota uusi kuva
-            </button>
-            {/* button that allows the user to send the image to further evaluation */}
-            <button
-              className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
-              onClick={handleNext}
-            >
-              Hyväksy kuva
-            </button>
-          </div>
+
+          <div
+            style={{
+              width: "361px",
+              height: "476px",
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}
+            className="relative mb-5"
+          >
+            {/* show photo if available */}
+            {photo ? (
+              <div className="flex flex-col items-center">
+                <img
+                  src={photo}
+                  alt="Captured"
+                  className="w-full h-full object-cover rounded-sm"
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full object-cover">
+                {/* app opens back camera if available and if not shows error messages */}
+                <Camera
+                  ref={cameraRef}
+                  facingMode="environment"
+                  errorMessages={{
+                    noCameraAccessible: "Kameraan ei saada yhteyttä",
+                    permissionDenied: "Kameran käyttöoikeus evätty",
+                    switchCamera: "Kameran vaihtaminen epäonnistui",
+                    canvas: "Canvas-elementtiä ei tueta",
+                  }}
+                />
+              </div>
             )}
-       </div>
+          </div>
+          <div className="flex flex-row gap-2 fixed bottom-2 left-1/2 transform -translate-x-1/2 h-16 items-center px-7 pb-6">
+            {/* if no feedback message, show options to either take a photo or upload one */}
+            {!showMessage && (
+              <>
+                <div className="flex flex-row gap-2">
+                  <button
+                    onClick={capturePhoto}
+                    className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
+                  >
+                    {/* button that captures the picture */}
+                    <span className="inline-flex items-center gap-2">
+                      <Focus
+                        color="#ffffff"
+                        strokeWidth={2.5}
+                        className="w-5 h-5"
+                      />{" "}
+                      Ota kuva
+                    </span>
+                  </button>
+                  {/* button that allows user to upload a picture */}
+                  <UploadButton setPhoto={setPhoto} />
+                </div>
+                {/* if photo is taken and available, show it to user */}
+                {photo && (
+                  <button
+                    onClick={imageFeedback}
+                    className="mt-4 px-6 py-3 text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
+                  >
+                    {/* button that submits the photo for the AI feedback analysis */}
+                    Tarkista kuva
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+          {/* if feedback message is shown, give the user the option to retake/reupload a photo or to send it to further evaluation*/}
+          {showMessage && (
+            <div className="flex flex-row gap-2">
+              {/* button that allows the user to retake the photo */}
+              <button
+                className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
+                onClick={() => {
+                  setPhoto(null);
+                  setShowMessage(false);
+                  setImageFeedbackMsg("");
+                }}
+              >
+                Ota uusi kuva
+              </button>
+              {/* button that allows the user to send the image to further evaluation */}
+              <button
+                className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
+                onClick={handleNext}
+              >
+                Hyväksy kuva
+              </button>
+            </div>
+          )}
+        </div>
       ) : (
         // if loading, show loading component
         <Loading />

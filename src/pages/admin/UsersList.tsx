@@ -17,11 +17,14 @@ const UsersList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/admin", {
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-          },
-        });
+        const response = await fetch(
+          import.meta.env.VITE_BACKEND_URL + "/api/admin",
+          {
+            headers: {
+              Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Käyttäjien haku epäonnistui.");
@@ -73,8 +76,10 @@ const UsersList = () => {
                 </div>
                 <button
                   className="px-2 py-1 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-500 transition"
-                  onClick={() => navigate(`/users/edit/${user.id}`, { state: { user } })}
-                 >
+                  onClick={() =>
+                    navigate(`/users/edit/${user.id}`, { state: { user } })
+                  }
+                >
                   Muokkaa
                 </button>
               </li>

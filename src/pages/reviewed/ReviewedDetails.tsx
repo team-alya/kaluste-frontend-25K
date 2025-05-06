@@ -152,7 +152,7 @@ const ReviewedDetails = () => {
         kunto: formData.condition,
         priceEstimation: {
           recommended_price: formData.recommended_price,
-        },      
+        },
         description: formData.description,
         materiaalit: formData.materials || [],
         status: "reviewed",
@@ -202,7 +202,6 @@ const ReviewedDetails = () => {
       );
 
       setSaveOk(true);
-      console.log("Päivitys onnistui:", updatedEvaluation);
     } catch (error) {
       console.error("Virhe päivitettäessä:", error);
     }
@@ -284,7 +283,6 @@ const ReviewedDetails = () => {
         throw new Error("Poisto epäonnistui");
       }
 
-      console.log("Tuote poistettu onnistuneesti");
       navigate("/reviewed");
     } catch (error) {
       console.error("Virhe poistettaessa:", error);

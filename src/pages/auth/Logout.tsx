@@ -1,4 +1,3 @@
-
 // logout function
 
 export default function Logout() {

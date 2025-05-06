@@ -7,7 +7,9 @@ const ForbiddenPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-5 text-center bg-gray-100">
       <Lock size={64} className="text-red-600 mb-4" />
-      <h1 className="text-4xl font-bold text-gray-800 mb-2">403 - Pääsy estetty</h1>
+      <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        403 - Pääsy estetty
+      </h1>
       <p className="text-lg text-gray-600 mb-6">
         Sinulla ei ole oikeuksia päästä tälle sivulle.
       </p>
