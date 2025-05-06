@@ -41,12 +41,6 @@ export default function Settings() {
                     <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
                 </label>
             </div>
-              <button 
-            className="w-50 px-12 py-3 h-12 text-white bg-gray-500 shadow-md hover:bg-gray-400 transition rounded-sm btn-primary"
-            onClick={() => navigate("/home", { state: { from: location.pathname } })}
-        >
-            Etusivulle
-        </button>
 
 
         <button 

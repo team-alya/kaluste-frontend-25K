@@ -58,6 +58,11 @@ const AcceptedPage: React.FC = () => {
     formData.append("materiaalit", evaluation.materiaalit.join(", "));
     formData.append("kunto", evaluation.kunto);
 
+    formData.append("priceEstimation", JSON.stringify({
+      recommended_price: evaluation.recommended_price,
+      price_reason: evaluation.price_reason,
+    }));
+
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
 
