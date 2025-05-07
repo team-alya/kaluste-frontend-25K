@@ -1,5 +1,5 @@
 export type FormData = {
-    suositus_hinta: number;
+    recommended_price: number;
     description: string;
     brand: string;
     model: string;

@@ -13,7 +13,7 @@ const AcceptedPage: React.FC = () => {
   const [okMessage] = useState<string>(
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
-  const [stockMessage, setStockMessage] = useState<string | null>(null);
+  const [, setStockMessage] = useState<string | null>(null);
   const [, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -58,6 +58,14 @@ const AcceptedPage: React.FC = () => {
     formData.append("materiaalit", evaluation.materiaalit.join(", "));
     formData.append("kunto", evaluation.kunto);
 
+    formData.append(
+      "priceEstimation",
+      JSON.stringify({
+        recommended_price: evaluation.recommended_price,
+        price_reason: evaluation.price_reason,
+      })
+    );
+
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
 
@@ -76,6 +84,8 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
+      const responseData = await response.json();
+      console.log("Saved Evaluation Response:", responseData);
 
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
@@ -107,7 +117,7 @@ const AcceptedPage: React.FC = () => {
       // haetaan blobiksi
       const resp = await fetch(photo);
       const blob = await resp.blob();
-  
+
       // pakkaa FormDataan
       const formData = new FormData();
       formData.append("merkki", evaluation.merkki);
@@ -119,7 +129,7 @@ const AcceptedPage: React.FC = () => {
       formData.append("materiaalit", evaluation.materiaalit.join(", "));
       formData.append("kunto", evaluation.kunto);
       formData.append("image", blob, "photo.jpg");
-  
+
       // lähetä ilman Content-Type-headeria, selaimesi asettaa boundaryn
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
@@ -135,7 +145,9 @@ const AcceptedPage: React.FC = () => {
       if (!stockResponse.ok) {
         const errorData = await stockResponse.json();
         setStockMessage(
-          `Virhe: ${errorData.error || "Varastotilanteen tarkistus epäonnistui."}`
+          `Virhe: ${
+            errorData.error || "Varastotilanteen tarkistus epäonnistui."
+          }`
         );
       } else {
         const data = await stockResponse.json();
@@ -148,7 +160,6 @@ const AcceptedPage: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 p-5 text-center">
@@ -193,12 +204,6 @@ const AcceptedPage: React.FC = () => {
       </div>
 
       <div>
-        {/* Show stock info */}
-
-        <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">
-          {stockMessage}
-        </p>
-
         {/* save button */}
         <button
           className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4 btn-tertiary"

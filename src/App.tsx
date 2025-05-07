@@ -1,9 +1,9 @@
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
-import CameraApp from "./pages/Camera";
+import CameraApp from "./pages/camera/Camera";
 import LoadingPage from "./pages/confirmation/Loading";
 import AcceptedPage from "./pages/confirmation/Accepted";
-import RejectedPage from "./pages/confirmation/Rejected";
+//import RejectedPage from "./pages/confirmation/Rejected";
 import "./index.css";
 import { BrowserRouter, Route, Routes, useLocation, Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/ui/Navbar";
@@ -11,13 +11,19 @@ import AuthNavbar from "./components/ui/LoginNavbar";
 import Settings from "./pages/Settings";
 import { useContext, useEffect } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
-import FetchAllEvals from "./pages/FetchAllEvals";
-import EvalDetails from "./pages/EvaluationDetails";
-import ErrorInfo from "./pages/Error";
-import Reviewed from "./pages/Reviewed";
-import Archive from "./pages/Archive";
-import ReviewedDetails from "./pages/ReviewedDetails";
-import ArchiveDetails from "./pages/ArchiveDetails";
+import FetchAllEvals from "./pages/evaluation/FetchAllEvals";
+import EvalDetails from "./pages/evaluation/EvaluationDetails";
+import ErrorInfo from "./components/Error";
+import Reviewed from "./pages/reviewed/Reviewed";
+import Archive from "./pages/archive/Archive";
+import ReviewedDetails from "./pages/reviewed/ReviewedDetails";
+import ArchiveDetails from "./pages/archive/ArchiveDetails";
+import AdminPage from "./pages/admin/Admin";
+import Register from "./pages/auth/Register";
+import UsersList from "./pages/admin/UsersList";
+import UserEdit from "./pages/admin/UserEdit";
+import ForbiddenPage from "./pages/confirmation/ForbiddenPage";
+import Menu from "./pages/Menu";
 
 
 // Layout component to render Navbar based on the page
@@ -51,9 +57,16 @@ const PrivateRoutes = () => {
   return <Outlet />
 }
 
-function App() {
+const AdminRoute = () => {
+  const role = localStorage.getItem("role");
 
-  
+  if (role !== "admin") {
+    return <Navigate to="/forbidden" replace />;
+  }
+  return <Outlet />;
+};
+
+function App() {
 
   return (
     <div className="overflow-hidden">
@@ -69,7 +82,7 @@ function App() {
                 <Route path="home" element={<Home />} />
                 <Route path="/camera" element={<CameraApp />} />
                 <Route path="/loading" element={<LoadingPage />} />
-                <Route path="/rejected" element={<RejectedPage />} />
+                {/*<Route path="/rejected" element={<RejectedPage />} />*/}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/error" element={<ErrorInfo />} />
                 <Route path="/evals" element={<FetchAllEvals />} />
@@ -79,10 +92,21 @@ function App() {
                 <Route path="/archive" element={<Archive />} />
                 <Route path="/reviewed/:id" element={<ReviewedDetails />} />
                 <Route path="/archive/:id" element={<ArchiveDetails />} />
+                <Route path="/menu" element={<Menu />} />
 
 
               </Route>
-            </Routes>
+
+              <Route element ={<AdminRoute />}>
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/users" element={<UsersList />} />
+                <Route path="/users/edit/:id" element={<UserEdit />} />
+              </Route>
+
+              <Route path="forbidden" element={<ForbiddenPage />} />
+              
+              </Routes>
           </Layout>
         </AuthProvider>
       </BrowserRouter>

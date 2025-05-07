@@ -13,13 +13,13 @@
 }
 
 .colorblind .btn-secondary {
-  background-color: #f97316; 
+  background-color: #1f2937; 
   color: white;
-  box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.5);
+  box-shadow: 0 10px 15px -3px rgba(31, 41, 55, 0.5);
 }
 
 .colorblind .btn-secondary:hover {
-  background-color: #ea580c; 
+  background-color: #374151; 
 }
 
 .colorblind .btn-tertiary {

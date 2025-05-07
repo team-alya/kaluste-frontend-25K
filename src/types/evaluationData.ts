@@ -1,7 +1,7 @@
 import { Evaluation } from "./evaluation";
 
 export type EvaluationData = {
-    suositus_hinta: number;
+    recommended_price: number;
     priceEstimation: EvaluationData | undefined;
     evaluation: Evaluation;
     imageId: string;
