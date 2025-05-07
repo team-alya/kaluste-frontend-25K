@@ -14,8 +14,9 @@ const Home = () => {
   const role = window.localStorage.getItem("role");
 
   return (
-    <div>
+
       <div className="m-8">
+      <div className="mb-6">
         <div className="flex items-center space-x-2">
           <h1 className="text-4xl font-bold">Hei,</h1>
           <p className="text-4xl font-bold text-emerald-700 text-primary">
@@ -25,59 +26,84 @@ const Home = () => {
         <p>Tervetuloa töihin, mitä haluaisit tehdä?</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 md:justify-items-center gap-2 md:gap-5 md:ml-0 ml-8">
-        <div>
-          {/* button that navigates to camera page */}
-          <button
-            className=""
-            style={{
-              backgroundImage: `url(${cam})`,
-              height: "150px",
-              width: "150px",
-            }}
-            onClick={() =>
-              navigate("/camera", {
-                state: { username, from: location.pathname },
-              })
-            }
-          >
-            <p className="mt-23 text-white">Tunnista tuote</p>
-          </button>
-        </div>
+      { role?.toLowerCase() !== "user" ? (
+        
+      <div className="space-y-6">
+        <div 
+        className="grid" 
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, max-content))", 
+        gap: "16px" }}>
 
-        <div>
-          {/* button that navigates to product list */}
-          <button
-            className=""
-            style={{
-              backgroundImage: `url(${check})`,
-              height: "150px",
-              width: "150px",
-            }}
-            onClick={() => {
-              navigate("/evals", { state: { from: location.pathname } });
-            }}
-          >
-            <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
-          </button>
-        </div>
+        {/* button that navigates to camera page */}
+        <button
+          className=""
+          style={{
+            backgroundImage: `url(${cam})`,
+            height: "150px",
+            width: "150px",
+          }}
+          onClick={() => navigate("/camera", { state: { username, from: location.pathname } })}
+        >
+          <p className="mt-23 text-white">Tunnista tuote</p>
+        </button>
+      </div>
 
-        <div>
-          {/* button that navigates to expert reviewed list */}
-          <button
-            className=""
-            style={{
-              backgroundImage: `url(${thumb})`,
-              height: "150px",
-              width: "150px",
-            }}
-            onClick={() => {
-              navigate("/reviewed", { state: { from: location.pathname } });
-            }}
-          >
-            <p className="mt-23 text-white">Expertin käsittelemät</p>
-          </button>
-        </div>
+      <h2 className="text-lg font-semibold text-gray-700">
+        Tunnistetut tuotteet
+      </h2>
+
+      <div
+        className="grid"
+        style={{
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, max-content))",
+        gap: "16px",}}>
+
+        {/* button that navigates to product list */}
+        <button
+          className=""
+          style={{
+            backgroundImage: `url(${check})`,
+            height: "150px",
+            width: "150px",
+          }}
+          onClick={() => {
+            navigate("/evals", { state: { from: location.pathname } });
+          }}
+        >
+          <p className="mt-23 text-white">Tekoälyn tunnistamat</p>
+        </button>
+
+        {/* button that navigates to expert reviewed list */}
+        <button
+          className=""
+          style={{
+            backgroundImage: `url(${thumb})`,
+            height: "150px",
+            width: "150px",
+          }}
+          onClick={() => {
+            navigate("/reviewed", { state: { from: location.pathname } });
+          }}
+        >
+          <p className="mt-23 text-white">Expertin käsittelemät</p>
+        </button>
+
+        {/* button that navigates to archived list */}
+        <button
+          className=""
+          style={{
+            backgroundImage: `url(${archive})`,
+            height: "150px",
+            width: "150px",
+          }}
+          onClick={() => {
+            navigate("/archive", { state: { from: location.pathname } });
+          }}
+        >
+          <p className="mt-23 text-white">Arkisto</p>
+        </button>
+    </div>
+    </div>
 
         <div>
           {/* button that navigates to archived list */}
