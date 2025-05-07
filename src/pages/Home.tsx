@@ -55,7 +55,7 @@ const Home = () => {
         style={{
         gridTemplateColumns: "repeat(auto-fit, minmax(150px, 150px))",
         gap: "16px",
-        maxWidth: "550px"}}>
+        maxWidth: "500px"}}>
 
         {/* button that navigates to product list */}
         <button
@@ -101,9 +101,21 @@ const Home = () => {
         >
           <p className="mt-23 text-white">Arkisto</p>
         </button>
+    </div>
+    
+    <h2 className="text-lg font-semibold text-gray-700">
+        Admin-toiminnot
+    </h2>
+  
+    <div
+        className="grid"
+        style={{
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 150px))",
+        gap: "16px",
+        maxWidth: "200px"}}>
 
-            {/* button that navigates to admin */}
-            `{role === "admin" && (
+          {/* button that navigates to admin */}
+          {role === "admin" && (
             <button
               className=""
               style={{
