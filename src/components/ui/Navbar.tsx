@@ -13,7 +13,6 @@ const Navbar = () => {
     "/camera": "Ota kuva",
     "/loading": "Odota hetki",
     "/accepted": "Tuote tunnistettu",
-   // "/rejected": "Tuotetta ei tunnistettu",
     "/register": "Rekisteröidy",
     "/settings": "Asetukset",
     "/evals": "Tunnistetut tuotteet",
