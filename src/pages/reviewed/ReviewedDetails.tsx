@@ -196,10 +196,9 @@ const ReviewedDetails = () => {
       });
 
       localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
-      console.log(
-        "Tallennettu localStorageen:",
+      
         JSON.parse(localStorage.getItem("evaluationData") || "{}")
-      );
+      
 
       setSaveOk(true);
     } catch (error) {

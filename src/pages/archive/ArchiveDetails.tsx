@@ -193,10 +193,9 @@ export default function EvalDetails() {
       });
 
       localStorage.setItem("evaluationData", JSON.stringify(updatedEvaluation));
-      console.log(
-        "Tallennettu localStorageen:",
+      
         JSON.parse(localStorage.getItem("evaluationData") || "{}")
-      );
+      
 
       setSaveOk(true);
     } catch (error) {
