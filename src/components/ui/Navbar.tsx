@@ -25,7 +25,7 @@ const Navbar = () => {
   };
 
   const previousPage = location.state?.from || "/home";
-  const restrictedPages = ["/", "/accepted", "/loading", "/error"];
+  const restrictedPages = ["/", "/accepted", "/loading", "/error", "/menu"];
 
   const handleNavigate = () => {
     if (!restrictedPages.includes(previousPage)) {
