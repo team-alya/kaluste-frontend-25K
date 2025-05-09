@@ -5,7 +5,6 @@ import { AuthContext } from "../../context/AuthContext";
 // login page
 
 const Login = () => {
-
   const { setAuthenticated } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -15,49 +14,49 @@ const Login = () => {
   const [showLoginFailedMessage, setShowLoginFailedMessage] =
     useState<boolean>(false);
 
-    // handle login form submission
-    const handleLogin = (e: React.FormEvent) => {
-      setShowLoginFailedMessage(false);
-      e.preventDefault();
+  // handle login form submission
+  const handleLogin = (e: React.FormEvent) => {
+    setShowLoginFailedMessage(false);
+    e.preventDefault();
 
-      // send login credentials to the backend
-      fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
+    // send login credentials to the backend
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // if an error occurs, display an error message in the console and UI
+          setShowLoginFailedMessage(true);
+          throw new Error("Kirjautuminen epäonnistui!");
+        }
+
+        return response.json();
       })
-        .then((response) => {
-          if (!response.ok) {
-            // if an error occurs, display an error message in the console and UI
-            setShowLoginFailedMessage(true);
-            throw new Error("Kirjautuminen epäonnistui!");
-          }
+      .then((data) => {
+        // if login is successful, clear the fields and set authentication to true
+        setUsername("");
+        setPassword("");
+        setAuthenticated(true);
 
-          return response.json();
-        })
-        .then((data) => {
+        // save the token and username to localStorage
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("username", data.user.username);
+        window.localStorage.setItem("role", data.user.role);
 
-          // if login is successful, clear the fields and set authentication to true
-          setUsername("");
-          setPassword("");
-          setAuthenticated(true);
-
-          // save the token and username to localStorage
-          window.localStorage.setItem("token", data.token);
-          window.localStorage.setItem("username", data.user.username);
-          window.localStorage.setItem("role", data.user.role);
-
-          // navigate to the homepage and pass the username and previous route for navigation
-          navigate("/home", { state: { username: data.user.username, from: location.pathname } });
-        })
-        .catch((err) => console.error(err));
-    };
+        // navigate to the homepage and pass the username and previous route for navigation
+        navigate("/home", {
+          state: { username: data.user.username, from: location.pathname },
+        });
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
-
     // login form
     <div className="mt-15 flex flex-col items-center">
       <form onSubmit={handleLogin}>
@@ -102,6 +101,6 @@ const Login = () => {
       </form>
     </div>
   );
-}
+};
 
 export default Login;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleCheckBig } from "lucide-react";
-
 // show the user a successful evaluation and the option to save or reject it
 
 const AcceptedPage: React.FC = () => {
@@ -14,7 +13,7 @@ const AcceptedPage: React.FC = () => {
   const [okMessage] = useState<string>(
     "Tuote otettu vastaan onnistuneesti. Sinut ohjataan etusivulle."
   );
-  const [stockMessage, setStockMessage] = useState<string | null>(null);
+  const [, setStockMessage] = useState<string | null>(null);
   const [, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -33,8 +32,10 @@ const AcceptedPage: React.FC = () => {
 
   // check stock availability when the component is mounted
   useEffect(() => {
-    checkStock();
-  }, []);
+    if (evaluation) {
+      checkStock();
+    }
+  }, [evaluation]);
 
   // saving the evaluation to the backend if the user accepts the evaluation
   const saveEval = async () => {
@@ -46,15 +47,24 @@ const AcceptedPage: React.FC = () => {
     const response = await fetch(photo);
     const blob = await response.blob();
 
-    // add evaluation details to formData
-    formData.append("merkki", evaluation.brand);
-    formData.append("malli", evaluation.model);
-    formData.append("vari", evaluation.color);
-    formData.append("pituus", evaluation.dimensions.length);
-    formData.append("leveys", evaluation.dimensions.width);
-    formData.append("korkeus", evaluation.dimensions.height);
-    formData.append("materiaalit", evaluation.materials);
-    formData.append("kunto", evaluation.condition);
+    // add evaluation details to formData -->
+    // changed the keys to match the backend requirements (in dimensions))
+    formData.append("merkki", evaluation.merkki);
+    formData.append("malli", evaluation.malli);
+    formData.append("vari", evaluation.vari);
+    formData.append("mitat[pituus]", evaluation.mitat.pituus);
+    formData.append("mitat[leveys]", evaluation.mitat.leveys);
+    formData.append("mitat[korkeus]", evaluation.mitat.korkeus);
+    formData.append("materiaalit", evaluation.materiaalit.join(", "));
+    formData.append("kunto", evaluation.kunto);
+
+    formData.append(
+      "priceEstimation",
+      JSON.stringify({
+        recommended_price: evaluation.recommended_price,
+        price_reason: evaluation.price_reason,
+      })
+    );
 
     // add the photo to formData
     formData.append("image", blob, "photo.jpg");
@@ -62,7 +72,7 @@ const AcceptedPage: React.FC = () => {
     try {
       // send to the backend
       const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save ",
+        import.meta.env.VITE_BACKEND_URL + "/api/evaluation/save",
         {
           method: "POST",
           headers: {
@@ -74,7 +84,7 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
-
+      await response.json();
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
       setSaveOk(true);
@@ -89,29 +99,44 @@ const AcceptedPage: React.FC = () => {
   // Function to check stock availability
   const checkStock = async () => {
     setLoading(true);
-    if (!evaluation) {
-      setStockMessage("Arviointitietoja ei ole saatavilla.");
+    if (!evaluation || !photo) {
+      setStockMessage("Arviointitietoja tai kuvaa ei ole saatavilla.");
+      setLoading(false);
+      return;
+    }
+
+    if (!evaluation.merkki || !evaluation.malli) {
+      setStockMessage("Merkki ja malli puuttuvat.");
       setLoading(false);
       return;
     }
 
     try {
-      // create a requestData object with the evaluation details
-      const requestData = {
-        malli: evaluation.model,
-        merkki: evaluation.brand,
-      };
+      // haetaan blobiksi
+      const resp = await fetch(photo);
+      const blob = await resp.blob();
 
-      //
+      // pakkaa FormDataan
+      const formData = new FormData();
+      formData.append("merkki", evaluation.merkki);
+      formData.append("malli", evaluation.malli);
+      formData.append("vari", evaluation.vari);
+      formData.append("mitat[pituus]", evaluation.mitat.pituus.toString());
+      formData.append("mitat[leveys]", evaluation.mitat.leveys.toString());
+      formData.append("mitat[korkeus]", evaluation.mitat.korkeus.toString());
+      formData.append("materiaalit", evaluation.materiaalit.join(", "));
+      formData.append("kunto", evaluation.kunto);
+      formData.append("image", blob, "photo.jpg");
+
+      // lähetä ilman Content-Type-headeria, selaimesi asettaa boundaryn
       const stockResponse = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/evaluation/check",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${window.localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(requestData),
+          body: formData,
         }
       );
 
@@ -122,14 +147,13 @@ const AcceptedPage: React.FC = () => {
             errorData.error || "Varastotilanteen tarkistus epäonnistui."
           }`
         );
-        return;
+      } else {
+        const data = await stockResponse.json();
+        setStockMessage(data.message);
       }
-
-      const data = await stockResponse.json();
-      setStockMessage(data.message);
-    } catch (error) {
-      console.log(error);
-      setStockMessage("virhe varastotilanteen tarkistuksessa.");
+    } catch (err) {
+      console.error(err);
+      setStockMessage("Virhe varastotilanteen tarkistuksessa.");
     } finally {
       setLoading(false);
     }
@@ -159,10 +183,10 @@ const AcceptedPage: React.FC = () => {
       {/* show the evaluation details to the user */}
       <div className="flex flex-col text-left mt-2">
         <p className="mb-2">
-          <strong>Merkki:</strong> {evaluation.brand}
+          <strong>Merkki:</strong> {evaluation.merkki}
         </p>
         <p className="mb-2">
-          <strong>Malli:</strong> {evaluation.model}
+          <strong>Malli:</strong> {evaluation.malli}
         </p>
       </div>
 
@@ -178,16 +202,10 @@ const AcceptedPage: React.FC = () => {
       </div>
 
       <div>
-        {/* Show stock info */}
-
-        <p className="text-lg border-emerald-700 border-2 my-6 font-bold rounded-md p-3 text-emerald-900 text-primary">
-          {stockMessage}
-        </p>
-
         {/* save button */}
         <button
           data-testid="save-button"
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm mr-4 btn-tertiary"
           onClick={() => saveEval()}
         >
           Ota vastaan
@@ -195,8 +213,7 @@ const AcceptedPage: React.FC = () => {
 
         {/* reject button */}
         <button
-          data-testid="reject-button"
-          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm"
+          className="gap-2 mt-4 px-6 py-3 h-12 text-white bg-red-700 shadow-md hover:bg-red-600 transition rounded-sm btn-secondary"
           onClick={() =>
             navigate("/home", { state: { username, from: location.pathname } })
           }

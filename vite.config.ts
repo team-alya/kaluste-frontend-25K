@@ -9,8 +9,22 @@ export default defineConfig({
       typescript: true
     })
   ],
+  // for docker development:
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 100
+    }
+  }
   // for ngrok:
   // server: {
   //   allowedHosts: true
   // }
+  // for local development:
+  /*
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+  },
+  */
 })

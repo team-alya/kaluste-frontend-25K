@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import LoadingProducts from "./LoadingProductList";
-import { Evaluation } from "../types/evaluation";
+import LoadingProducts from "../../components/LoadingProductList";
+import { Evaluation } from "../../types/evaluation";
 import { useNavigate } from "react-router-dom";
 
 // list of products reviewed by an expert
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Reviewed = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState<boolean>(false);
-  const [evals, setEvals] = useState([]);
+  const [evals, setEvals] = useState<Evaluation[]>([]);
 
   const navigate = useNavigate();
   // fetch all evals and filter "reviewed" evals
@@ -34,13 +34,21 @@ const Reviewed = () => {
         return response.json();
       })
       .then((data) => {
-        // set data to useState
-        // and exit the loading component
-        setEvals(data);
+        const sortedData = sortEvaluationsByDate(data);
+        setEvals(sortedData);
         setIsFetched(true);
         setLoading(false);
       })
       .catch((error) => console.error(error));
+  };
+
+  // Function to sort evaluations by date (newest first)
+  const sortEvaluationsByDate = (evaluations: Evaluation[]) => {
+    return evaluations.sort((a, b) => {
+      const dateA = new Date(a.timeStamp || 0).getTime();
+      const dateB = new Date(b.timeStamp || 0).getTime();
+      return dateB - dateA; // Sort descending
+    });
   };
 
   const reviewedProducts = evals.filter((e: Evaluation) => {
@@ -83,12 +91,9 @@ const Reviewed = () => {
       ) : (
         // if products are fetched and the list is not empty
         <div>
-          <div className="flex flex-col">
-            <h1
-              data-testid="käsitellyt"
-              className="text-4xl font-bold ml-5 mt-4"
-            >
-              Käsitellyt
+          <div className="flex flex-col items-center">
+            <h1 className="text-xl font-bold ml-5 mt-4">
+              Expertin tarkistamat tuotteet
             </h1>
 
             {/* listing the products */}
@@ -100,7 +105,9 @@ const Reviewed = () => {
                 <div key={e.id}>
                   {/* create a clickable button for the product card */}
                   <button
-                    className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs"
+                    className="m-5 flex flex-row justify-stretch p-4 border rounded-lg w-xs
+                            md:p-5 md:w-md md:text-lg
+                            lg:p-6 lg:w-lg lg:text-xl"
                     onClick={() => {
                       // save the evaluated product's data to sessionStorage for back navigation
                       fetchOneProduct(e.id);

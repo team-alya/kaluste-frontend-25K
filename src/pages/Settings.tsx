@@ -25,14 +25,13 @@ export default function Settings() {
   };
 
   return (
-    <div className="mt-20 flex flex-col items-center ">
+    <div className="mt-20 flex flex-col items-center space-y-6 ">
       <div className="flex items-center justify-between mb-6">
         <span className="text-lg font-medium text-gray-800 mr-4">
           Värisokeus
         </span>
         <label className="relative inline-flex items-center cursor-pointer">
           <input
-            data-testid="color-blind"
             type="checkbox"
             className="sr-only peer"
             checked={colorblindMode}
@@ -44,7 +43,7 @@ export default function Settings() {
       </div>
 
       <button
-        className="gap-2 mt-4 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm btn-primary"
+        className="w-50 px-12 py-3 h-12 text-white bg-emerald-700 shadow-md hover:bg-emerald-600 transition rounded-sm btn-primary"
         onClick={() => {
           Logout();
           navigate("/", { state: { from: location.pathname } });

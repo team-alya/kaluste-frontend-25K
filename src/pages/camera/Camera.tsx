@@ -3,7 +3,7 @@ import { Camera } from "react-camera-pro";
 import { Focus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UploadButton from "./UploadImage";
-import Loading from "./confirmation/Loading";
+import Loading from "../confirmation/Loading";
 
 const CameraApp: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
@@ -21,8 +21,6 @@ const CameraApp: React.FC = () => {
     if (cameraRef.current) {
       const imageDataUrl = cameraRef.current.takePhoto();
       setPhoto(imageDataUrl);
-      console.log(imageDataUrl);
-      console.log("Kuva otettu ja tallennettu");
     }
   };
 
@@ -99,11 +97,14 @@ const CameraApp: React.FC = () => {
         })
         .then((data) => {
           // if evaluation ok, return from loading page and navigate to accepted page
-          // also sends the evaluation data, username and endpoint info to the accepted page
           setLoading(false);
           navigate("/accepted", {
             state: {
-              evaluation: data.evaluation,
+              evaluation: {
+                ...data.evaluation, // Sisältää muut analysoidut tiedot
+                recommended_price: data.priceEstimation?.recommended_price || 0, // Lisää recommended_price
+                price_reason: data.priceEstimation?.price_reason || "", // Lisää price_reason
+              },
               username,
               photo,
               from: location.pathname,
@@ -122,11 +123,11 @@ const CameraApp: React.FC = () => {
     <div>
       {/* camera function styling */}
       {!loading ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-5 mt-[-50px]">
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 mt-[-50px]">
           {/* show feedback message if available */}
           {showMessage && (
-            <div className="mb-15 text-center">
-              <p className="text-md font-semibold text-[#104930]">
+            <div className="mb-3 mt-3 text-center">
+              <p className="text-sm font-semibold text-[#104930]">
                 {imageFeedbackMsg}
               </p>
             </div>
@@ -147,7 +148,7 @@ const CameraApp: React.FC = () => {
                 <img
                   src={photo}
                   alt="Captured"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-sm"
                 />
               </div>
             ) : (
@@ -166,13 +167,12 @@ const CameraApp: React.FC = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-row gap-2 mt-4 items-center">
+          <div className="flex flex-row gap-2 fixed bottom-2 left-1/2 transform -translate-x-1/2 h-16 items-center px-7 pb-6">
             {/* if no feedback message, show options to either take a photo or upload one */}
             {!showMessage && (
               <>
                 <div className="flex flex-row gap-2">
                   <button
-                    data-testid="capture-button"
                     onClick={capturePhoto}
                     className="flex items-center justify-center gap-2 mt-4 px-6 py-3 h-12 text-white bg-emerald-700 rounded-full shadow-lg shadow-emerald-700 hover:bg-emerald-600 transition btn-primary"
                   >
@@ -220,7 +220,6 @@ const CameraApp: React.FC = () => {
               {/* button that allows the user to send the image to further evaluation */}
               <button
                 data-testid="accept-image"
-                className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500  rounded-full"
                 className="mt-4 px-6 py-3 text-white bg-emerald-600 shadow-lg shadow-emerald-600 hover:bg-emerald-500 rounded-full btn-tertiary"
                 onClick={handleNext}
               >

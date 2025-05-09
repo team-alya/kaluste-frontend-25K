@@ -19,7 +19,7 @@ test.beforeEach('Open start URL', async ({ page }) => {
  
   await page.click('[data-testid="expert-button"]');
  
-  await expect(page).toHaveURL("http://localhost:5173/reviewed")
+  await expect(page).toHaveURL("http://localhost:5173/reviewed");
 });
 
 test('expert page renders correctly', async ({ page }) => {
