@@ -178,7 +178,7 @@ const Archive = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-2 justify-start m-1">
+            <div className="grid grid-cols-2 gap-2 justify-start m-1 ">
               {evals.map((e: Evaluation) => {
                 const evalDate = e.timeStamp
                   ? new Date(e.timeStamp).toLocaleDateString("fi-FI")
@@ -186,7 +186,7 @@ const Archive = () => {
                 return (
                   <div
                     key={e.id}
-                    className="flex flex-col items-start border border-gray-300 rounded-sm pb-4"
+                    className="flex flex-col items-start border border-gray-300 rounded-sm"
                   >
                     {showCheckboxes && (
                       <input
@@ -226,9 +226,9 @@ const Archive = () => {
                           />
                         )}
                       </div>
-                      <div className="ml-4 min-w-1/2 flex flex-col justify-center">
-                        <p className="m-2">{e.evaluation.brand}</p>
-                        <p className="text-sm text-gray-500">{evalDate}</p>
+                      <div className="ml-1 w-1/2 flex flex-col justify-center"> 
+                        <p className="text-sm">{e.evaluation.brand}</p> 
+                        <p className="text-xs text-gray-500">{evalDate}</p>
                       </div>
                     </button>
                   </div>

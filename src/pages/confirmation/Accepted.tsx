@@ -84,8 +84,7 @@ const AcceptedPage: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error saving evaluation");
       }
-      const responseData = await response.json();
-      responseData
+      
       // if saving is successful, show a success message
       // and redirect the user to the homepage after 4 seconds
       setSaveOk(true);
