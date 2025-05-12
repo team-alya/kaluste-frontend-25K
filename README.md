@@ -45,31 +45,35 @@ For this app to work with all its functionalities you also need to have the back
 
 ![kirjautumissivu](src/assets/demo_pictures/demopics_1_resize_new.jpg)
 
-#### Front Page
+#### Admin Front Page
 
-![etusivu](src/assets/demo_pictures/demopics_2_resize_new.jpg)
+![admin etusivu](src/assets/demo_pictures/admin_frontpage_resize.jpg)
 
-#### Camera View
+#### User/Expert Front Page
 
-![kamera](src/assets/demo_pictures/demopics_3_resize_new.jpg)
+![user tai expert etusivu](src/assets/demo_pictures/expert_view_resize.jpg)
 
-#### Picture Taken/Uploaded
+#### Camera
 
-![kuva otettu tai ladattu](src/assets/demo_pictures/demopics_4_resize_new.jpg)
+![kamera](src/assets/demo_pictures/camera_resize.jpg)
 
-#### Loading View
+#### Picture Quality Review
 
-![latausnakyma](src/assets/demo_pictures/demopics_5_resize_new.jpg)
+![kuvan laatu arvioitu](src/assets/demo_pictures/image_review_resize.jpg)
 
-#### Indentified View
+#### Object Indentified
 
-![tunnistettu](src/assets/demo_pictures/demopics_6_resize_new.jpg)
+![tunnistettu](src/assets/demo_pictures/item_identified_resize.jpg)
 
-#### Accepted View
+#### AI Reviewed List
 
-![hyvaksytty](src/assets/demo_pictures/demopics_7_resize_new.jpg)
+![tekoalylistaus](src/assets/demo_pictures/demopics_8_resize_new.jpg)
 
-#### Listed objects View
+#### Expert List
+
+![expertlista](src/assets/demo_pictures/demopics_8_resize_new.jpg)
+
+#### Archive
 
 ![listattu](src/assets/demo_pictures/demopics_8_resize_new.jpg)
 
