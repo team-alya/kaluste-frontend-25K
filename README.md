@@ -43,7 +43,7 @@ For this app to work with all its functionalities you also need to have the back
 
 #### Login Page
 
-![kirjautumissivu](src/assets/demo_pictures/demopics_1_resize_new.jpg)
+![kirjautumissivu](src/assets/demo_pictures/login_page.jpg)
 
 #### Admin Front Page
 
@@ -67,20 +67,32 @@ For this app to work with all its functionalities you also need to have the back
 
 #### AI Reviewed List
 
-![tekoalylistaus](src/assets/demo_pictures/demopics_8_resize_new.jpg)
+![tekoalylistaus](src/assets/demo_pictures/ai_reviewed_list.jpg)
 
 #### Expert List
 
-![expertlista](src/assets/demo_pictures/demopics_8_resize_new.jpg)
+![expertlista](src/assets/demo_pictures/expert_list.jpg)
 
 #### Archive
 
-![listattu](src/assets/demo_pictures/demopics_8_resize_new.jpg)
+![listattu](src/assets/demo_pictures/archive.jpg)
 
 #### Object Page View
 
-![tuotenakyma](src/assets/demo_pictures/demopics_9_resize_new.jpg)
+![tuotenakyma](src/assets/demo_pictures/item_info.jpg)
 
-#### Settings Page
+#### Admin Page
 
-![asetukset](src/assets/demo_pictures/demopics_10_resize_new.jpg)
+![asetukset](src/assets/demo_pictures/admin_page.jpg)
+
+#### List of Users
+
+![asetukset](src/assets/demo_pictures/users.jpg)
+
+#### Modify User
+
+![asetukset](src/assets/demo_pictures/modify_user.jpg)
+
+#### Register Page
+
+![asetukset](src/assets/demo_pictures/register_user.jpg)
